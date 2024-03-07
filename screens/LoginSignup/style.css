@@ -1,0 +1,358 @@
+.login-signup {
+  background-color: var(--neutral-0);
+  height: 812px;
+  position: relative;
+  width: 375px;
+}
+
+.login-signup .sign-up-question {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 52px;
+  left: 0;
+  padding: 0px 16px;
+  position: absolute;
+  top: 489px;
+  width: 375px;
+}
+
+.login-signup .button {
+  align-self: stretch !important;
+  flex: 0 0 auto !important;
+  width: 100% !important;
+}
+
+.login-signup .shape-pill-size-super-hirearchy-tertiary-state-default {
+  color: #d29720 !important;
+}
+
+.login-signup .overlap {
+  height: 161px;
+  left: 0;
+  position: absolute;
+  top: 584px;
+  width: 375px;
+}
+
+.login-signup .button-wrapper {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 52px;
+  left: 0;
+  padding: 0px 16px;
+  position: absolute;
+  top: 109px;
+  width: 375px;
+}
+
+.login-signup .button-2 {
+  align-items: center;
+  align-self: stretch;
+  border-radius: 25px;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+  justify-content: center;
+  padding: 16px 8px;
+  position: relative;
+  width: 100%;
+}
+
+.login-signup .p {
+  color: transparent;
+  font-family: var(--button-regular-font-family);
+  font-size: var(--button-regular-font-size);
+  font-style: var(--button-regular-font-style);
+  font-weight: var(--button-regular-font-weight);
+  letter-spacing: var(--button-regular-letter-spacing);
+  line-height: var(--button-regular-line-height);
+  margin-top: -1px;
+  position: relative;
+  text-align: center;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.login-signup .span {
+  color: #252422;
+  font-family: var(--button-regular-font-family);
+  font-size: var(--button-regular-font-size);
+  font-style: var(--button-regular-font-style);
+  font-weight: var(--button-regular-font-weight);
+  letter-spacing: var(--button-regular-letter-spacing);
+  line-height: var(--button-regular-line-height);
+}
+
+.login-signup .text-wrapper-2 {
+  color: #d29620;
+  font-family: var(--button-regular-font-family);
+  font-size: var(--button-regular-font-size);
+  font-style: var(--button-regular-font-style);
+  font-weight: var(--button-regular-font-weight);
+  letter-spacing: var(--button-regular-letter-spacing);
+  line-height: var(--button-regular-line-height);
+}
+
+.login-signup .login-buttons {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 112px;
+  left: 0;
+  padding: 0px 16px;
+  position: absolute;
+  top: 0;
+  width: 375px;
+}
+
+.login-signup .button-3 {
+  all: unset;
+  align-self: stretch;
+  border: 1px solid;
+  border-color: #252422;
+  border-radius: 25px;
+  box-sizing: border-box;
+  height: 52px;
+  position: relative;
+  width: 100%;
+}
+
+.login-signup .type-apple-group-instance {
+  height: 20px !important;
+  left: 86px !important;
+  position: absolute !important;
+  top: 16px !important;
+  width: 20px !important;
+}
+
+.login-signup .type-apple-group-social-fill-OFF-instance {
+  height: 15px !important;
+  top: 2px !important;
+  width: 12px !important;
+}
+
+.login-signup .text-wrapper-3 {
+  color: #252422;
+  font-family: "Inter", Helvetica;
+  font-size: 14px;
+  font-weight: 500;
+  left: 113px;
+  letter-spacing: 0;
+  line-height: 20.3px;
+  position: absolute;
+  text-align: center;
+  top: 15px;
+  white-space: nowrap;
+}
+
+.login-signup .type-google-group-social-fill-off {
+  height: 20px !important;
+  left: 85px !important;
+  position: absolute !important;
+  top: 16px !important;
+  width: 20px !important;
+}
+
+.login-signup .text-wrapper-4 {
+  color: #252422;
+  font-family: var(--button-regular-font-family);
+  font-size: var(--button-regular-font-size);
+  font-style: var(--button-regular-font-style);
+  font-weight: var(--button-regular-font-weight);
+  left: 111px;
+  letter-spacing: var(--button-regular-letter-spacing);
+  line-height: var(--button-regular-line-height);
+  position: absolute;
+  text-align: center;
+  top: 15px;
+  white-space: nowrap;
+}
+
+.login-signup .button-4 {
+  all: unset;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(210, 151, 32, 0.75) 0%, rgba(210, 151, 32, 0.56) 100%);
+  border: 1px solid;
+  border-color: #d29720bd;
+  border-radius: 25px;
+  box-sizing: border-box;
+  height: 52px;
+  left: 16px;
+  position: absolute;
+  top: 437px;
+  width: 343px;
+}
+
+.login-signup .text-wrapper-5 {
+  color: #252422;
+  font-family: "Inter", Helvetica;
+  font-size: 16px;
+  font-weight: 500;
+  left: 136px;
+  letter-spacing: 0;
+  line-height: 23.2px;
+  position: absolute;
+  text-align: center;
+  top: 15px;
+  white-space: nowrap;
+}
+
+.login-signup .overlap-2 {
+  height: 20px;
+  left: 16px;
+  position: absolute;
+  top: 543px;
+  width: 343px;
+}
+
+.login-signup .text-wrapper-6 {
+  color: #252422;
+  font-family: var(--button-regular-font-family);
+  font-size: var(--button-regular-font-size);
+  font-style: var(--button-regular-font-style);
+  font-weight: var(--button-regular-font-weight);
+  left: 161px;
+  letter-spacing: var(--button-regular-letter-spacing);
+  line-height: var(--button-regular-line-height);
+  position: absolute;
+  text-align: center;
+  top: 0;
+  white-space: nowrap;
+}
+
+.login-signup .vector {
+  height: 1px;
+  left: 0;
+  object-fit: cover;
+  position: absolute;
+  top: 10px;
+  width: 343px;
+}
+
+.login-signup .overlap-3 {
+  height: 224px;
+  left: 87px;
+  position: absolute;
+  top: 58px;
+  width: 201px;
+}
+
+.login-signup .SOULDIS-NOTEXTNOLINE {
+  height: 201px;
+  left: 0;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  width: 201px;
+}
+
+.login-signup .SOULTECH {
+  -webkit-text-stroke: 1.12px transparent;
+  color: #3c3630;
+  font-family: "Literata", Helvetica;
+  font-size: 15.6px;
+  font-weight: 300;
+  height: 11px;
+  left: 26px;
+  letter-spacing: 3.27px;
+  line-height: normal;
+  position: absolute;
+  text-align: center;
+  top: 153px;
+  white-space: nowrap;
+  width: 146px;
+}
+
+.login-signup .text-wrapper-7 {
+  color: #1c1a18;
+  font-family: "Inter", Helvetica;
+  font-size: 32px;
+  font-weight: 600;
+  left: 29px;
+  letter-spacing: 0;
+  line-height: 38px;
+  position: absolute;
+  text-align: center;
+  top: 186px;
+  white-space: nowrap;
+}
+
+.login-signup .textfield {
+  align-items: center;
+  border: 1px solid;
+  border-color: #0000001a;
+  border-radius: 6px;
+  display: flex;
+  gap: 4px;
+  height: 52px;
+  left: 16px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 309px;
+  width: 343px;
+}
+
+.login-signup .text {
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  color: #00000080;
+  display: -webkit-box;
+  flex: 1;
+  font-family: "Roboto", Helvetica;
+  font-size: 14px;
+  font-weight: 400;
+  height: 20px;
+  letter-spacing: 0;
+  line-height: 20px;
+  overflow: hidden;
+  position: relative;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.login-signup .div-wrapper {
+  align-items: center;
+  border: 1px solid;
+  border-color: #0000001a;
+  border-radius: 6px;
+  display: flex;
+  gap: 4px;
+  height: 52px;
+  left: 16px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 373px;
+  width: 343px;
+}
+
+.login-signup .frame {
+  height: 40px;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 375px;
+}
+
+.login-signup .iphone-with-notch-instance {
+  top: -2px !important;
+  width: 375px !important;
+}
+
+.login-signup .design-component-instance-node {
+  left: 30px !important;
+}
+
+.login-signup .iphone-with-notch-2 {
+  left: 9px !important;
+}
+
+.login-signup .iphone-with-notch-3 {
+  border-radius: unset !important;
+  left: 6px !important;
+  position: absolute !important;
+  top: 6px !important;
+}
