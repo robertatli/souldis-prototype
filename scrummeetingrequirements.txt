@@ -33,3 +33,7 @@ updatea dict bakvið tjöldin til að suggesta treatments fyrir einstaklinga
 {
     "kvíði": 10 (counter)
     "eh": 20 (counter)
+
+
+
+    "main": "node_modules/expo/AppEntry.js",

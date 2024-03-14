@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { StyleSheet, View, Button, ImageBackground, Dimensions, Platform, Text, Modal, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, View, Button, ImageBackground, Dimensions, Platform, Text, Modal, FlatList, TouchableOpacity, TextInput, Pressable } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNPickerSelect from 'react-native-picker-select';
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist';
 import Icon from 'react-native-vector-icons/Feather';
+import { Link } from 'expo-router';
 
 
 const { width, height } = Dimensions.get('window');
@@ -328,7 +329,7 @@ export default function App() {
   const clearScreen = () => {
     console.log('Clearing screen...');
     setComponents([]); // Clear all components
-    setBackgroundImage(require('./assets/splash.png')); // Remove background image
+    setBackgroundImage(require('../../assets/splash.png')); // Remove background image
   };
 
 
@@ -495,6 +496,9 @@ export default function App() {
                   </View>
                 )}
               />
+              <Link href="/QuestionnairePage">
+              Questionaire
+              </Link>
               <Button title="Close" onPress={() => setModalVisible(false)} />
             </View>
           </View>
