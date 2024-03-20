@@ -3,8 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
 const QuestionnairePage = ({ navigation }) => {
     const questions = [
-        { question: "Little interest or pleasure in doing things", options: [0, 1, 2, 3] },
-        { question: "Feeling down, depressed or hopeless", options: [0, 1, 2, 3] }
+        { question: "Feeling nervous, anxious or on edge", options: [0, 1, 2, 3] },
+        { question: "Not being able to stop or control worrying", options: [0, 1, 2, 3] }
     ];
 
     const [responses, setResponses] = useState(Array(questions.length).fill(0));

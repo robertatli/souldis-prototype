@@ -3,7 +3,7 @@ import { Tabs } from "expo-router";
 const TabsLayout = () => {
     return (
     <Tabs>
-        <Tabs.Screen name="App" />
+        <Tabs.Screen name="index" />
         <Tabs.Screen name="QuestionairePage" />
     </Tabs>
     );
