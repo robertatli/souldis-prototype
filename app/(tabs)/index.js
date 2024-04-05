@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { StyleSheet, View, Button, ImageBackground, Dimensions, Platform, Text, Modal, FlatList, TouchableOpacity, TextInput, Pressable } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Button, ImageBackground, Platform, Text, Modal, FlatList, TouchableOpacity, TextInput } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
@@ -8,16 +8,24 @@ import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNPickerSelect from 'react-native-picker-select';
 import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist';
-import Icon from 'react-native-vector-icons/Feather';
+
 import { Link } from 'expo-router';
 
+// import styles
+import styles from '../styles/stylesIndex.js';
 
-const { width, height } = Dimensions.get('window');
+
+// import components
+import Dropdown from '../components/Dropdown/Dropdown.js';
+import HapticDropdown from '../components/HapticDropdown/HapticDropdown.js';
+import ButtonComponent from '../components/ButtonComponent/ButtonComponent.js';
+
 
 export default function App() {
   const [components, setComponents] = useState([]);
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [saveSetupModalVisible, setSaveSetupModalVisible] = useState(false);
   const [setupName, setSetupName] = useState('');
   const [savedSetups, setSavedSetups] = useState([]);
   const [currentButtonId, setCurrentButtonId] = useState(null);
@@ -25,161 +33,6 @@ export default function App() {
   const [buttonConfigs, setButtonConfigs] = useState({});
   const [hapticNodes, setHapticNodes] = useState({});
 
-
-  const Dropdown = ({ savedSetups, currentButtonId, buttonConfigs, onConfigChange }) => {
-    // Convert saved setups to items for the picker
-    const items = savedSetups.map((setup) => ({
-        label: setup.name,
-        value: setup.name,
-    }));
-
-    // Custom style for the picker
-    const customPickerStyles = {
-      inputIOS: {
-          fontSize: 16,
-          paddingVertical: 8,
-          borderWidth: 1,
-          borderColor: 'gray',
-          borderRadius: 4,
-          color: 'black',
-          textAlign: 'center',
-          marginTop: 8,
-      },
-      inputAndroid: {
-          fontSize: 16,
-          paddingVertical: 8,
-          borderWidth: 1,
-          borderColor: 'gray',
-          borderRadius: 8,
-          color: 'black',
-          textAlign: 'center',
-      },
-      placeholder: {
-          color: 'gray',
-          fontSize: 16,
-          textAlign: 'center',
-      },
-    };
-
-    // Handle value change
-    const handleValueChange = (value) => {
-        onConfigChange(currentButtonId, value);
-    };
-
-    return (
-        <RNPickerSelect
-            onValueChange={handleValueChange}
-            items={items}
-            value={buttonConfigs[currentButtonId]}
-            placeholder={{ label: "Select a setup...", value: null }}
-            style={customPickerStyles}
-            useNativeAndroidPickerStyle={false}
-        />
-    );
-  };
-
-  const HapticDropdown = ({ onHapticChange }) => {
-    // Options for the haptic feedback types
-    const hapticOptions = [
-        { label: 'Selection', value: 'selectionAsync' },
-        { label: 'Success Notification', value: 'notificationAsyncSuccess' },
-        { label: 'Error Notification', value: 'notificationAsyncError' },
-        { label: 'Warning Notification', value: 'notificationAsyncWarning' },
-        { label: 'Light Impact', value: 'impactAsyncLight' },
-        { label: 'Medium Impact', value: 'impactAsyncMedium' },
-        { label: 'Heavy Impact', value: 'impactAsyncHeavy' },
-    ];
-
-    // Custom style for the picker
-    const customPickerStyles = {
-      inputIOS: {
-          fontSize: 16,
-          paddingVertical: 8,
-          borderWidth: 1,
-          borderColor: 'gray',
-          borderRadius: 4,
-          color: 'black',
-          textAlign: 'center',
-          paddingRight: 30, // to ensure the text is never behind the icon
-      },
-      inputAndroid: {
-          fontSize: 16,
-          paddingHorizontal: 10,
-          paddingVertical: 8,
-          borderWidth: 0.5,
-          borderColor: 'purple',
-          borderRadius: 8,
-          color: 'black',
-          paddingRight: 30, // to ensure the text is never behind the icon
-      },
-      placeholder: {
-          color: 'gray',
-          fontSize: 16,
-      },
-      iconContainer: {
-          top: 10,
-          right: 15,
-      },
-  };
-
-    return (
-      <RNPickerSelect
-          onValueChange={onHapticChange}
-          items={hapticOptions}
-          placeholder={{ label: "Select a haptic...", value: null }}
-          style={customPickerStyles}
-          useNativeAndroidPickerStyle={false} // this is to ensure consistent styling across platforms
-          Icon={() => <Icon name="chevron-down" size={20} color="gray" />}
-      />
-    );
-  };
-
-
-  const ButtonComponent = ({ id, onPress, onLongPress }) => {
-    const positionX = useSharedValue(0);
-    const positionY = useSharedValue(0);
-  
-    const panGesture = Gesture.Pan()
-      .onUpdate((event) => {
-        positionX.value = event.translationX;
-        positionY.value = event.translationY;
-      });
-  
-      const singleTap = Gesture.Tap()
-      .maxDuration(250)
-      .onStart(() => {
-        console.log('Single tap!');
-      });
-  
-    const doubleTap = Gesture.Tap()
-      .maxDuration(250)
-      .numberOfTaps(2)
-      .onStart(() => {
-        console.log('Double tap!');
-      });
-
-    const LongPress = Gesture.LongPress()
-      .runOnJS(true)
-      .onEnd(() => {
-        onLongPress(id);
-      });
-  
-    const gesture = Gesture.Exclusive(panGesture, LongPress, doubleTap, singleTap);
-  
-    const animatedStyle = useAnimatedStyle(() => {
-      return {
-        transform: [{ translateX: positionX.value }, { translateY: positionY.value }],
-      };
-    });
-  
-    return (
-      <GestureDetector gesture={gesture}>
-        <Animated.View style={animatedStyle}>
-          <Button title={`Button ${id}`} onPress={() => onPress(id)} />
-        </Animated.View>
-      </GestureDetector>
-    );
-  };
 
   const HapticNodeItem = ({ item, drag, isActive, onValueChange }) => {
     // Assuming your `item` has a 'label' and 'value' that corresponds to the haptic feedback
@@ -467,16 +320,22 @@ export default function App() {
           }}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <Button title="Add Button" onPress={handleAddComponent} />
-              <Button title="Set Background" onPress={() => pickImage()} />
-              <TextInput
-                placeholder="Setup Name"
-                value={setupName}
-                onChangeText={setSetupName}
-                style={styles.textInput}
-              />
-              <Button title="Save Current Setup" onPress={saveSetup} />
-              <Button title="Clear Screen" onPress={clearScreen} />
+            <TouchableOpacity style={styles.modalButton} onPress={handleAddComponent}>
+              <Text>Add Button</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.modalButton} onPress={() => pickImage()}>
+              <Text>Set Background</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.modalButton} onPress={clearScreen}>
+              <Text>Clear The Screen</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.modalButton} onPress={() => setSaveSetupModalVisible(true)}>
+              <Text>Save Current Setup</Text>
+            </TouchableOpacity>
+          
               <FlatList
                 data={savedSetups}
                 keyExtractor={(item) => item.name}
@@ -496,12 +355,34 @@ export default function App() {
                   </View>
                 )}
               />
-              <Link href="/QuestionnairePage">
-              Questionaire
-              </Link>
               <Button title="Close" onPress={() => setModalVisible(false)} />
             </View>
           </View>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={saveSetupModalVisible}
+            onRequestClose={() => {
+              setSaveSetupModalVisible(!saveSetupModalVisible);
+            }}>
+            <View style={styles.centeredModalView}>
+              <View style={styles.saveModalView}>
+                <Text style={styles.modalTitle}>Give your Design a name</Text>
+                <TextInput
+                  placeholder="Enter Setup Name"
+                  value={setupName}
+                  onChangeText={setSetupName}
+                  style={styles.modalTextInput}
+                />
+                <TouchableOpacity style={styles.modalSaveButton} onPress={saveSetup}>
+                  <Text style={styles.modalButtonText}>Save Design</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.modalCancelButton} onPress={() => setSaveSetupModalVisible(false)}>
+                  <Text style={styles.modalButtonText}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
         </Modal>
         <Modal
           visible={configOverlayVisible}
@@ -537,97 +418,3 @@ export default function App() {
     </GestureHandlerRootView>
   );
 }
-
-const styles = StyleSheet.create({
-  backgroundImage: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: width,
-    height: height,
-  },
-  menuButtonContainer: {
-    position: 'absolute',
-    top: 40, // Adjust top as needed
-    right: 10, // Adjust right as needed
-    backgroundColor: 'red',
-    borderRadius: 5,
-    overflow: 'hidden',
-    padding: 10, // Add padding to increase the touchable area
-  },
-  picker: {
-    width: 200,
-  },
-  buttonContainer: {
-    margin: 10,
-    width: 200,
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  modalView: {
-    width: '100%',
-    height: '100%',
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  textInput: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    width: '80%',
-  },
-  setupItemRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: '#ddd',
-    borderRadius: 5,
-    marginTop: 10,
-    padding: 10,
-  },
-  deleteButton: {
-    // Ensure this button is outside and to the right of the setup item container
-    padding: 8,
-    backgroundColor: 'red',
-    borderRadius: 5,
-  },
-  deleteButtonText: {
-    fontSize: 16,
-    color: 'white',
-  },
-  setupItemText: {
-    fontSize: 16,
-    marginRight: 8,
-  },    
-  container: {
-    flex: 1,
-    padding: 10,
-  },
-  nodeItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-    marginVertical: 5,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 4,
-  },
-});

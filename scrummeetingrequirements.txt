@@ -37,3 +37,9 @@ updatea dict bakvið tjöldin til að suggesta treatments fyrir einstaklinga
 
 
     "main": "node_modules/expo/AppEntry.js",
+
+
+
+
+Teikna upp ferli fyrir Spurningalista (user) og UI, hvernig appið er.
+
