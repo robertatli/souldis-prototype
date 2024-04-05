@@ -2,14 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Button, ImageBackground, Platform, Text, Modal, FlatList, TouchableOpacity, TextInput } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
-import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import RNPickerSelect from 'react-native-picker-select';
-import DraggableFlatList, { RenderItemParams } from 'react-native-draggable-flatlist';
-
-import { Link } from 'expo-router';
+import DraggableFlatList from 'react-native-draggable-flatlist';
 
 // import styles
 import styles from '../styles/stylesIndex.js';
@@ -198,32 +193,6 @@ export default function App() {
     setModalVisible(false); // Optionally close the modal after setting the background
   };
 
-  // const handleActionChange = async (action) => {
-  //   setSelectedAction(action); // This line might need to be adjusted based on your logic.
-  //   switch (action) {
-  //       case 'addButton':
-  //           handleAddComponent();
-  //           break;
-  //       case 'setBackground':
-  //           let result = await ImagePicker.launchImageLibraryAsync({
-  //               mediaTypes: ImagePicker.MediaTypeOptions.Images,
-  //               quality: 1,
-  //           });
-  //           if (!result.cancelled) {
-  //               setBackgroundImage({ uri: result.assets[0].uri }); // Adjusted to access the uri correctly
-  //           }
-  //           break;
-  //       case 'saveSetup':
-  //           await saveSetup(); // Save the current setup
-  //           break;
-  //       case 'loadSetup':
-  //           await loadSetup(); // Load the saved setup
-  //           break;
-  //       default:
-  //           console.log('Action not recognized:', action);
-  //   }
-  // };
-
 
   const handleAddComponent = () => {
     const newComponent = {
@@ -286,24 +255,6 @@ export default function App() {
     setCurrentButtonId(buttonId);
     setConfigOverlayVisible(true);
   };
-
-  // const onGestureEvent = (event, id) => {
-  //   if (event.nativeEvent.state === State.ACTIVE) {
-  //     const updatedComponents = components.map(component => {
-  //       if (component.id === id) {
-  //         return {
-  //           ...component,
-  //           position: {
-  //             x: event.nativeEvent.translationX,
-  //             y: event.nativeEvent.translationY,
-  //           },
-  //         };
-  //       }
-  //       return component;
-  //     });
-  //     setComponents(updatedComponents);
-  //   }
-  // };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
