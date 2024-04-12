@@ -7,13 +7,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 
 // import styles
-import styles from '../styles/stylesIndex.js';
+import styles from '../../styles/stylesIndex.js';
 
 
 // import components
-import Dropdown from '../components/Dropdown/Dropdown.js';
-import HapticDropdown from '../components/HapticDropdown/HapticDropdown.js';
-import ButtonComponent from '../components/ButtonComponent/ButtonComponent.js';
+import Dropdown from '../../components/Dropdown/Dropdown.js';
+import HapticDropdown from '../../components/HapticDropdown/HapticDropdown.js';
+import ButtonComponent from '../../components/ButtonComponent/ButtonComponent.js';
 
 
 export default function App() {
@@ -177,7 +177,7 @@ export default function App() {
   const clearScreen = () => {
     console.log('Clearing screen...');
     setComponents([]); // Clear all components
-    setBackgroundImage(require('../../assets/splash.png')); // Remove background image
+    setBackgroundImage(require('../../../assets/splash.png')); // Remove background image
   };
 
 
