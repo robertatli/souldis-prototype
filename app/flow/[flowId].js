@@ -58,18 +58,21 @@ const FlowOverview = () => {
 
     // Render page item
     const renderItem = ({ item, drag, isActive }) => (
-        <TouchableOpacity
-            onLongPress={drag}
-            style={{
-                backgroundColor: isActive ? 'blue' : 'grey',
-                padding: 20,
-                margin: 5,
-                borderRadius: 5,
-            }}>
-            <Text>{item.name}</Text>
-            <Button title="Delete" onPress={() => handleDeletePage(item.id)} />
-        </TouchableOpacity>
+        <Link href={`/flow/page/${item.id}`} asChild>
+            <TouchableOpacity
+                onLongPress={drag}
+                style={{
+                    backgroundColor: isActive ? 'blue' : 'grey',
+                    padding: 20,
+                    margin: 5,
+                    borderRadius: 5,
+                }}>
+                <Text style={{ color: 'white' }}>{item.name}</Text>
+                <Button title="Delete" onPress={() => handleDeletePage(item.id)} />
+            </TouchableOpacity>
+        </Link>
     );
+
 
     return (
         <GestureHandlerRootView style={{ flex: 1, marginTop: 50, marginBottom: 50 }}>
