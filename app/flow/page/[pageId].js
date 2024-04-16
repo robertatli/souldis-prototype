@@ -5,6 +5,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DraggableFlatList from 'react-native-draggable-flatlist';
+import { useLocalSearchParams, Link } from 'expo-router';
+
 
 // import styles
 import styles from '../../styles/stylesIndex.js';
@@ -194,14 +196,14 @@ export default function App() {
   };
 
 
-  const handleAddComponent = () => {
-    const newComponent = {
-      type: 'Button',
-      id: Date.now(),
-      position: { x: 0, y: 0 },
-    };
-    setComponents([...components, newComponent]);
-  };
+  // const handleAddComponent = () => {
+  //   const newComponent = {
+  //     type: 'Button',
+  //     id: Date.now(),
+  //     position: { x: 0, y: 0 },
+  //   };
+  //   setComponents([...components, newComponent]);
+  // };
 
   const onButtonPress = async (id) => {
 
@@ -271,9 +273,12 @@ export default function App() {
           }}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-            <TouchableOpacity style={styles.modalButton} onPress={handleAddComponent}>
-              <Text>Add Button</Text>
-            </TouchableOpacity>
+        
+            <Link href="/components/ComponentsPage/ComponentsPage" asChild>
+              <TouchableOpacity style={styles.modalButton}>
+                <Text>Add Component</Text>
+              </TouchableOpacity>
+            </Link>
             
             <TouchableOpacity style={styles.modalButton} onPress={() => pickImage()}>
               <Text>Set Background</Text>
