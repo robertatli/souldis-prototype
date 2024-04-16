@@ -17,8 +17,15 @@ import Dropdown from '../../components/Dropdown/Dropdown.js';
 import HapticDropdown from '../../components/HapticDropdown/HapticDropdown.js';
 import ButtonComponent from '../../components/ButtonComponent/ButtonComponent.js';
 
+// import modals
+//import SaveDesignModal from '../../modals/SaveDesignModal.js';
+import MainMenuModal from '../../modals/MainMenuModal.js';
+import ButtonConfigOverlayModal from '../../modals/ButtonConfigOverlayModal.js';
+
 
 export default function App() {
+  const { pageId } = useLocalSearchParams();  // Extracting pageId from the URL parameters
+
   const [components, setComponents] = useState([]);
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -109,19 +116,44 @@ export default function App() {
     );
   };
   
-  
-
   useEffect(() => {
-    loadSavedSetups();
-    (async () => {
+    const loadSetupData = async () => {
+      try {
+        const storedSetups = await AsyncStorage.getItem('@setups');
+        if (storedSetups) {
+          setSavedSetups(JSON.parse(storedSetups));
+        }
+      } catch (e) {
+        console.error('Failed to load setups', e);
+        alert('Failed to load saved setups.');
+      }
+
       if (Platform.OS !== 'web') {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!');
+        try {
+          const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+          if (status !== 'granted') {
+            alert('Sorry, we need camera roll permissions to make this work!');
+          }
+        } catch (e) {
+          console.error('Failed to request media library permissions', e);
         }
       }
-    })();
+    };
+
+    loadSetupData();
   }, []);
+
+  // useEffect(() => {
+  //   loadSavedSetups();
+  //   (async () => {
+  //     if (Platform.OS !== 'web') {
+  //       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  //       if (status !== 'granted') {
+  //         alert('Sorry, we need camera roll permissions to make this work!');
+  //       }
+  //     }
+  //   })();
+  // }, []);
 
   const saveSetup = async () => {
     const newSetup = {
@@ -264,104 +296,30 @@ export default function App() {
       <View style={styles.menuButtonContainer}>
         <Button title="Menu" onPress={() => setModalVisible(true)} color="white" />
       </View>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
-            setModalVisible(!modalVisible);
-          }}>
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-        
-            <Link href="/components/ComponentsPage/ComponentsPage" asChild>
-              <TouchableOpacity style={styles.modalButton}>
-                <Text>Add Component</Text>
-              </TouchableOpacity>
-            </Link>
-            
-            <TouchableOpacity style={styles.modalButton} onPress={() => pickImage()}>
-              <Text>Set Background</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.modalButton} onPress={clearScreen}>
-              <Text>Clear The Screen</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.modalButton} onPress={() => setSaveSetupModalVisible(true)}>
-              <Text>Save Current Setup</Text>
-            </TouchableOpacity>
-          
-              <FlatList
-                data={savedSetups}
-                keyExtractor={(item) => item.name}
-                renderItem={({ item }) => (
-                  <View style={styles.setupItemRow}>
-                    <TouchableOpacity 
-                      onPress={() => loadSetup(item)}>
-                      <Text style={styles.setupItemText} numberOfLines={1} ellipsizeMode="tail">
-                        {item.name}
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                      style={styles.deleteButton} 
-                      onPress={() => deleteSetup(item.name)}>
-                      <Text style={styles.deleteButtonText}>🗑️</Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              />
-              <Button title="Close" onPress={() => setModalVisible(false)} />
-            </View>
-          </View>
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={saveSetupModalVisible}
-            onRequestClose={() => {
-              setSaveSetupModalVisible(!saveSetupModalVisible);
-            }}>
-            <View style={styles.centeredModalView}>
-              <View style={styles.saveModalView}>
-                <Text style={styles.modalTitle}>Give your Design a name</Text>
-                <TextInput
-                  placeholder="Enter Setup Name"
-                  value={setupName}
-                  onChangeText={setSetupName}
-                  style={styles.modalTextInput}
-                />
-                <TouchableOpacity style={styles.modalSaveButton} onPress={saveSetup}>
-                  <Text style={styles.modalButtonText}>Save Design</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.modalCancelButton} onPress={() => setSaveSetupModalVisible(false)}>
-                  <Text style={styles.modalButtonText}>Cancel</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-        </Modal>
-        <Modal
+      <MainMenuModal 
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          handleAddComponent={handleAddComponent}
+          pickImage={pickImage}
+          clearScreen={clearScreen}
+          setSaveSetupModalVisible={setSaveSetupModalVisible}
+          savedSetups={savedSetups}
+          loadSetup={loadSetup}
+          deleteSetup={deleteSetup}
+          setupName={setupName}
+          setSetupName={setSetupName}
+          saveSetup={saveSetup}
+          saveSetupModalVisible={saveSetupModalVisible}
+      />
+      <ButtonConfigOverlayModal
           visible={configOverlayVisible}
-          onRequestClose={() => setConfigOverlayVisible(false)}
-          animationType="slide"
-          transparent={true}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text>Button Configuration</Text>
-              <Dropdown
-                savedSetups={savedSetups}
-                currentButtonId={currentButtonId}
-                buttonConfigs={buttonConfigs}
-                onConfigChange={(id, selectedSetup) => {
-                  setButtonConfigs({ ...buttonConfigs, [id]: selectedSetup });
-                }}
-              />
-              <ButtonConfiguration/>
-              <Button title="Save" onPress={() => setConfigOverlayVisible(false)} />
-            </View>
-          </View>
-        </Modal>
+          onClose={() => setConfigOverlayVisible(false)}
+          savedSetups={savedSetups}
+          currentButtonId={currentButtonId}
+          buttonConfigs={buttonConfigs}
+          setButtonConfigs={setButtonConfigs}
+          ButtonConfigurationComponent={<ButtonConfiguration />}
+      />
         {components.map((component) => (
           <ButtonComponent
             key={component.id}
