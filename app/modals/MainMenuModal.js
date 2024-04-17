@@ -2,6 +2,7 @@
 import React from 'react';
 import { Modal, View, Text, TouchableOpacity, FlatList, Button } from 'react-native';
 import styles from '../styles/stylesIndex';
+import { Link } from 'expo-router';
 
 import SaveDesignModal from './SaveDesignModal';
 
@@ -18,7 +19,8 @@ const MainMenuModal = ({
     setupName, 
     setSetupName, 
     saveSetup,
-    saveSetupModalVisible
+    saveSetupModalVisible,
+    flowId
 }) => {
     return (
         <Modal
@@ -61,6 +63,9 @@ const MainMenuModal = ({
                             </View>
                         )}
                     />
+                    <Link href={`/flow/${flowId}`} asChild>
+                        <Button title="Go back to Flow" onPress={() => {}} />
+                    </Link>
                     <Button title="Close" onPress={() => setModalVisible(false)} />
                 </View>
             </View>

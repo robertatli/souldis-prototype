@@ -5,7 +5,7 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 import { useLocalSearchParams, Link } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import styles from '../styles/stylesIndex';
+import styles from '../../styles/stylesIndex';
 
 const FlowOverview = () => {
     const { flowId } = useLocalSearchParams();
@@ -58,7 +58,7 @@ const FlowOverview = () => {
 
     // Render page item
     const renderItem = ({ item, drag, isActive }) => (
-        <Link href={`/flow/page/${item.id}`} asChild>
+        <Link href={`/flow/${flowId}/page/${item.id}`} asChild>
             <TouchableOpacity
                 onLongPress={drag}
                 style={{

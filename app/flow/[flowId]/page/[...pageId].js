@@ -9,22 +9,23 @@ import { useLocalSearchParams, Link } from 'expo-router';
 
 
 // import styles
-import styles from '../../styles/stylesIndex.js';
+import styles from '../../../styles/stylesIndex.js';
 
 
 // import components
-import Dropdown from '../../components/Dropdown/Dropdown.js';
-import HapticDropdown from '../../components/HapticDropdown/HapticDropdown.js';
-import ButtonComponent from '../../components/ButtonComponent/ButtonComponent.js';
+import Dropdown from '../../../components/Dropdown/Dropdown.js';
+import HapticDropdown from '../../../components/HapticDropdown/HapticDropdown.js';
+import ButtonComponent from '../../../components/ButtonComponent/ButtonComponent.js';
+import useLoadPageData from '../../../components/useLoadPageData/useLoadPageData.js';
 
 // import modals
 //import SaveDesignModal from '../../modals/SaveDesignModal.js';
-import MainMenuModal from '../../modals/MainMenuModal.js';
-import ButtonConfigOverlayModal from '../../modals/ButtonConfigOverlayModal.js';
+import MainMenuModal from '../../../modals/MainMenuModal.js';
+import ButtonConfigOverlayModal from '../../../modals/ButtonConfigOverlayModal.js';
 
 
 export default function App() {
-  const { pageId } = useLocalSearchParams();  // Extracting pageId from the URL parameters
+  const { flowId, pageId } = useLocalSearchParams();  // Extracting pageId from the URL parameters
 
   const [components, setComponents] = useState([]);
   const [backgroundImage, setBackgroundImage] = useState(null);
@@ -114,34 +115,40 @@ export default function App() {
         />
       </View>
     );
-  };
+  }; 
+
+
+  // Use the custom hook to load page data and handle permissions
+  useLoadPageData(pageId, setComponents, setBackgroundImage);
   
-  useEffect(() => {
-    const loadSetupData = async () => {
-      try {
-        const storedSetups = await AsyncStorage.getItem('@setups');
-        if (storedSetups) {
-          setSavedSetups(JSON.parse(storedSetups));
-        }
-      } catch (e) {
-        console.error('Failed to load setups', e);
-        alert('Failed to load saved setups.');
-      }
+//   useEffect(() => {
+//     const loadPageData = async () => {
+//       const storedPages = await AsyncStorage.getItem('@pages');
+//       if (storedPages) {
+//         const pages = JSON.parse(storedPages);
+//         const currentPage = pages.find(p => p.id === pageId);
+//         if (currentPage) {
+//           setComponents(currentPage.components);
+//           setBackgroundImage(currentPage.backgroundImageUri);
+//           // set other state specific to the page
+//         }
+//       }
+//     }
 
-      if (Platform.OS !== 'web') {
-        try {
-          const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-          if (status !== 'granted') {
-            alert('Sorry, we need camera roll permissions to make this work!');
-          }
-        } catch (e) {
-          console.error('Failed to request media library permissions', e);
-        }
-      }
-    };
+//     if (Platform.OS !== 'web') {
+//       try {
+//         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+//         if (status !== 'granted') {
+//           alert('Sorry, we need camera roll permissions to make this work!');
+//         }
+//         } catch (e) {
+//           console.error('Failed to request media library permissions', e);
+//         }
+//       }
+//     };
 
-    loadSetupData();
-  }, []);
+//     loadPageData();
+// }, [pageId]);
 
   // useEffect(() => {
   //   loadSavedSetups();
@@ -211,7 +218,7 @@ export default function App() {
   const clearScreen = () => {
     console.log('Clearing screen...');
     setComponents([]); // Clear all components
-    setBackgroundImage(require('../../../assets/splash.png')); // Remove background image
+    setBackgroundImage(require('../../../../assets/splash.png')); // Remove background image
   };
 
 
@@ -228,14 +235,14 @@ export default function App() {
   };
 
 
-  // const handleAddComponent = () => {
-  //   const newComponent = {
-  //     type: 'Button',
-  //     id: Date.now(),
-  //     position: { x: 0, y: 0 },
-  //   };
-  //   setComponents([...components, newComponent]);
-  // };
+  const handleAddComponent = () => {
+    const newComponent = {
+      type: 'Button',
+      id: Date.now(),
+      position: { x: 0, y: 0 },
+    };
+    setComponents([...components, newComponent]);
+  };
 
   const onButtonPress = async (id) => {
 
@@ -310,6 +317,7 @@ export default function App() {
           setSetupName={setSetupName}
           saveSetup={saveSetup}
           saveSetupModalVisible={saveSetupModalVisible}
+          flowId={flowId}
       />
       <ButtonConfigOverlayModal
           visible={configOverlayVisible}
