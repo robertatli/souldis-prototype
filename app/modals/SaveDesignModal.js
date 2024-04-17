@@ -3,7 +3,13 @@ import React from 'react';
 import { Modal, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import styles from '../styles/stylesIndex';
 
-const SaveDesignModal = ({ modalVisible, setModalVisible, setupName, setSetupName, saveSetup }) => {
+const SaveDesignModal = ({ 
+        modalVisible, 
+        setModalVisible, 
+        //pageName, 
+        //setPageName, 
+        savePage 
+    }) => {
     return (
         <Modal
             animationType="fade"
@@ -16,11 +22,11 @@ const SaveDesignModal = ({ modalVisible, setModalVisible, setupName, setSetupNam
                     <Text style={styles.modalTitle}>Give your Design a name</Text>
                     <TextInput
                         placeholder="Enter Setup Name"
-                        value={setupName}
-                        onChangeText={setSetupName}
+                        value={pageName}
+                        onChangeText={setPageName}
                         style={styles.modalTextInput}
                     />
-                    <TouchableOpacity style={styles.modalSaveButton} onPress={saveSetup}>
+                    <TouchableOpacity style={styles.modalSaveButton} onPress={savePage}>
                         <Text style={styles.modalButtonText}>Save Design</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.modalCancelButton} onPress={() => setModalVisible(false)}>

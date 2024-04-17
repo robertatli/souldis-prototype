@@ -12,14 +12,14 @@ const MainMenuModal = ({
     handleAddComponent,
     pickImage,
     clearScreen,
-    setSaveSetupModalVisible,
-    savedSetups,
-    loadSetup,
-    deleteSetup,
-    setupName, 
-    setSetupName, 
-    saveSetup,
-    saveSetupModalVisible,
+    // setSavePageModalVisible,
+    savedPages,
+    loadPage,
+    deletePage,
+    // pageName, 
+    // setPageName, 
+    savePage,
+    // savePageModalVisible,
     flowId
 }) => {
     return (
@@ -43,21 +43,21 @@ const MainMenuModal = ({
                         <Text>Clear The Screen</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.modalButton} onPress={() => setSaveSetupModalVisible(true)}>
+                    <TouchableOpacity style={styles.modalButton} onPress={savePage}>
                         <Text>Save Current Setup</Text>
                     </TouchableOpacity>
                 
                     <FlatList
-                        data={savedSetups}
+                        data={savedPages}
                         keyExtractor={(item) => item.name}
                         renderItem={({ item }) => (
                             <View style={styles.setupItemRow}>
-                                <TouchableOpacity onPress={() => loadSetup(item)}>
+                                <TouchableOpacity onPress={() => loadPage(item)}>
                                     <Text style={styles.setupItemText} numberOfLines={1} ellipsizeMode="tail">
                                         {item.name}
                                     </Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.deleteButton} onPress={() => deleteSetup(item.name)}>
+                                <TouchableOpacity style={styles.deleteButton} onPress={() => deletePage(item.name)}>
                                     <Text style={styles.deleteButtonText}>🗑️</Text>
                                 </TouchableOpacity>
                             </View>
@@ -69,13 +69,13 @@ const MainMenuModal = ({
                     <Button title="Close" onPress={() => setModalVisible(false)} />
                 </View>
             </View>
-            <SaveDesignModal
-                modalVisible={saveSetupModalVisible}
-                setModalVisible={setSaveSetupModalVisible}
-                setupName={setupName}
-                setSetupName={setSetupName}
-                saveSetup={saveSetup}
-            />
+            {/* <SaveDesignModal
+                modalVisible={savePageModalVisible}
+                setModalVisible={setSavePageModalVisible}
+                //pageName={pageName}
+                //setPageName={setPageName}
+                savePage={savePage}
+            /> */}
         </Modal>
     );
 };

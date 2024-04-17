@@ -34,11 +34,27 @@ const useLoadPageData = (pageId, setComponents, setBackgroundImage) => {
       }
     };
 
+    const validatePagesData = async () => {
+      let storedPagesJson = await AsyncStorage.getItem('@pages');
+      let storedPages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
+      
+      // Correct any page ids that are arrays rather than strings
+      storedPages = storedPages.map(page => ({
+          ...page,
+          id: Array.isArray(page.id) ? page.id[0] : page.id
+      }));
+  
+      await AsyncStorage.setItem('@pages', JSON.stringify(storedPages));
+    };
+
     // Call the function to load page data
     loadPageData();
 
     // Call the function to request permissions
     requestPermissions();
+
+    // validate the page data
+    validatePagesData();
   }, [pageId, setComponents, setBackgroundImage]);
 };
 

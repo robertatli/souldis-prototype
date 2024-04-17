@@ -5,7 +5,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DraggableFlatList from 'react-native-draggable-flatlist';
-import { useLocalSearchParams, Link } from 'expo-router';
+import { useLocalSearchParams, useGlobalSearchParams, Link } from 'expo-router';
 
 
 // import styles
@@ -25,19 +25,26 @@ import ButtonConfigOverlayModal from '../../../modals/ButtonConfigOverlayModal.j
 
 
 export default function App() {
-  const { flowId, pageId } = useLocalSearchParams();  // Extracting pageId from the URL parameters
+  const { flowId, pageId: pageIdArray } = useLocalSearchParams();  // Extracting pageId from the URL parameters
+  const pageId = Array.isArray(pageIdArray) ? pageIdArray[0] : pageIdArray;
+  // const glob = useGlobalSearchParams();
+  // const local = useLocalSearchParams();
+
+  // console.log("Local:", local, "Global:", glob); //  this is for debug purposes
 
   const [components, setComponents] = useState([]);
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [saveSetupModalVisible, setSaveSetupModalVisible] = useState(false);
-  const [setupName, setSetupName] = useState('');
-  const [savedSetups, setSavedSetups] = useState([]);
+  // const [savePageModalVisible, setSavePageModalVisible] = useState(false);
+  // const [pageName, setPageName] = useState('');
+  const [savedPages, setSavedPages] = useState([]);
   const [currentButtonId, setCurrentButtonId] = useState(null);
   const [configOverlayVisible, setConfigOverlayVisible] = useState(false);
   const [buttonConfigs, setButtonConfigs] = useState({});
   const [hapticNodes, setHapticNodes] = useState({});
 
+   // Use the custom hook to load page data and handle permissions
+   useLoadPageData(pageId, setComponents, setBackgroundImage);
 
   const HapticNodeItem = ({ item, drag, isActive, onValueChange }) => {
     // Assuming your `item` has a 'label' and 'value' that corresponds to the haptic feedback
@@ -121,99 +128,96 @@ export default function App() {
   // Use the custom hook to load page data and handle permissions
   useLoadPageData(pageId, setComponents, setBackgroundImage);
   
-//   useEffect(() => {
-//     const loadPageData = async () => {
-//       const storedPages = await AsyncStorage.getItem('@pages');
-//       if (storedPages) {
-//         const pages = JSON.parse(storedPages);
-//         const currentPage = pages.find(p => p.id === pageId);
-//         if (currentPage) {
-//           setComponents(currentPage.components);
-//           setBackgroundImage(currentPage.backgroundImageUri);
-//           // set other state specific to the page
-//         }
-//       }
-//     }
+  const savePage = async () => {
+    // Fetch the existing list of pages
+    const storedPagesJson = await AsyncStorage.getItem('@pages');
+    let pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
+    console.log("pages: ", pages);
+    
+    // Find the index of the current page using `pageId`
+    console.log("page Id: ", pageId);
+    const pageIndex = pages.findIndex(p => p.id === pageId);
+    console.log("page Index: ", pageIndex);
+    if (pageIndex !== -1) {
+      // Update the existing page data
+      pages[pageIndex] = {
+        ...pages[pageIndex], // Preserve existing data
+        components: components, // Update components
+        backgroundImageUri: backgroundImage ? backgroundImage.uri : null // Update background image
+      };
 
-//     if (Platform.OS !== 'web') {
-//       try {
-//         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-//         if (status !== 'granted') {
-//           alert('Sorry, we need camera roll permissions to make this work!');
-//         }
-//         } catch (e) {
-//           console.error('Failed to request media library permissions', e);
-//         }
-//       }
-//     };
-
-//     loadPageData();
-// }, [pageId]);
-
-  // useEffect(() => {
-  //   loadSavedSetups();
-  //   (async () => {
-  //     if (Platform.OS !== 'web') {
-  //       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  //       if (status !== 'granted') {
-  //         alert('Sorry, we need camera roll permissions to make this work!');
-  //       }
-  //     }
-  //   })();
-  // }, []);
-
-  const saveSetup = async () => {
-    const newSetup = {
-      name: setupName || `Setup ${new Date().toISOString()}`,
-      components,
-      backgroundImageUri: backgroundImage ? backgroundImage.uri : '',
-    };
-    // Attempt to load existing setups, or initialize an empty array if none are found
-    const existingSetupsJson = await AsyncStorage.getItem('@setups');
-    const existingSetups = existingSetupsJson ? JSON.parse(existingSetupsJson) : [];
-    const updatedSetups = [...existingSetups, newSetup];
-    try {
-      await AsyncStorage.setItem('@setups', JSON.stringify(updatedSetups));
-      setSavedSetups(updatedSetups); // Update the local state to reflect the new list of setups
-      setModalVisible(false); // Optionally close the modal
-      alert('Setup saved successfully!');
-    } catch (e) {
-      console.log(e);
-      alert('Failed to save setup.');
-    }
-  };  
-
-  // Function to load the list of saved setups from AsyncStorage
-  const loadSavedSetups = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem('@setups');
-      if (jsonValue != null) {
-        setSavedSetups(JSON.parse(jsonValue));
+      // Save the updated pages array back to storage
+      try {
+        await AsyncStorage.setItem('@pages', JSON.stringify(pages));
+        alert('Page updated successfully!');
+      } catch (e) {
+        console.error('Failed to update page', e);
+        alert('Failed to update page.');
       }
-    } catch (e) {
-      console.log(e);
-      alert('Failed to load saved setups.');
+    } else {
+      // This case should not normally occur since the page should exist
+      alert('Page not found!');
     }
   };
 
-  // This function remains mostly unchanged but will be called when a user selects a setup to load
-  const loadSetup = (setup) => {
-    setComponents(setup.components);
-    setBackgroundImage(setup.backgroundImageUri ? { uri: setup.backgroundImageUri } : null);
-    setModalVisible(false); // Close the modal after loading a setup
-  };
 
-  const deleteSetup = async (name) => {
-    const filteredSetups = savedSetups.filter(setup => setup.name !== name);
-    setSavedSetups(filteredSetups); // Update the local state
+  // const savePage = async () => {
+  //   const newPage = {
+  //     id: pageId,
+  //     name: pageName || `Page ${new Date().toISOString()}`,
+  //     components,
+  //     backgroundImageUri: backgroundImage ? backgroundImage.uri : null,
+  //   };
+  
+  //   const storedPagesJson = await AsyncStorage.getItem('@pages');
+  //   let pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
+  //   const pageIndex = pages.findIndex(p => p.id === pageId);
+  //   if (pageIndex !== -1) {
+  //     pages[pageIndex] = newPage;  // Update existing page
+  //   } else {
+  //     pages.push(newPage);  // Add new page
+  //   }
+  
+  //   try {
+  //     await AsyncStorage.setItem('@pages', JSON.stringify(pages));
+  //     alert('Page saved successfully!');
+  //   } catch (e) {
+  //     console.error('Failed to save page', e);
+  //     alert('Failed to save page.');
+  //   }
+  // };
+  
+
+
+  const loadPage = async () => {
+    const storedPagesJson = await AsyncStorage.getItem('@pages');
+    const pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
+    const currentPage = pages.find(p => p.id === pageId);
+    if (currentPage) {
+      setComponents(currentPage.components);
+      setBackgroundImage(currentPage.backgroundImageUri ? { uri: currentPage.backgroundImageUri } : null);
+    } else {
+      alert('Page not found');
+    }
+  };
+  
+
+
+  const deletePage = async (id) => {
+    const storedPagesJson = await AsyncStorage.getItem('@pages');
+    let pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
+    const filteredPages = pages.filter(p => p.id !== id);
+    
     try {
-      await AsyncStorage.setItem('@setups', JSON.stringify(filteredSetups)); // Update AsyncStorage
-      alert('Setup deleted successfully!');
+      await AsyncStorage.setItem('@pages', JSON.stringify(filteredPages));
+      alert('Page deleted successfully!');
     } catch (e) {
-      console.log(e);
-      alert('Failed to delete setup.');
+      console.error('Failed to delete page', e);
+      alert('Failed to delete page.');
     }
   };
+  
+
   
   const clearScreen = () => {
     console.log('Clearing screen...');
@@ -281,14 +285,14 @@ export default function App() {
       }
     }
 
-    const setupName = buttonConfigs[id];
-    if (setupName) {
-      const setup = savedSetups.find(s => s.name === setupName);
-      if (setup) {
-        loadSetup(setup);
+    const pageName = buttonConfigs[id];
+    if (pageName) {
+      const page = savedPages.find(s => s.name === pageName);
+      if (page) {
+        loadPage(page);
       }
     } else {
-      console.log(`Button ${id} pressed without a specific setup configured.`);
+      console.log(`Button ${id} pressed without a specific page configured.`);
     }
   };
 
@@ -309,20 +313,20 @@ export default function App() {
           handleAddComponent={handleAddComponent}
           pickImage={pickImage}
           clearScreen={clearScreen}
-          setSaveSetupModalVisible={setSaveSetupModalVisible}
-          savedSetups={savedSetups}
-          loadSetup={loadSetup}
-          deleteSetup={deleteSetup}
-          setupName={setupName}
-          setSetupName={setSetupName}
-          saveSetup={saveSetup}
-          saveSetupModalVisible={saveSetupModalVisible}
+          // setSavePageModalVisible={setSavePageModalVisible}
+          savedPages={savedPages}
+          loadPage={loadPage}
+          deletePage={deletePage}
+          // pageName={pageName}
+          // setPageName={setPageName}
+          savePage={savePage}
+          // savePageModalVisible={savePageModalVisible}
           flowId={flowId}
       />
       <ButtonConfigOverlayModal
           visible={configOverlayVisible}
           onClose={() => setConfigOverlayVisible(false)}
-          savedSetups={savedSetups}
+          savedPages={savedPages}
           currentButtonId={currentButtonId}
           buttonConfigs={buttonConfigs}
           setButtonConfigs={setButtonConfigs}

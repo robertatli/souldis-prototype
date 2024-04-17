@@ -7,7 +7,7 @@ import styles from '../styles/stylesIndex';
 const ButtonConfigOverlayModal = ({
     visible,
     onClose,
-    savedSetups,
+    savedPages,
     currentButtonId,
     buttonConfigs,
     setButtonConfigs,
@@ -24,7 +24,7 @@ const ButtonConfigOverlayModal = ({
                 <View style={styles.modalView}>
                     <Text>Button Configuration</Text>
                     <Dropdown
-                        savedSetups={savedSetups}
+                        savedPages={savedPages}
                         currentButtonId={currentButtonId}
                         buttonConfigs={buttonConfigs}
                         onConfigChange={(id, selectedSetup) => {

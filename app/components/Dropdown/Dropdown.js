@@ -2,8 +2,8 @@
 import React from 'react';
 import RNPickerSelect from 'react-native-picker-select';
 
-const Dropdown = ({ savedSetups, currentButtonId, buttonConfigs, onConfigChange }) => {
-  const items = savedSetups.map((setup) => ({
+const Dropdown = ({ savedPages, currentButtonId, buttonConfigs, onConfigChange }) => {
+  const items = savedPages.map((setup) => ({
       label: setup.name,
       value: setup.name,
   }));
@@ -44,7 +44,7 @@ const Dropdown = ({ savedSetups, currentButtonId, buttonConfigs, onConfigChange 
           onValueChange={handleValueChange}
           items={items}
           value={buttonConfigs[currentButtonId]}
-          placeholder={{ label: "Select a setup...", value: null }}
+          placeholder={{ label: "Select a page...", value: null }}
           style={customPickerStyles}
           useNativeAndroidPickerStyle={false}
       />

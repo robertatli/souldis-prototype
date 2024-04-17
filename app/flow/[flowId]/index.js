@@ -27,16 +27,36 @@ const FlowOverview = () => {
     }, [flowId]);
 
     // Add a new page
-    const handleAddPage = () => {
+    const handleAddPage = async () => {
+        const newPageId = `page_${Date.now()}`;
         const newPage = {
-            id: `page_${Date.now()}`,
+            id: newPageId,
             name: `New Page ${pages.length + 1}`,
-            components: []
+            components: [],
+            backgroundImageUri: null // Initial background image set to null or default
         };
+    
+        // Update the pages list for the flow
         const updatedPages = [...pages, newPage];
         setPages(updatedPages);
-        updateFlowInStorage(updatedPages);
+        await updateFlowInStorage(updatedPages);
+    
+        // Additionally, save the new page in the @pages storage
+        const storedPagesJson = await AsyncStorage.getItem('@pages');
+        const storedPages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
+
+        storedPages.push(newPage);
+        console.log("Stored Pages after: " + JSON.stringify(storedPages, null, 2));
+    
+        try {
+            await AsyncStorage.setItem('@pages', JSON.stringify(storedPages));
+        } catch (e) {
+            console.error('Failed to create new page in @pages', e);
+            alert('Failed to create new page.');
+        }
     };
+    
+    
 
     // Update the flow in AsyncStorage
     const updateFlowInStorage = async (updatedPages) => {
