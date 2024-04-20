@@ -31,9 +31,25 @@ const MainMenuModal = ({
         >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    <TouchableOpacity style={styles.modalButton} onPress={handleAddComponent}>
+                    {/* <TouchableOpacity style={styles.modalButton} onPress={handleAddComponent}>
+                        <Text>Add Button</Text>
+                    </TouchableOpacity> */}
+                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Button')}>
                         <Text>Add Button</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Radio')}>
+                        <Text>Add Radio</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Checkbox')}>
+                        <Text>Add Checkbox</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Text')}>
+                        <Text>Add Text</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('TextInput')}>
+                        <Text>Add TextInput</Text>
+                    </TouchableOpacity>
+
                     
                     <TouchableOpacity style={styles.modalButton} onPress={pickImage}>
                         <Text>Set Background</Text>

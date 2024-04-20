@@ -17,6 +17,7 @@ import Dropdown from '../../../components/Dropdown/Dropdown.js';
 import HapticDropdown from '../../../components/HapticDropdown/HapticDropdown.js';
 import ButtonComponent from '../../../components/ButtonComponent/ButtonComponent.js';
 import useLoadPageData from '../../../components/useLoadPageData/useLoadPageData.js';
+import DynamicComponent from '../../../components/DynamicComponent/DynamicComponent.js';
 
 // import modals
 //import SaveDesignModal from '../../modals/SaveDesignModal.js';
@@ -135,8 +136,8 @@ export default function App() {
   
 
 
-  // Use the custom hook to load page data and handle permissions
-  useLoadPageData(pageId, setComponents, setBackgroundImage);
+  // // Use the custom hook to load page data and handle permissions
+  // useLoadPageData(pageId, setComponents, setBackgroundImage);
   
   const savePage = async () => {
     // Fetch the existing list of pages
@@ -227,14 +228,43 @@ export default function App() {
   };
 
 
-  const handleAddComponent = () => {
-    const newComponent = {
-      type: 'Button',
-      id: Date.now(),
-      position: { x: 0, y: 0 },
+  // const handleAddComponent = () => {
+  //   const newComponent = {
+  //     type: 'Button',
+  //     id: Date.now(),
+  //     position: { x: 0, y: 0 },
+  //   };
+  //   setComponents([...components, newComponent]);
+  // };
+
+  const handleAddComponent = (type) => {
+    const baseComponent = {
+        id: Date.now(),
+        position: { x: 0, y: 0 },
+        type: type,
     };
-    setComponents([...components, newComponent]);
-  };
+
+    switch (type) {
+        case 'Button':
+            setComponents([...components, {...baseComponent}]);
+            break;
+        case 'Radio':
+            setComponents([...components, {...baseComponent, selected: false}]); // Example additional property
+            break;
+        case 'Checkbox':
+            setComponents([...components, {...baseComponent, checked: false}]);
+            break;
+        case 'Text':
+            setComponents([...components, {...baseComponent, text: 'New Text'}]);
+            break;
+        case 'TextInput':
+            setComponents([...components, {...baseComponent, value: ''}]);
+            break;
+        default:
+            console.log('Unknown type');
+      }
+    };
+
 
   const onButtonPress = async (id) => {
 
@@ -320,7 +350,7 @@ export default function App() {
           setButtonConfigs={setButtonConfigs}
           ButtonConfigurationComponent={<ButtonConfiguration />}
       />
-        {components.map((component) => (
+        {/* {components.map((component) => (
           <ButtonComponent
             key={component.id}
             id={component.id}
@@ -329,7 +359,17 @@ export default function App() {
             initialPosition={component.position}
             onPositionChange={handlePositionChange}
           />
+        ))} */}
+        {components.map((component) => (
+          <DynamicComponent
+              key={component.id}
+              component={component}
+              onPress={onButtonPress}
+              onLongPress={onButtonLongPress}
+              onPositionChange={handlePositionChange}
+          />
         ))}
+
       </ImageBackground>
     </GestureHandlerRootView>
   );
