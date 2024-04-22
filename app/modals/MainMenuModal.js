@@ -5,10 +5,13 @@ import styles from '../styles/stylesIndex';
 import { Link } from 'expo-router';
 
 import SaveDesignModal from './SaveDesignModal';
+import ComponentsMenuModal from './ComponentsMenuModal';
 
 const MainMenuModal = ({
     modalVisible,
     setModalVisible,
+    componentsPageModalVisible,
+    setComponentsPageModalVisible,
     handleAddComponent,
     pickImage,
     clearScreen,
@@ -34,7 +37,10 @@ const MainMenuModal = ({
                     {/* <TouchableOpacity style={styles.modalButton} onPress={handleAddComponent}>
                         <Text>Add Button</Text>
                     </TouchableOpacity> */}
-                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Button')}>
+                    <TouchableOpacity style={styles.modalButton} onPress={() => setComponentsPageModalVisible(true)}>
+                        <Text>Add Component</Text>
+                    </TouchableOpacity>
+                    {/* <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Button')}>
                         <Text>Add Button</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Radio')}>
@@ -48,7 +54,7 @@ const MainMenuModal = ({
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('TextInput')}>
                         <Text>Add TextInput</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
 
                     
                     <TouchableOpacity style={styles.modalButton} onPress={pickImage}>
@@ -92,6 +98,11 @@ const MainMenuModal = ({
                 //setPageName={setPageName}
                 savePage={savePage}
             /> */}
+                <ComponentsMenuModal 
+                    modalVisible={componentsPageModalVisible}
+                    setModalVisible={setComponentsPageModalVisible}
+                    handleAddComponent={handleAddComponent}
+                />
         </Modal>
     );
 };

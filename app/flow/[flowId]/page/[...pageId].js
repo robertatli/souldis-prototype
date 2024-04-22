@@ -36,6 +36,7 @@ export default function App() {
   const [components, setComponents] = useState([]);
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [componentsPageModalVisible, setComponentsPageModalVisible] = useState(false);
   // const [savePageModalVisible, setSavePageModalVisible] = useState(false);
   // const [pageName, setPageName] = useState('');
   const [savedPages, setSavedPages] = useState([]);
@@ -328,6 +329,8 @@ export default function App() {
       <MainMenuModal 
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
+          componentsPageModalVisible={componentsPageModalVisible}
+          setComponentsPageModalVisible={setComponentsPageModalVisible}
           handleAddComponent={handleAddComponent}
           pickImage={pickImage}
           clearScreen={clearScreen}

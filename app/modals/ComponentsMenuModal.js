@@ -3,7 +3,11 @@ import React from 'react';
 import { Modal, View, Text, TouchableOpacity } from 'react-native';
 import styles from '../styles/stylesIndex';
 
-const ComponentsMenuModal = ({ modalVisible, setModalVisible }) => {
+const ComponentsMenuModal = ({ 
+    modalVisible, 
+    setModalVisible,
+    handleAddComponent
+ }) => {
     return (
         <Modal
             animationType="slide"
@@ -15,10 +19,22 @@ const ComponentsMenuModal = ({ modalVisible, setModalVisible }) => {
                 <View style={styles.modalView}>
                     {/* Add your components menu content here */}
                     <Text>Components Menu</Text>
-                    <TouchableOpacity style={styles.modalButton} onPress={() => console.log('Button pressed')}>
-                        <Text>Button</Text>
+                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Button')}>
+                        <Text>Add Button</Text>
                     </TouchableOpacity>
-                    {/* Add more components/buttons as needed */}
+                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Radio')}>
+                        <Text>Add Radio</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Checkbox')}>
+                        <Text>Add Checkbox</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Text')}>
+                        <Text>Add Text</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('TextInput')}>
+                        <Text>Add TextInput</Text>
+                    </TouchableOpacity>
+
                     <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false)}>
                         <Text>Close</Text>
                     </TouchableOpacity>
