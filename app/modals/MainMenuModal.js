@@ -1,72 +1,68 @@
-import React, { useState } from 'react';
+// MainMenuModal.js
+import React from 'react';
 import { Modal, View, Text, TouchableOpacity, FlatList, Button } from 'react-native';
 import styles from '../styles/stylesIndex';
+import { Link } from 'expo-router';
 
-import ComponentsMenuModal from './ComponentsMenuModal';
+import SaveDesignModal from './SaveDesignModal';
 
-const MainMenuModal = ({ modalVisible, setModalVisible }) => {
-    const [componentsMenuVisible, setComponentsMenuVisible] = useState(false);
-
-    const openComponentsMenu = () => {
-        setComponentsMenuVisible(true);
-    };
-
-    const handleAddComponent = () => {
-        // Add functionality to handle adding components
-        console.log('Add component functionality here');
-    };
-
-    const pickImage = () => {
-        // Add functionality to pick an image
-        console.log('Pick image functionality here');
-    };
-
-    const clearScreen = () => {
-        // Add functionality to clear the screen
-        console.log('Clear screen functionality here');
-    };
-
-    const savePage = () => {
-        // Add functionality to save the current setup
-        console.log('Save page functionality here');
-    };
-
-    const loadPage = (item) => {
-        // Add functionality to load a saved page
-        console.log(`Load page: ${item.name}`);
-    };
-
-    const deletePage = (name) => {
-        // Add functionality to delete a saved page
-        console.log(`Delete page: ${name}`);
-    };
-
-    const savedPages = []; // Add your saved pages data here
-
-    const flowId = ''; // Add your flow ID here
-
+const MainMenuModal = ({
+    modalVisible,
+    setModalVisible,
+    handleAddComponent,
+    pickImage,
+    clearScreen,
+    // setSavePageModalVisible,
+    savedPages,
+    loadPage,
+    deletePage,
+    // pageName, 
+    // setPageName, 
+    savePage,
+    // savePageModalVisible,
+    flowId
+}) => {
     return (
         <Modal
             animationType="slide"
             transparent={true}
             visible={modalVisible}
-            onRequestClose={() => setModalVisible(false)}
+            onRequestClose={() => setModalVisible(!modalVisible)}
         >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    {/* Existing functionality */}
-                    <TouchableOpacity style={styles.modalButton} onPress={handleAddComponent}>
-                        <Text>Add Component</Text>
+                    {/* <TouchableOpacity style={styles.modalButton} onPress={handleAddComponent}>
+                        <Text>Add Button</Text>
+                    </TouchableOpacity> */}
+                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Button')}>
+                        <Text>Add Button</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Radio')}>
+                        <Text>Add Radio</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Checkbox')}>
+                        <Text>Add Checkbox</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Text')}>
+                        <Text>Add Text</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('TextInput')}>
+                        <Text>Add TextInput</Text>
+                    </TouchableOpacity>
+
+                    
                     <TouchableOpacity style={styles.modalButton} onPress={pickImage}>
                         <Text>Set Background</Text>
                     </TouchableOpacity>
+
                     <TouchableOpacity style={styles.modalButton} onPress={clearScreen}>
                         <Text>Clear The Screen</Text>
                     </TouchableOpacity>
+
                     <TouchableOpacity style={styles.modalButton} onPress={savePage}>
                         <Text>Save Current Setup</Text>
                     </TouchableOpacity>
+                
                     <FlatList
                         data={savedPages}
                         keyExtractor={(item) => item.name}
@@ -83,24 +79,19 @@ const MainMenuModal = ({ modalVisible, setModalVisible }) => {
                             </View>
                         )}
                     />
-                    <Button title="Go back to Flow" onPress={() => {}} />
-                    {/* New functionality to open ComponentsMenuModal */}
-                    <TouchableOpacity style={styles.modalButton} onPress={openComponentsMenu}>
-                        <Text>Open Components Menu</Text>
-                    </TouchableOpacity>
-                    {/* Close modal button */}
-                    <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false)}>
-                        <Text>Close</Text>
-                    </TouchableOpacity>
+                    <Link href={`/flow/${flowId}`} asChild>
+                        <Button title="Go back to Flow" onPress={() => {}} />
+                    </Link>
+                    <Button title="Close" onPress={() => setModalVisible(false)} />
                 </View>
             </View>
-            {/* Render ComponentsMenuModal if componentsMenuVisible is true */}
-            {componentsMenuVisible && (
-                <ComponentsMenuModal
-                    modalVisible={componentsMenuVisible}
-                    setModalVisible={setComponentsMenuVisible}
-                />
-            )}
+            {/* <SaveDesignModal
+                modalVisible={savePageModalVisible}
+                setModalVisible={setSavePageModalVisible}
+                //pageName={pageName}
+                //setPageName={setPageName}
+                savePage={savePage}
+            /> */}
         </Modal>
     );
 };

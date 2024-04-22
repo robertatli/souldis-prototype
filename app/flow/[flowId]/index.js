@@ -46,7 +46,7 @@ const FlowOverview = () => {
         const storedPages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
 
         storedPages.push(newPage);
-        console.log("Stored Pages after: " + JSON.stringify(storedPages, null, 2));
+        //console.log("Stored Pages after: " + JSON.stringify(storedPages, null, 2));
     
         try {
             await AsyncStorage.setItem('@pages', JSON.stringify(storedPages));

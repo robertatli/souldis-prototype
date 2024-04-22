@@ -17,6 +17,7 @@ import Dropdown from '../../../components/Dropdown/Dropdown.js';
 import HapticDropdown from '../../../components/HapticDropdown/HapticDropdown.js';
 import ButtonComponent from '../../../components/ButtonComponent/ButtonComponent.js';
 import useLoadPageData from '../../../components/useLoadPageData/useLoadPageData.js';
+import DynamicComponent from '../../../components/DynamicComponent/DynamicComponent.js';
 
 // import modals
 //import SaveDesignModal from '../../modals/SaveDesignModal.js';
@@ -124,26 +125,43 @@ export default function App() {
     );
   }; 
 
+  const handlePositionChange = (componentId, newPosition) => {
+    setComponents(currentComponents => currentComponents.map(comp => {
+      if (comp.id === componentId) {
+        return { ...comp, position: newPosition };
+      }
+      return comp;
+    }));
+  };
+  
 
-  // Use the custom hook to load page data and handle permissions
-  useLoadPageData(pageId, setComponents, setBackgroundImage);
+
+  // // Use the custom hook to load page data and handle permissions
+  // useLoadPageData(pageId, setComponents, setBackgroundImage);
   
   const savePage = async () => {
     // Fetch the existing list of pages
     const storedPagesJson = await AsyncStorage.getItem('@pages');
     let pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
-    console.log("pages: ", pages);
+
+    // Find the page object using `pageId`
+    const currentPage = pages.find(p => p.id === pageId);
+
+    if (currentPage) {
+        console.log("Current page: ", JSON.stringify(currentPage, null, 2));
+    } else {
+        console.log("No page found with id:", pageId);
+    }
+    
     
     // Find the index of the current page using `pageId`
-    console.log("page Id: ", pageId);
     const pageIndex = pages.findIndex(p => p.id === pageId);
-    console.log("page Index: ", pageIndex);
     if (pageIndex !== -1) {
       // Update the existing page data
       pages[pageIndex] = {
         ...pages[pageIndex], // Preserve existing data
         components: components, // Update components
-        backgroundImageUri: backgroundImage ? backgroundImage.uri : null // Update background image
+        backgroundImageUri: backgroundImage ? backgroundImage : null // Update background image
       };
 
       // Save the updated pages array back to storage
@@ -160,36 +178,7 @@ export default function App() {
     }
   };
 
-
-  // const savePage = async () => {
-  //   const newPage = {
-  //     id: pageId,
-  //     name: pageName || `Page ${new Date().toISOString()}`,
-  //     components,
-  //     backgroundImageUri: backgroundImage ? backgroundImage.uri : null,
-  //   };
-  
-  //   const storedPagesJson = await AsyncStorage.getItem('@pages');
-  //   let pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
-  //   const pageIndex = pages.findIndex(p => p.id === pageId);
-  //   if (pageIndex !== -1) {
-  //     pages[pageIndex] = newPage;  // Update existing page
-  //   } else {
-  //     pages.push(newPage);  // Add new page
-  //   }
-  
-  //   try {
-  //     await AsyncStorage.setItem('@pages', JSON.stringify(pages));
-  //     alert('Page saved successfully!');
-  //   } catch (e) {
-  //     console.error('Failed to save page', e);
-  //     alert('Failed to save page.');
-  //   }
-  // };
-  
-
-
-  const loadPage = async () => {
+  const loadPage = async () => { // maybe should only be in flowOverview
     const storedPagesJson = await AsyncStorage.getItem('@pages');
     const pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
     const currentPage = pages.find(p => p.id === pageId);
@@ -203,7 +192,7 @@ export default function App() {
   
 
 
-  const deletePage = async (id) => {
+  const deletePage = async (id) => { // maybe should only be in flowOverview
     const storedPagesJson = await AsyncStorage.getItem('@pages');
     let pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
     const filteredPages = pages.filter(p => p.id !== id);
@@ -239,14 +228,43 @@ export default function App() {
   };
 
 
-  const handleAddComponent = () => {
-    const newComponent = {
-      type: 'Button',
-      id: Date.now(),
-      position: { x: 0, y: 0 },
+  // const handleAddComponent = () => {
+  //   const newComponent = {
+  //     type: 'Button',
+  //     id: Date.now(),
+  //     position: { x: 0, y: 0 },
+  //   };
+  //   setComponents([...components, newComponent]);
+  // };
+
+  const handleAddComponent = (type) => {
+    const baseComponent = {
+        id: Date.now(),
+        position: { x: 0, y: 0 },
+        type: type,
     };
-    setComponents([...components, newComponent]);
-  };
+
+    switch (type) {
+        case 'Button':
+            setComponents([...components, {...baseComponent}]);
+            break;
+        case 'Radio':
+            setComponents([...components, {...baseComponent, selected: false}]); // Example additional property
+            break;
+        case 'Checkbox':
+            setComponents([...components, {...baseComponent, checked: false}]);
+            break;
+        case 'Text':
+            setComponents([...components, {...baseComponent, text: 'New Text'}]);
+            break;
+        case 'TextInput':
+            setComponents([...components, {...baseComponent, value: ''}]);
+            break;
+        default:
+            console.log('Unknown type');
+      }
+    };
+
 
   const onButtonPress = async (id) => {
 
@@ -315,8 +333,8 @@ export default function App() {
           clearScreen={clearScreen}
           // setSavePageModalVisible={setSavePageModalVisible}
           savedPages={savedPages}
-          loadPage={loadPage}
-          deletePage={deletePage}
+          loadPage={loadPage} // maybe should only be in flowOverview
+          deletePage={deletePage} // maybe should only be in flowOverview
           // pageName={pageName}
           // setPageName={setPageName}
           savePage={savePage}
@@ -332,14 +350,26 @@ export default function App() {
           setButtonConfigs={setButtonConfigs}
           ButtonConfigurationComponent={<ButtonConfiguration />}
       />
-        {components.map((component) => (
+        {/* {components.map((component) => (
           <ButtonComponent
             key={component.id}
             id={component.id}
             onPress={onButtonPress}
             onLongPress={onButtonLongPress}
+            initialPosition={component.position}
+            onPositionChange={handlePositionChange}
+          />
+        ))} */}
+        {components.map((component) => (
+          <DynamicComponent
+              key={component.id}
+              component={component}
+              onPress={onButtonPress}
+              onLongPress={onButtonLongPress}
+              onPositionChange={handlePositionChange}
           />
         ))}
+
       </ImageBackground>
     </GestureHandlerRootView>
   );
