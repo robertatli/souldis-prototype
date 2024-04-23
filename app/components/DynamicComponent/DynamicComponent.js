@@ -29,12 +29,12 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange })
 
     const singleTap = Gesture.Tap()
         .onEnd(() => {
-            runOnJS(onPress)(component.id);
+            return runOnJS(onPress)(component.id, component.type);
         });
 
     const longPressGesture = Gesture.LongPress()
         .onEnd(() => {
-            runOnJS(onLongPress)(component.id);
+            runOnJS(onLongPress)(component.id, component.type);
         });
 
     const gesture = Gesture.Race(panGesture, singleTap, longPressGesture);

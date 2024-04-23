@@ -3,9 +3,9 @@ import React from 'react';
 import RNPickerSelect from 'react-native-picker-select';
 
 const Dropdown = ({ savedPages, currentButtonId, buttonConfigs, onConfigChange }) => {
-  const items = savedPages.map((setup) => ({
-      label: setup.name,
-      value: setup.name,
+  const items = savedPages.map((page) => ({
+      label: page.name,
+      value: page.id,
   }));
 
   const customPickerStyles = {

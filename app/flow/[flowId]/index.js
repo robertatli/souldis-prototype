@@ -31,6 +31,7 @@ const FlowOverview = () => {
         const newPageId = `page_${Date.now()}`;
         const newPage = {
             id: newPageId,
+            flowId: flowId,
             name: `New Page ${pages.length + 1}`,
             components: [],
             backgroundImageUri: null // Initial background image set to null or default

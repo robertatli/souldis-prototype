@@ -19,13 +19,13 @@ const SaveDesignModal = ({
         >
             <View style={styles.centeredModalView}>
                 <View style={styles.saveModalView}>
-                    <Text style={styles.modalTitle}>Give your Design a name</Text>
+                    {/* <Text style={styles.modalTitle}>Give your Design a name</Text>
                     <TextInput
                         placeholder="Enter Setup Name"
                         value={pageName}
                         onChangeText={setPageName}
                         style={styles.modalTextInput}
-                    />
+                    /> */}
                     <TouchableOpacity style={styles.modalSaveButton} onPress={savePage}>
                         <Text style={styles.modalButtonText}>Save Design</Text>
                     </TouchableOpacity>
