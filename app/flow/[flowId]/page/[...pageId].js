@@ -178,33 +178,33 @@ export default function App() {
     }
   };
 
-  const loadPage = async () => { // maybe should only be in flowOverview
-    const storedPagesJson = await AsyncStorage.getItem('@pages');
-    const pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
-    const currentPage = pages.find(p => p.id === pageId);
-    if (currentPage) {
-      setComponents(currentPage.components);
-      setBackgroundImage(currentPage.backgroundImageUri ? { uri: currentPage.backgroundImageUri } : null);
-    } else {
-      alert('Page not found');
-    }
-  };
+  // const loadPage = async () => { // maybe should only be in flowOverview
+  //   const storedPagesJson = await AsyncStorage.getItem('@pages');
+  //   const pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
+  //   const currentPage = pages.find(p => p.id === pageId);
+  //   if (currentPage) {
+  //     setComponents(currentPage.components);
+  //     setBackgroundImage(currentPage.backgroundImageUri ? { uri: currentPage.backgroundImageUri } : null);
+  //   } else {
+  //     alert('Page not found');
+  //   }
+  // };
   
 
 
-  const deletePage = async (id) => { // maybe should only be in flowOverview
-    const storedPagesJson = await AsyncStorage.getItem('@pages');
-    let pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
-    const filteredPages = pages.filter(p => p.id !== id);
+  // const deletePage = async (id) => { // maybe should only be in flowOverview
+  //   const storedPagesJson = await AsyncStorage.getItem('@pages');
+  //   let pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
+  //   const filteredPages = pages.filter(p => p.id !== id);
     
-    try {
-      await AsyncStorage.setItem('@pages', JSON.stringify(filteredPages));
-      alert('Page deleted successfully!');
-    } catch (e) {
-      console.error('Failed to delete page', e);
-      alert('Failed to delete page.');
-    }
-  };
+  //   try {
+  //     await AsyncStorage.setItem('@pages', JSON.stringify(filteredPages));
+  //     alert('Page deleted successfully!');
+  //   } catch (e) {
+  //     console.error('Failed to delete page', e);
+  //     alert('Failed to delete page.');
+  //   }
+  // };
   
 
   
@@ -266,56 +266,102 @@ export default function App() {
     };
 
 
-  const onButtonPress = async (id) => {
+  const onButtonPress = async (id, componentType) => {
+    console.log(`Button with ID ${id} pressed`);
+    console.log(`Component type: ${componentType}`);
+    switch (componentType) {
+      case 'Button':
+        const hapticSequence = hapticNodes[id] || [];
+  
+        for (let node of hapticSequence) {
+          switch (node.value) {
+            case 'selectionAsync':
+              console.log('HapticSelection');
+              await Haptics.selectionAsync();
+              break;
+            case 'notificationAsyncSuccess':
+              console.log('HapticSuccess');
+              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+              break;
+            case 'notificationAsyncError':
+              console.log('HapticError');
+              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+              break;
+            case 'notificationAsyncWarning':
+              console.log('HapticWarning');
+              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+              break;
+            case 'impactAsyncLight':
+              console.log('HapticLight');
+              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              break;
+            case 'impactAsyncMedium':
+              console.log('HapticMedium');
+              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              break;
+            case 'impactAsyncHeavy':
+              console.log('HapticHeavy');
+              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+              break;
+          }
+        }
 
-    const hapticSequence = hapticNodes[id] || [];
+        const nextPageId = buttonConfigs[id]; // Assuming buttonConfigs stores page IDs now
+
+        if (nextPageId) {
+            // Use the `router.navigate` or `router.push` method to navigate to the selected page
+            router.push({ pathname: `/flow/${flowId}/page/${nextPageId}` });
+        } else {
+            console.log(`Button ${id} pressed without a specific page configured.`);
+        }
+        break;
+      case 'Radio':
+        break;
+      case 'Checkbox':
+        break;
+      case 'Text':
+        break;
+      case 'TextInput':
+        break;
+      default:
+          return null;
+    }
+
     
-    for (let node of hapticSequence) {
-      switch (node.value) {
-        case 'selectionAsync':
-          console.log('HapticSelection');
-          await Haptics.selectionAsync();
-          break;
-        case 'notificationAsyncSuccess':
-          console.log('HapticSuccess');
-          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-          break;
-        case 'notificationAsyncError':
-          console.log('HapticError');
-          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-          break;
-        case 'notificationAsyncWarning':
-          console.log('HapticWarning');
-          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-          break;
-        case 'impactAsyncLight':
-          console.log('HapticLight');
-          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          break;
-        case 'impactAsyncMedium':
-          console.log('HapticMedium');
-          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-          break;
-        case 'impactAsyncHeavy':
-          console.log('HapticHeavy');
-          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-          break;
-      }
-    }
-
-    const nextPageId = buttonConfigs[id]; // Assuming buttonConfigs stores page IDs now
-
-    if (nextPageId) {
-        // Use the `router.navigate` or `router.push` method to navigate to the selected page
-        router.push({ pathname: `/flow/${flowId}/page/${nextPageId}` });
-    } else {
-        console.log(`Button ${id} pressed without a specific page configured.`);
-    }
   };
 
-  const onButtonLongPress = (buttonId) => {
-    setCurrentButtonId(buttonId);
-    setConfigOverlayVisible(true);
+  const onButtonLongPress = (buttonId, componentType) => {
+    switch (componentType) {
+        case 'Button':
+          setCurrentButtonId(buttonId);
+          console.log(componentType, 'long press detected');
+          setConfigOverlayVisible(true);
+          break;
+        case 'Radio':
+          setCurrentButtonId(buttonId);
+          console.log(componentType, 'long press detected');
+          setConfigOverlayVisible(true);
+          break;
+        case 'Checkbox':
+          setCurrentButtonId(buttonId);
+          console.log(componentType, 'long press detected');
+          setConfigOverlayVisible(true);
+          break;
+        case 'Text':
+          setCurrentButtonId(buttonId);
+          console.log(componentType, 'long press detected');
+          setConfigOverlayVisible(true);
+          break;
+        case 'TextInput': // open config for this component type
+          setCurrentButtonId(buttonId);
+          console.log(componentType, 'long press detected');
+          setConfigOverlayVisible(true);
+          break;
+        default:
+            return null;
+    }
+    // setCurrentButtonId(buttonId);
+    // setConfigOverlayVisible(true);
   };
 
   return (
@@ -331,9 +377,9 @@ export default function App() {
           pickImage={pickImage}
           clearScreen={clearScreen}
           // setSavePageModalVisible={setSavePageModalVisible}
-          savedPages={savedPages}
-          loadPage={loadPage} // maybe should only be in flowOverview
-          deletePage={deletePage} // maybe should only be in flowOverview
+          // savedPages={savedPages}
+          // loadPage={loadPage} // maybe should only be in flowOverview
+          // deletePage={deletePage} // maybe should only be in flowOverview
           // pageName={pageName}
           // setPageName={setPageName}
           savePage={savePage}

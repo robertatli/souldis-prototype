@@ -29,39 +29,12 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange })
 
     const singleTap = Gesture.Tap()
         .onEnd(() => {
-            switch (component.type) {
-                case 'Button':
-                    return runOnJS(onPress)(component.id);
-                case 'Radio':
-                    return runOnJS(onPress)(component.id);
-                case 'Checkbox':
-                    return runOnJS(onPress)(component.id);
-                case 'Text':
-                    return runOnJS(onPress)(component.id);
-                case 'TextInput':
-                    return runOnJS(onPress)(component.id);
-                default:
-                    return null;
-            }
+            return runOnJS(onPress)(component.id, component.type);
         });
 
     const longPressGesture = Gesture.LongPress()
         .onEnd(() => {
-            // switch (component.type) {
-            //     case 'Button':
-            //         return runOnJS(onLongPress)(component.id);
-            //     case 'Radio':
-            //         return runOnJS(onLongPress)(component.id);
-            //     case 'Checkbox':
-            //         return runOnJS(onLongPress)(component.id);
-            //     case 'Text':
-            //         return runOnJS(onLongPress)(component.id);
-            //     case 'TextInput':
-            //         return runOnJS(onLongPress)(component.id);
-            //     default:
-            //         return null;
-            // }
-            runOnJS(onLongPress)(component.id);
+            runOnJS(onLongPress)(component.id, component.type);
         });
 
     const gesture = Gesture.Race(panGesture, singleTap, longPressGesture);

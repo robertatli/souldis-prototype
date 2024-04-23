@@ -13,9 +13,9 @@ const MainMenuModal = ({
     pickImage,
     clearScreen,
     // setSavePageModalVisible,
-    savedPages,
-    loadPage,
-    deletePage,
+    // savedPages,
+    // loadPage,
+    // deletePage,
     // pageName, 
     // setPageName, 
     savePage,
@@ -63,7 +63,7 @@ const MainMenuModal = ({
                         <Text>Save Current Setup</Text>
                     </TouchableOpacity>
                 
-                    <FlatList
+                    {/* <FlatList
                         data={savedPages}
                         keyExtractor={(item) => item.name}
                         renderItem={({ item }) => (
@@ -78,7 +78,7 @@ const MainMenuModal = ({
                                 </TouchableOpacity>
                             </View>
                         )}
-                    />
+                    /> */}
                     <Link href={`/flow/${flowId}`} asChild>
                         <Button title="Go back to Flow" onPress={() => {}} />
                     </Link>
