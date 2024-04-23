@@ -10,6 +10,8 @@ const Dropdown = ({ savedPages, currentButtonId, buttonConfigs, onConfigChange }
 
   const customPickerStyles = {
     inputIOS: {
+      width: '100%', // Ensure full width or a fixed width as needed
+      height: 40, // Standardize height
       fontSize: 16,
       paddingVertical: 8,
       borderWidth: 1,

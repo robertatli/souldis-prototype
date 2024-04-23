@@ -43,6 +43,7 @@ export default function App() {
   const [configOverlayVisible, setConfigOverlayVisible] = useState(false);
   const [buttonConfigs, setButtonConfigs] = useState({});
   const [hapticNodes, setHapticNodes] = useState({});
+  const [selectedHaptic, setSelectedHaptic] = useState(null);
 
    // Use the custom hook to load page data and handle permissions
    useLoadPageData(pageId, setComponents, setBackgroundImage, setSavedPages, flowId);
@@ -55,10 +56,11 @@ export default function App() {
         disabled={isActive}
         style={[
           styles.nodeItem,
-          { backgroundColor: isActive ? "red" : "lightgrey" },
+          { backgroundColor: isActive ? "lightgrey" : "#f0f0f0" },
         ]}
       >
         <HapticDropdown
+          selectedHaptic={selectedHaptic}
           onHapticChange={(value) => {
             onValueChange(item.key, value); // Update based on item.key
           }}
@@ -71,6 +73,7 @@ export default function App() {
   const HapticNodeList = ({ nodes, setNodes }) => {
     const renderItem = ({ item, drag, isActive }) => {
       const onValueChange = (key, newValue) => {
+        setSelectedHaptic(newValue);
         console.log(`Haptic feedback for ${key} changed to ${newValue}`);
         const updatedNodes = nodes.map((node) => 
           node.key === key ? { ...node, value: newValue } : node
