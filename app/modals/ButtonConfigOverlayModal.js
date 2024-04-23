@@ -12,9 +12,7 @@ const ButtonConfigOverlayModal = ({
     buttonConfigs,
     setButtonConfigs,
     ButtonConfigurationComponent,  // Passing the whole component as a prop if it depends on context or has hooks
-    flowId
 }) => {
-    const filteredPages = savedPages.filter(page => page.flowId === flowId);
     return (
         <Modal
             visible={visible}

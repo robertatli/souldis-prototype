@@ -5,7 +5,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DraggableFlatList from 'react-native-draggable-flatlist';
-import { useLocalSearchParams, useGlobalSearchParams, Link } from 'expo-router';
+import { useLocalSearchParams, useGlobalSearchParams, Link, router } from 'expo-router';
 
 
 // import styles
@@ -45,7 +45,7 @@ export default function App() {
   const [hapticNodes, setHapticNodes] = useState({});
 
    // Use the custom hook to load page data and handle permissions
-   useLoadPageData(pageId, setComponents, setBackgroundImage);
+   useLoadPageData(pageId, setComponents, setBackgroundImage, setSavedPages, flowId);
 
   const HapticNodeItem = ({ item, drag, isActive, onValueChange }) => {
     // Assuming your `item` has a 'label' and 'value' that corresponds to the haptic feedback
@@ -303,14 +303,13 @@ export default function App() {
       }
     }
 
-    const pageName = buttonConfigs[id];
-    if (pageName) {
-      const page = savedPages.find(s => s.name === pageName);
-      if (page) {
-        loadPage(page);
-      }
+    const nextPageId = buttonConfigs[id]; // Assuming buttonConfigs stores page IDs now
+
+    if (nextPageId) {
+        // Use the `router.navigate` or `router.push` method to navigate to the selected page
+        router.push({ pathname: `/flow/${flowId}/page/${nextPageId}` });
     } else {
-      console.log(`Button ${id} pressed without a specific page configured.`);
+        console.log(`Button ${id} pressed without a specific page configured.`);
     }
   };
 

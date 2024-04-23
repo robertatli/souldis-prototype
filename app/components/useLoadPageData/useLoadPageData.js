@@ -3,7 +3,7 @@ import { Platform, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 
-const useLoadPageData = (pageId, setComponents, setBackgroundImage) => {
+const useLoadPageData = (pageId, setComponents, setBackgroundImage, setSavedPages, flowId) => {
   useEffect(() => {
     // Function to load the page data
     const loadPageData = async () => {
@@ -47,6 +47,12 @@ const useLoadPageData = (pageId, setComponents, setBackgroundImage) => {
       await AsyncStorage.setItem('@pages', JSON.stringify(storedPages));
     };
 
+    const fetchPages = async () => {
+      const storedPagesJson = await AsyncStorage.getItem('@pages');
+      const pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
+      setSavedPages(pages.filter(p => p.flowId === flowId));
+    };
+
     // Call the function to load page data
     loadPageData();
 
@@ -55,7 +61,9 @@ const useLoadPageData = (pageId, setComponents, setBackgroundImage) => {
 
     // validate the page data
     validatePagesData();
-  }, [pageId, setComponents, setBackgroundImage]);
+
+    fetchPages();
+  }, [pageId, setComponents, setBackgroundImage, flowId]);
 };
 
 export default useLoadPageData;
