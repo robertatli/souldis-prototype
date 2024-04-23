@@ -153,13 +153,22 @@ const styles = StyleSheet.create({
       padding: 10,
     },
     nodeItem: {
-      flexDirection: 'row',
+      width: 300,
+      flexDirection: 'column',
       alignItems: 'center',
       padding: 10,
       marginVertical: 5,
       backgroundColor: '#f0f0f0',
       borderRadius: 4,
     },
+    itemContainer: {
+      padding: 10,
+      marginHorizontal: 10,
+      marginVertical: 5,
+      borderRadius: 5,
+      borderWidth: 1,
+      borderColor: '#ccc',
+    }
   });
   
 export default styles;

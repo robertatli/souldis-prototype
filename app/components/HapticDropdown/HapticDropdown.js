@@ -3,7 +3,9 @@ import React from 'react';
 import RNPickerSelect from 'react-native-picker-select';
 import Icon from 'react-native-vector-icons/Feather';
 
-const HapticDropdown = ({ onHapticChange }) => {
+import styles from '../../styles/stylesIndex';
+
+const HapticDropdown = ({ selectedHaptic, onHapticChange }) => {
     // Options for the haptic feedback types
     const hapticOptions = [
         { label: 'Selection', value: 'selectionAsync' },
@@ -15,47 +17,48 @@ const HapticDropdown = ({ onHapticChange }) => {
         { label: 'Heavy Impact', value: 'impactAsyncHeavy' },
     ];
 
-    // Custom style for the picker
-    const customPickerStyles = {
-      inputIOS: {
-          fontSize: 16,
-          paddingVertical: 8,
-          borderWidth: 1,
-          borderColor: 'gray',
-          borderRadius: 4,
-          color: 'black',
-          textAlign: 'center',
-          paddingRight: 30, // to ensure the text is never behind the icon
-      },
-      inputAndroid: {
-          fontSize: 16,
-          paddingHorizontal: 10,
-          paddingVertical: 8,
-          borderWidth: 0.5,
-          borderColor: 'purple',
-          borderRadius: 8,
-          color: 'black',
-          paddingRight: 30, // to ensure the text is never behind the icon
-      },
-      placeholder: {
-          color: 'gray',
-          fontSize: 16,
-      },
-      iconContainer: {
-          top: 10,
-          right: 15,
-      },
-  };
+    // // Custom style for the picker
+    // const customPickerStyles = {
+    //     inputIOS: {
+    //         width: '75%', // Ensure full width or a fixed width as needed
+    //         fontSize: 16,
+    //         paddingVertical: 8,
+    //         borderWidth: 1,
+    //         borderColor: 'gray',
+    //         borderRadius: 4,
+    //         color: 'black',
+    //         textAlign: 'left',
+    //     },
+    //     inputAndroid: {
+    //         width: '75%', // Ensure full width or a fixed width as needed
+    //         fontSize: 16,
+    //         paddingVertical: 8,
+    //         borderWidth: 1,
+    //         borderColor: 'gray',
+    //         borderRadius: 8,
+    //         color: 'black',
+    //         textAlign: 'left',
+    //     },
+    //     placeholder: {
+    //         color: 'gray',
+    //         fontSize: 16,
+    //         textAlign: 'left',
+    //     },
+    //     iconContainer: {
+    //         top: 0,
+    //         right: 88,
+    //     },
+    // };
 
     return (
-      <RNPickerSelect
-          onValueChange={onHapticChange}
-          items={hapticOptions}
-          placeholder={{ label: "Select a haptic...", value: null }}
-          style={customPickerStyles}
-          useNativeAndroidPickerStyle={false} // this is to ensure consistent styling across platforms
-          Icon={() => <Icon name="chevron-down" size={20} color="gray" />}
-      />
+        <RNPickerSelect
+            onValueChange={onHapticChange}
+            items={hapticOptions}
+            value={selectedHaptic}
+            placeholder={{ label: "Select a haptic...", value: null }}
+            useNativeAndroidPickerStyle={false} // this is to ensure consistent styling across platforms
+            Icon={() => <Icon name="chevron-down" size={20} color="gray" />}
+        />
     );
   };
 
