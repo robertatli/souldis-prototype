@@ -24,6 +24,10 @@ import DynamicComponent from '../../../components/DynamicComponent/DynamicCompon
 //import SaveDesignModal from '../../modals/SaveDesignModal.js';
 import MainMenuModal from '../../../modals/MainMenuModal.js';
 import ButtonConfigOverlayModal from '../../../modals/ButtonConfigOverlayModal.js';
+import RadioConfigOverlayModal from '../../../modals/RadioConfigOverlayModal.js';
+import CheckboxConfigOverlayModal from '../../../modals/CheckboxConfigOverlayModal.js';
+import TextConfigOverlayModal from '../../../modals/TextConfigOverlayModal.js';
+import TextInputConfigOverlayModal from '../../../modals/TextInputConfigOverlayModal.js';
 
 
 export default function App() {
@@ -43,6 +47,10 @@ export default function App() {
   const [savedPages, setSavedPages] = useState([]);
   const [currentButtonId, setCurrentButtonId] = useState(null);
   const [configOverlayVisible, setConfigOverlayVisible] = useState(false);
+  const [radioConfigOverlayVisible, setRadioConfigOverlayVisible] = useState(false);
+  const [checkboxConfigOverlayVisible, setCheckboxConfigOverlayVisible] = useState(false);
+  const [textConfigOverlayVisible, setTextConfigOverlayVisible] = useState(false);
+  const [textInputConfigOverlayVisible, setTextInputConfigOverlayVisible] = useState(false);
   const [buttonConfigs, setButtonConfigs] = useState({});
   const [hapticNodes, setHapticNodes] = useState({});
   const [selectedHaptic, setSelectedHaptic] = useState(null);
@@ -354,22 +362,22 @@ export default function App() {
         case 'Radio':
           setCurrentButtonId(buttonId);
           console.log(componentType, 'long press detected');
-          setConfigOverlayVisible(true);
+          setRadioConfigOverlayVisible(true);
           break;
         case 'Checkbox':
           setCurrentButtonId(buttonId);
           console.log(componentType, 'long press detected');
-          setConfigOverlayVisible(true);
+          setCheckboxConfigOverlayVisible(true);
           break;
         case 'Text':
           setCurrentButtonId(buttonId);
           console.log(componentType, 'long press detected');
-          setConfigOverlayVisible(true);
+          setTextConfigOverlayVisible(true);
           break;
         case 'TextInput': // open config for this component type
           setCurrentButtonId(buttonId);
           console.log(componentType, 'long press detected');
-          setConfigOverlayVisible(true);
+          setTextInputConfigOverlayVisible(true);
           break;
         default:
             return null;
@@ -410,6 +418,22 @@ export default function App() {
           buttonConfigs={buttonConfigs}
           setButtonConfigs={setButtonConfigs}
           ButtonConfigurationComponent={<ButtonConfiguration />}
+      />
+      <RadioConfigOverlayModal
+        visible={radioConfigOverlayVisible}
+        onClose={() => setRadioConfigOverlayVisible(false)}
+      />
+      <CheckboxConfigOverlayModal
+        visible={checkboxConfigOverlayVisible}
+        onClose={() => setCheckboxConfigOverlayVisible(false)}
+      />
+      <TextConfigOverlayModal
+        visible={textConfigOverlayVisible}
+        onClose={() => setTextConfigOverlayVisible(false)}
+      />
+      <TextInputConfigOverlayModal
+        visible={textInputConfigOverlayVisible}
+        onClose={() => setTextInputConfigOverlayVisible(false)}
       />
         {/* {components.map((component) => (
           <ButtonComponent

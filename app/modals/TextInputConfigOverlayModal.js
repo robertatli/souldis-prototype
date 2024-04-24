@@ -4,7 +4,7 @@ import { Modal, View, Text, Button } from 'react-native';
 import Dropdown from '../components/Dropdown/Dropdown';
 import styles from '../styles/stylesIndex';
 
-const CheckboxConfigOverlayModal = ({
+const TextConfigOverlayModal = ({
     visible,
     onClose,
 }) => {
@@ -17,7 +17,7 @@ const CheckboxConfigOverlayModal = ({
         >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    <Text>Checkbox Configuration</Text>
+                    <Text>TextInput Configuration</Text>
                     <Button title="Save" onPress={onClose} />
                 </View>
             </View>
@@ -25,4 +25,4 @@ const CheckboxConfigOverlayModal = ({
     );
 };
 
-export default CheckboxConfigOverlayModal;
+export default TextConfigOverlayModal;
