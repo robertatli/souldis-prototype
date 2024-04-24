@@ -6,6 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { useLocalSearchParams, useGlobalSearchParams, Link, router } from 'expo-router';
+import Checkbox from 'react-native-ui-lib/checkbox.js'
 
 
 // import styles
@@ -270,10 +271,10 @@ export default function App() {
     };
 
 
-  const onButtonPress = async (id, componentType) => {
-    console.log(`Button with ID ${id} pressed`);
-    console.log(`Component type: ${componentType}`);
-    switch (componentType) {
+  const onButtonPress = async (component) => {
+    console.log(`Button with ID ${component.id} pressed`);
+    console.log(`Component type: ${component.type}`);
+    switch (component.type) {
       case 'Button':
         const hapticSequence = hapticNodes[id] || [];
   
@@ -310,18 +311,27 @@ export default function App() {
           }
         }
 
-        const nextPageId = buttonConfigs[id]; // Assuming buttonConfigs stores page IDs now
+        const nextPageId = buttonConfigs[component.id]; // Assuming buttonConfigs stores page IDs now
 
         if (nextPageId) {
             // Use the `router.navigate` or `router.push` method to navigate to the selected page
             router.push({ pathname: `/flow/${flowId}/page/${nextPageId}` });
         } else {
-            console.log(`Button ${id} pressed without a specific page configured.`);
+            console.log(`Button ${component.id} pressed without a specific page configured.`);
         }
         break;
       case 'Radio':
         break;
       case 'Checkbox':
+        setComponents(prevComponents => {
+            return prevComponents.map(prevComponent => {
+                if (prevComponent.id === component.id) {
+                    return { ...prevComponent, checked: !prevComponent.checked };
+                } else {
+                    return prevComponent;
+                }
+            });
+        });
         break;
       case 'Text':
         break;

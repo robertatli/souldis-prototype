@@ -4,6 +4,7 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useSharedValue } from 'react-native-reanimated';
 import { runOnJS } from 'react-native-reanimated';
+import Checkbox from 'react-native-ui-lib/checkbox'
 
 const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange }) => {
     const positionX = useSharedValue(component.position.x);
@@ -29,7 +30,7 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange })
 
     const singleTap = Gesture.Tap()
         .onEnd(() => {
-            return runOnJS(onPress)(component.id, component.type);
+            return runOnJS(onPress)(component);
         });
 
     const longPressGesture = Gesture.LongPress()
@@ -54,7 +55,7 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange })
                 return <Text>Radio {component.id}</Text>;
             case 'Checkbox':
                 // Additional logic for Checkbox if needed
-                return <Switch value={component.checked} onValueChange={() => {}} />;
+                return <Checkbox value={component.checked} onValueChange={() => {}} />;
             case 'Text':
                 return <Text>{component.text}</Text>;
             case 'TextInput':
