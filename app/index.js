@@ -3,6 +3,9 @@ import { View, Button, Text, FlatList, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Link } from 'expo-router';
 
+import styles from './styles/stylesIndex';
+
+
 const Home = () => {
     const [flows, setFlows] = useState([]);
 
@@ -29,15 +32,15 @@ const Home = () => {
     };
 
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <View style={styles.flowList}>
             <Button title="Create New Flow" onPress={handleCreateFlow} />
             <FlatList
                 data={flows}
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
                     <Link href={`/flow/${item.id}`} asChild>
-                        <TouchableOpacity>
-                            <Text>{item.name}</Text>
+                        <TouchableOpacity style={styles.flowName}>
+                            <Text style={styles.flowText}>{item.name}</Text>
                         </TouchableOpacity>
                     </Link>
                 )}

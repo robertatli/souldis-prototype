@@ -168,6 +168,24 @@ const styles = StyleSheet.create({
       borderRadius: 5,
       borderWidth: 1,
       borderColor: '#ccc',
+    },
+    flowName: {
+      textColor: 'navy',
+      padding: 10,
+      marginVertical: 10,
+      backgroundColor: 'lightgray',
+      alignItems: 'center',
+      height: 100,
+      borderRadius: 5,
+    },
+    flowText: {
+      fontSize: 18,
+    },
+    flowList: {
+      flex: 1,
+      height: '100%',
+      width: '80%',
+      alignSelf: 'center',
     }
   });
   
