@@ -7,7 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { useLocalSearchParams, useGlobalSearchParams, Link, router } from 'expo-router';
 import Checkbox from 'react-native-ui-lib/checkbox.js'
-
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 // import styles
 import styles from '../../../styles/stylesIndex.js';
@@ -30,6 +31,7 @@ import TextConfigOverlayModal from '../../../modals/TextConfigOverlayModal.js';
 import TextInputConfigOverlayModal from '../../../modals/TextInputConfigOverlayModal.js';
 
 
+
 export default function App() {
   const { flowId, pageId: pageIdArray } = useLocalSearchParams();  // Extracting pageId from the URL parameters
   const pageId = Array.isArray(pageIdArray) ? pageIdArray[0] : pageIdArray;
@@ -42,6 +44,7 @@ export default function App() {
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [componentsPageModalVisible, setComponentsPageModalVisible] = useState(false);
+  const [currentComponent, setCurrentComponent] = useState(null);
   // const [savePageModalVisible, setSavePageModalVisible] = useState(false);
   // const [pageName, setPageName] = useState('');
   const [savedPages, setSavedPages] = useState([]);
@@ -118,7 +121,7 @@ export default function App() {
     // Function to add a new haptic node
     const addHapticNode = () => {
       const newNode = {
-        key: `${Date.now()}`, // Unique key for the new node
+        key: `${uuidv4()}`, // Unique key for the new node
         value: 'selectionAsync', // Default value or some initial value
       };
       const currentNodes = hapticNodes[currentButtonId] || [];
@@ -250,11 +253,22 @@ export default function App() {
   //   setComponents([...components, newComponent]);
   // };
 
+  const onLabelChange = (id, newLabel) => {
+    setComponents(prevComponents => prevComponents.map(comp => {
+        if (comp.id === id) {
+            return { ...comp, label: newLabel };
+        }
+        return comp;
+    }));
+  };
+
+
   const handleAddComponent = (type) => {
     const baseComponent = {
-        id: Date.now(),
+        id: uuidv4(),
         position: { x: 0, y: 0 },
         type: type,
+        label: type === 'Text' ? 'New Text' : type,
     };
 
     switch (type) {
@@ -352,31 +366,36 @@ export default function App() {
     
   };
 
-  const onButtonLongPress = (buttonId, componentType) => {
-    switch (componentType) {
+  const onButtonLongPress = (component) => {
+    switch (component.type) {
         case 'Button':
-          setCurrentButtonId(buttonId);
-          console.log(componentType, 'long press detected');
+          setCurrentButtonId(component.id);
+          setCurrentComponent(component);
+          console.log(component.type, 'long press detected');
           setConfigOverlayVisible(true);
           break;
         case 'Radio':
-          setCurrentButtonId(buttonId);
-          console.log(componentType, 'long press detected');
+          setCurrentButtonId(component.id);
+          setCurrentComponent(component);
+          console.log(component.type, 'long press detected');
           setRadioConfigOverlayVisible(true);
           break;
         case 'Checkbox':
-          setCurrentButtonId(buttonId);
-          console.log(componentType, 'long press detected');
+          setCurrentButtonId(component.id);
+          setCurrentComponent(component);
+          console.log(component.type, 'long press detected');
           setCheckboxConfigOverlayVisible(true);
           break;
         case 'Text':
-          setCurrentButtonId(buttonId);
-          console.log(componentType, 'long press detected');
+          setCurrentButtonId(component.id);
+          setCurrentComponent(component);
+          console.log(component.type, 'long press detected');
           setTextConfigOverlayVisible(true);
           break;
         case 'TextInput': // open config for this component type
-          setCurrentButtonId(buttonId);
-          console.log(componentType, 'long press detected');
+          setCurrentButtonId(component.id);
+          setCurrentComponent(component);
+          console.log(component.type, 'long press detected');
           setTextInputConfigOverlayVisible(true);
           break;
         default:
@@ -418,22 +437,32 @@ export default function App() {
           buttonConfigs={buttonConfigs}
           setButtonConfigs={setButtonConfigs}
           ButtonConfigurationComponent={<ButtonConfiguration />}
+          component={currentComponent}
+          onLabelChange={onLabelChange}
       />
       <RadioConfigOverlayModal
         visible={radioConfigOverlayVisible}
         onClose={() => setRadioConfigOverlayVisible(false)}
+        component={currentComponent}
+        onLabelChange={onLabelChange}
       />
       <CheckboxConfigOverlayModal
         visible={checkboxConfigOverlayVisible}
         onClose={() => setCheckboxConfigOverlayVisible(false)}
+        component={currentComponent}
+        onLabelChange={onLabelChange}
       />
       <TextConfigOverlayModal
         visible={textConfigOverlayVisible}
         onClose={() => setTextConfigOverlayVisible(false)}
+        component={currentComponent}
+        onLabelChange={onLabelChange}
       />
       <TextInputConfigOverlayModal
         visible={textInputConfigOverlayVisible}
         onClose={() => setTextInputConfigOverlayVisible(false)}
+        component={currentComponent}
+        onLabelChange={onLabelChange}
       />
         {/* {components.map((component) => (
           <ButtonComponent
@@ -452,6 +481,7 @@ export default function App() {
               onPress={onButtonPress}
               onLongPress={onButtonLongPress}
               onPositionChange={handlePositionChange}
+              onLabelChange={onLabelChange}
           />
         ))}
 

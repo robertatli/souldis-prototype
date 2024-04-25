@@ -6,7 +6,7 @@ import { useSharedValue } from 'react-native-reanimated';
 import { runOnJS } from 'react-native-reanimated';
 import Checkbox from 'react-native-ui-lib/checkbox'
 
-const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange }) => {
+const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, onLabelChange }) => {
     const positionX = useSharedValue(component.position.x);
     const positionY = useSharedValue(component.position.y);
 
@@ -35,7 +35,7 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange })
 
     const longPressGesture = Gesture.LongPress()
         .onEnd(() => {
-            runOnJS(onLongPress)(component.id, component.type);
+            runOnJS(onLongPress)(component);
         });
 
     const gesture = Gesture.Race(panGesture, singleTap, longPressGesture);
@@ -46,24 +46,23 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange })
         };
       });
 
-    const renderComponentContent = () => {
+      const renderComponentContent = () => {
         switch (component.type) {
             case 'Button':
-                return <Button title={`Button ${component.id}`} onPress={() => {}} />;
+                return <Button title={component.label || `Button ${component.id}`} onPress={() => {}} />;
             case 'Radio':
-                // Additional logic for Radio if needed
-                return <Text>Radio {component.id}</Text>;
+                return <Text>{component.label || `Radio ${component.id}`}</Text>;
             case 'Checkbox':
-                // Additional logic for Checkbox if needed
                 return <Checkbox value={component.checked} onValueChange={() => {}} />;
             case 'Text':
-                return <Text>{component.text}</Text>;
+                return <Text>{component.label || `Text ${component.id}`}</Text>;
             case 'TextInput':
-                return <TextInput value={component.value} onChangeText={() => {}} />;
+                return <TextInput value={component.label || ''} onChangeText={(text) => runOnJS(onLabelChange)(component.id, text)} />;
             default:
                 return null;
         }
     };
+    
 
     return (
         <GestureDetector gesture={gesture}>

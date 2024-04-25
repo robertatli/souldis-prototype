@@ -1,6 +1,5 @@
-// ConfigOverlayModal.js
-import React from 'react';
-import { Modal, View, Text, Button } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Modal, View, Text, Button, TextInput } from 'react-native';
 import Dropdown from '../components/Dropdown/Dropdown';
 import styles from '../styles/stylesIndex';
 
@@ -11,8 +10,25 @@ const ButtonConfigOverlayModal = ({
     currentButtonId,
     buttonConfigs,
     setButtonConfigs,
-    ButtonConfigurationComponent,  // Passing the whole component as a prop if it depends on context or has hooks
+    ButtonConfigurationComponent,
+    component,
+    onLabelChange,
 }) => {
+    const [label, setLabel] = useState(component?.label || '');
+
+    useEffect(() => {
+        if (component) {
+            setLabel(component.label || '');
+        }
+    }, [component]);
+
+    const handleSave = () => {
+        if (component) {
+            onLabelChange(component.id, label);
+        }
+        onClose();
+    };
+
     return (
         <Modal
             visible={visible}
@@ -23,6 +39,11 @@ const ButtonConfigOverlayModal = ({
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
                     <Text>Button Configuration</Text>
+                    <TextInput
+                        value={label}
+                        onChangeText={setLabel}
+                        placeholder="Enter component label"
+                    />
                     <Dropdown
                         savedPages={savedPages}
                         currentButtonId={currentButtonId}
@@ -32,7 +53,7 @@ const ButtonConfigOverlayModal = ({
                         }}
                     />
                     {ButtonConfigurationComponent}
-                    <Button title="Save" onPress={onClose} />
+                    <Button title="Save" onPress={handleSave} />
                 </View>
             </View>
         </Modal>
