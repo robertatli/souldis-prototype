@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Button, ImageBackground, Platform, Text, Modal, FlatList, TouchableOpacity, TextInput } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DraggableFlatList from 'react-native-draggable-flatlist';
@@ -366,6 +366,17 @@ export default function App() {
     
   };
 
+  const onGestureEvent = (event) => {
+    if (event.nativeEvent.translationX > -100 && event.nativeEvent.velocityX < 0) { // Customize trigger distance and ensure swipe direction is right
+        setModalVisible(true);
+      }
+  };
+
+  const onHandlerStateChange = (event) => {
+      if (event.nativeEvent.state === State.END) {
+      }
+  };
+
   const onButtonLongPress = (component) => {
     switch (component.type) {
         case 'Button':
@@ -407,85 +418,88 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
-      <View style={styles.menuButtonContainer}>
-        <Button title="Menu" onPress={() => setModalVisible(true)} color="white" />
-      </View>
-      <MainMenuModal 
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          componentsPageModalVisible={componentsPageModalVisible}
-          setComponentsPageModalVisible={setComponentsPageModalVisible}
-          handleAddComponent={handleAddComponent}
-          pickImage={pickImage}
-          clearScreen={clearScreen}
-          // setSavePageModalVisible={setSavePageModalVisible}
-          // savedPages={savedPages}
-          // loadPage={loadPage} // maybe should only be in flowOverview
-          // deletePage={deletePage} // maybe should only be in flowOverview
-          // pageName={pageName}
-          // setPageName={setPageName}
-          savePage={savePage}
-          // savePageModalVisible={savePageModalVisible}
-          flowId={flowId}
-      />
-      <ButtonConfigOverlayModal
-          visible={configOverlayVisible}
-          onClose={() => setConfigOverlayVisible(false)}
-          savedPages={savedPages}
-          currentButtonId={currentButtonId}
-          buttonConfigs={buttonConfigs}
-          setButtonConfigs={setButtonConfigs}
-          ButtonConfigurationComponent={<ButtonConfiguration />}
-          component={currentComponent}
-          onLabelChange={onLabelChange}
-      />
-      <RadioConfigOverlayModal
-        visible={radioConfigOverlayVisible}
-        onClose={() => setRadioConfigOverlayVisible(false)}
-        component={currentComponent}
-        onLabelChange={onLabelChange}
-      />
-      <CheckboxConfigOverlayModal
-        visible={checkboxConfigOverlayVisible}
-        onClose={() => setCheckboxConfigOverlayVisible(false)}
-        component={currentComponent}
-        onLabelChange={onLabelChange}
-      />
-      <TextConfigOverlayModal
-        visible={textConfigOverlayVisible}
-        onClose={() => setTextConfigOverlayVisible(false)}
-        component={currentComponent}
-        onLabelChange={onLabelChange}
-      />
-      <TextInputConfigOverlayModal
-        visible={textInputConfigOverlayVisible}
-        onClose={() => setTextInputConfigOverlayVisible(false)}
-        component={currentComponent}
-        onLabelChange={onLabelChange}
-      />
-        {/* {components.map((component) => (
-          <ButtonComponent
-            key={component.id}
-            id={component.id}
-            onPress={onButtonPress}
-            onLongPress={onButtonLongPress}
-            initialPosition={component.position}
-            onPositionChange={handlePositionChange}
+      <PanGestureHandler
+        onGestureEvent={onGestureEvent}
+        onHandlerStateChange={onHandlerStateChange}>
+        <View style={{ flex: 1 }}>
+          <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
+          <MainMenuModal 
+              modalVisible={modalVisible}
+              setModalVisible={setModalVisible}
+              componentsPageModalVisible={componentsPageModalVisible}
+              setComponentsPageModalVisible={setComponentsPageModalVisible}
+              handleAddComponent={handleAddComponent}
+              pickImage={pickImage}
+              clearScreen={clearScreen}
+              // setSavePageModalVisible={setSavePageModalVisible}
+              // savedPages={savedPages}
+              // loadPage={loadPage} // maybe should only be in flowOverview
+              // deletePage={deletePage} // maybe should only be in flowOverview
+              // pageName={pageName}
+              // setPageName={setPageName}
+              savePage={savePage}
+              // savePageModalVisible={savePageModalVisible}
+              flowId={flowId}
           />
-        ))} */}
-        {components.map((component) => (
-          <DynamicComponent
-              key={component.id}
-              component={component}
-              onPress={onButtonPress}
-              onLongPress={onButtonLongPress}
-              onPositionChange={handlePositionChange}
+          <ButtonConfigOverlayModal
+              visible={configOverlayVisible}
+              onClose={() => setConfigOverlayVisible(false)}
+              savedPages={savedPages}
+              currentButtonId={currentButtonId}
+              buttonConfigs={buttonConfigs}
+              setButtonConfigs={setButtonConfigs}
+              ButtonConfigurationComponent={<ButtonConfiguration />}
+              component={currentComponent}
               onLabelChange={onLabelChange}
           />
-        ))}
+          <RadioConfigOverlayModal
+            visible={radioConfigOverlayVisible}
+            onClose={() => setRadioConfigOverlayVisible(false)}
+            component={currentComponent}
+            onLabelChange={onLabelChange}
+          />
+          <CheckboxConfigOverlayModal
+            visible={checkboxConfigOverlayVisible}
+            onClose={() => setCheckboxConfigOverlayVisible(false)}
+            component={currentComponent}
+            onLabelChange={onLabelChange}
+          />
+          <TextConfigOverlayModal
+            visible={textConfigOverlayVisible}
+            onClose={() => setTextConfigOverlayVisible(false)}
+            component={currentComponent}
+            onLabelChange={onLabelChange}
+          />
+          <TextInputConfigOverlayModal
+            visible={textInputConfigOverlayVisible}
+            onClose={() => setTextInputConfigOverlayVisible(false)}
+            component={currentComponent}
+            onLabelChange={onLabelChange}
+          />
+            {/* {components.map((component) => (
+              <ButtonComponent
+                key={component.id}
+                id={component.id}
+                onPress={onButtonPress}
+                onLongPress={onButtonLongPress}
+                initialPosition={component.position}
+                onPositionChange={handlePositionChange}
+              />
+            ))} */}
+            {components.map((component) => (
+              <DynamicComponent
+                  key={component.id}
+                  component={component}
+                  onPress={onButtonPress}
+                  onLongPress={onButtonLongPress}
+                  onPositionChange={handlePositionChange}
+                  onLabelChange={onLabelChange}
+              />
+            ))}
 
-      </ImageBackground>
+          </ImageBackground>
+        </View>
+      </PanGestureHandler>
     </GestureHandlerRootView>
   );
 }

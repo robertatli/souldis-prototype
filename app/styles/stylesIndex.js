@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: 22,
+      marginTop: 50,
     },
     modalView: {
       width: '100%',
@@ -43,14 +43,7 @@ const styles = StyleSheet.create({
       borderRadius: 20,
       padding: 35,
       alignItems: 'center',
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 4,
-      elevation: 5,
+      marginTop: 120,
     },
     modalButton: {
         backgroundColor: 'white',
@@ -63,11 +56,31 @@ const styles = StyleSheet.create({
         width: '90%',
         height: 40,
       },
+      otherModalButton: {
+        backgroundColor: '#3C3630',
+        padding: 10,
+        margin: 10,
+        borderRadius: 10,
+        alignItems: 'center',
+        borderWidth: 1,
+        width: '90%',
+        height: 40,
+      },
+      closeButton: {
+        position: 'absolute',
+        top: 0,
+        left: -30,
+        padding: 20,
+        zIndex: 1
+      },
+      otherModalText: {
+        color: 'white',
+      },
     centeredModalView: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginTop: 22,
+        marginTop: 15,
     },
     saveModalView: {
         margin: 20,

@@ -1,8 +1,11 @@
 // MainMenuModal.js
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity, FlatList, Button } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Button } from 'react-native';
 import styles from '../styles/stylesIndex';
 import { Link } from 'expo-router';
+import Modal from "react-native-modal";
+import Icon from 'react-native-vector-icons/MaterialIcons';
+
 
 import SaveDesignModal from './SaveDesignModal';
 import ComponentsMenuModal from './ComponentsMenuModal';
@@ -27,35 +30,25 @@ const MainMenuModal = ({
 }) => {
     return (
         <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => setModalVisible(!modalVisible)}
+            transparent={false}
+            animationIn="slideInRight"
+            animationOut="slideOutRight"
+            presentationStyle="overFullscreen"
+            isVisible={modalVisible}
+            useNativeDriver={true}
+            swipeDirection="right"
+            hasBackdrop={false}
+            onSwipeComplete={() => setModalVisible(false)}
+            
         >
             <View style={styles.centeredView}>
+                <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+                    <Icon name="chevron-left" size={40} color="#000" /> 
+                </TouchableOpacity>
                 <View style={styles.modalView}>
-                    {/* <TouchableOpacity style={styles.modalButton} onPress={handleAddComponent}>
-                        <Text>Add Button</Text>
-                    </TouchableOpacity> */}
                     <TouchableOpacity style={styles.modalButton} onPress={() => setComponentsPageModalVisible(true)}>
                         <Text>Add Component</Text>
                     </TouchableOpacity>
-                    {/* <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Button')}>
-                        <Text>Add Button</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Radio')}>
-                        <Text>Add Radio</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Checkbox')}>
-                        <Text>Add Checkbox</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Text')}>
-                        <Text>Add Text</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('TextInput')}>
-                        <Text>Add TextInput</Text>
-                    </TouchableOpacity> */}
-
                     
                     <TouchableOpacity style={styles.modalButton} onPress={pickImage}>
                         <Text>Set Background</Text>
@@ -65,39 +58,18 @@ const MainMenuModal = ({
                         <Text>Clear The Screen</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.modalButton} onPress={savePage}>
-                        <Text>Save Current Setup</Text>
+                    <TouchableOpacity style={styles.otherModalButton} onPress={savePage}>
+                        <Text style={styles.otherModalText}>Save Current Setup</Text>
                     </TouchableOpacity>
                 
-                    {/* <FlatList
-                        data={savedPages}
-                        keyExtractor={(item) => item.name}
-                        renderItem={({ item }) => (
-                            <View style={styles.setupItemRow}>
-                                <TouchableOpacity onPress={() => loadPage(item)}>
-                                    <Text style={styles.setupItemText} numberOfLines={1} ellipsizeMode="tail">
-                                        {item.name}
-                                    </Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.deleteButton} onPress={() => deletePage(item.name)}>
-                                    <Text style={styles.deleteButtonText}>🗑️</Text>
-                                </TouchableOpacity>
-                            </View>
-                        )}
-                    /> */}
                     <Link href={`/flow/${flowId}`} asChild>
-                        <Button title="Go back to Flow" onPress={() => {}} />
+                        <TouchableOpacity style={styles.otherModalButton} onPress={() => {}}>
+                            <Text style={styles.otherModalText}>Go back to Flow Overview</Text>
+                        </TouchableOpacity>
                     </Link>
-                    <Button title="Close" onPress={() => setModalVisible(false)} />
+                    
                 </View>
             </View>
-            {/* <SaveDesignModal
-                modalVisible={savePageModalVisible}
-                setModalVisible={setSavePageModalVisible}
-                //pageName={pageName}
-                //setPageName={setPageName}
-                savePage={savePage}
-            /> */}
                 <ComponentsMenuModal 
                     modalVisible={componentsPageModalVisible}
                     setModalVisible={setComponentsPageModalVisible}
