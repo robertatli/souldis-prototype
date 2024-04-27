@@ -9,18 +9,22 @@ const RadioConfigOverlayModal = ({
     onClose,
     component,
     onLabelChange,
+    onSaveValue,
 }) => {
     const [label, setLabel] = useState(component?.label || '');
+    const [value, setValue] = useState(component?.value || 0);
 
     useEffect(() => {
         if (component) {
             setLabel(component.label || '');
+            setValue(component.value || 0);
         }
     }, [component]);
 
     const handleSave = () => {
         if (component) {
             onLabelChange(component.id, label);
+            onSaveValue(component.id, value);
         }
         onClose();
     };
@@ -40,6 +44,14 @@ const RadioConfigOverlayModal = ({
                         onChangeText={setLabel}
                         placeholder="Enter component label"
                     />
+                    <br/>
+                    <Text>Radio Value</Text>
+                    <TextInput
+                    value={value}
+                    onChangeText={setValue}
+                    placeholder="Enter component's value"
+                    />
+                    <br/>
                     <Button title="Save" onPress={handleSave} />
                 </View>
             </View>
