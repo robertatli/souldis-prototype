@@ -7,10 +7,19 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import styles from '../../styles/stylesIndex';
 
+import FlowOverviewSettingsOverlayModal from '../../modals/FlowOverviewSettingsOverlayModal';
+
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
+
 const FlowOverview = () => {
     const { flowId } = useLocalSearchParams();
     const [pages, setPages] = useState([]);
     const [flow, setFlow] = useState(null);
+    const [flowSettingOverlayVisible, setFlowSettingOverlayVisible] = useState(false);
+    const [variables, setVariables] = useState([]);
+    const [newVariableName, setNewVariableName] = useState('');
+
 
     // Load the flow data from storage
     useEffect(() => {
@@ -21,6 +30,7 @@ const FlowOverview = () => {
             if (currentFlow) {
                 setFlow(currentFlow);
                 setPages(currentFlow.pages);
+                setVariables(currentFlow.variables);
             }
         };
         loadFlowData();
@@ -57,7 +67,48 @@ const FlowOverview = () => {
         }
     };
     
+    // Function to handle adding a new variable
+    const handleAddVariable = (varName) => {
+        const newVariable = {
+            id: uuidv4(), // Using Date.now() for simplicity
+            name: varName,
+            value: 0
+        };
+        
+        const updatedVariables = [...variables, newVariable];
+        setVariables(updatedVariables);
+        updateFlowVariablesInStorage(updatedVariables);
+        saveFlowData({ ...flow, variables: [...flow.variables, newVariable] }); // Assuming flow includes a variables array
+    };
+
+    const handleRenameVariable = (id, newName) => {
+        const updatedVariables = variables.map(variable => {
+            if (variable.id === id) {
+                return { ...variable, name: newName };
+            }
+            return variable;
+        });
+        setVariables(updatedVariables);
+        saveFlowData({ ...flow, variables: updatedVariables });
+        updateFlowVariablesInStorage(updatedVariables);
+    };
     
+    // Function to save flow data to AsyncStorage
+    const saveFlowData = async (flowData) => {
+        try {
+        const flows = await AsyncStorage.getItem('@flows');
+        let flowsArray = flows ? JSON.parse(flows) : [];
+        const flowIndex = flowsArray.findIndex(f => f.id === flowData.id);
+        if (flowIndex !== -1) {
+            flowsArray[flowIndex] = flowData;
+        } else {
+            flowsArray.push(flowData);
+        }
+        await AsyncStorage.setItem('@flows', JSON.stringify(flowsArray));
+        } catch (error) {
+        console.error('Failed to save flow data', error);
+        }
+    };
 
     // Update the flow in AsyncStorage
     const updateFlowInStorage = async (updatedPages) => {
@@ -68,6 +119,23 @@ const FlowOverview = () => {
             flowsArray[flowIndex].pages = updatedPages;
             await AsyncStorage.setItem('@flows', JSON.stringify(flowsArray));
         }
+    };
+
+    const updateFlowVariablesInStorage = async (updatedVariables) => {
+        const storedFlows = await AsyncStorage.getItem('@flows');
+        let flowsArray = storedFlows ? JSON.parse(storedFlows) : [];
+        let flowIndex = flowsArray.findIndex(f => f.id === flowId);
+        if (flowIndex !== -1) {
+            flowsArray[flowIndex].variables = updatedVariables;
+            await AsyncStorage.setItem('@flows', JSON.stringify(flowsArray));
+        }
+    };
+
+    const handleRemoveVariable = (variableId) => {
+        const updatedVariables = variables.filter(variable => variable.id !== variableId);
+        setVariables(updatedVariables);
+        updateFlowVariablesInStorage(updatedVariables);
+        saveFlowData({ ...flow, variables: updatedVariables });
     };
 
     // Handle deleting a page
@@ -106,10 +174,21 @@ const FlowOverview = () => {
                     keyExtractor={(item) => `draggable-item-${item.id}`}
                     onDragEnd={({ data }) => setPages(data)}
                 />
+                <Button title="Settings" onPress={() => setFlowSettingOverlayVisible(true)} />
                 <Link href="/" asChild>
                     <Button title="Go back" onPress={() => {}} />
                 </Link>
             </View>
+            <FlowOverviewSettingsOverlayModal
+                visible={flowSettingOverlayVisible}
+                onClose={() => setFlowSettingOverlayVisible(false)}
+                variables={variables}
+                onAddVariable={handleAddVariable}
+                onRenameVariable={handleRenameVariable}
+                newVariableName={newVariableName}
+                setNewVariableName={setNewVariableName}
+                handleRemoveVariable={handleRemoveVariable}
+            />
         </GestureHandlerRootView>
     );
 };
