@@ -58,6 +58,7 @@ export default function App() {
   const [buttonConfigs, setButtonConfigs] = useState({});
   const [hapticNodes, setHapticNodes] = useState({});
   const [selectedHaptic, setSelectedHaptic] = useState(null);
+  const [viewMode, setViewMode] = useState(false);
 
    // Use the custom hook to load page data and handle permissions
    useLoadPageData(pageId, setComponents, setBackgroundImage, setSavedPages, flowId);
@@ -441,6 +442,8 @@ export default function App() {
           savePage={savePage}
           // savePageModalVisible={savePageModalVisible}
           flowId={flowId}
+          changeViewMode={setViewMode}
+          isViewModeOn={viewMode}
       />
       <ButtonConfigOverlayModal
           visible={configOverlayVisible}
@@ -497,6 +500,7 @@ export default function App() {
               onLongPress={onButtonLongPress}
               onPositionChange={handlePositionChange}
               onLabelChange={onLabelChange}
+              viewModeIsOn={viewMode}
           />
         ))}
         </RadioGroup>
