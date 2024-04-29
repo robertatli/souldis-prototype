@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Button, Text, FlatList, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Link } from 'expo-router';
+import 'react-native-get-random-values';
+import { v4 as uuidv4 } from 'uuid';
 
 import styles from './styles/stylesIndex';
 
@@ -21,9 +23,10 @@ const Home = () => {
 
     const handleCreateFlow = async () => {
         const newFlow = {
-            id: `flow_${Date.now()}`,
+            id: `flow_${uuidv4()}`,
             name: `New Flow ${flows.length + 1}`,
-            pages: []
+            pages: [],
+            variables: []
         };
         const updatedFlows = [...flows, newFlow];
         await AsyncStorage.setItem('@flows', JSON.stringify(updatedFlows));

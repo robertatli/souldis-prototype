@@ -26,7 +26,9 @@ const MainMenuModal = ({
     // setPageName, 
     savePage,
     // savePageModalVisible,
-    flowId
+    flowId,
+    changeViewMode,
+    isViewModeOn
 }) => {
     return (
         <Modal

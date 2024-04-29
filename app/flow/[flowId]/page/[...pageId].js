@@ -29,6 +29,7 @@ import RadioConfigOverlayModal from '../../../modals/RadioConfigOverlayModal.js'
 import CheckboxConfigOverlayModal from '../../../modals/CheckboxConfigOverlayModal.js';
 import TextConfigOverlayModal from '../../../modals/TextConfigOverlayModal.js';
 import TextInputConfigOverlayModal from '../../../modals/TextInputConfigOverlayModal.js';
+import { RadioButton, RadioGroup } from 'react-native-ui-lib';
 
 
 
@@ -57,6 +58,7 @@ export default function App() {
   const [buttonConfigs, setButtonConfigs] = useState({});
   const [hapticNodes, setHapticNodes] = useState({});
   const [selectedHaptic, setSelectedHaptic] = useState(null);
+  const [viewMode, setViewMode] = useState(false);
 
    // Use the custom hook to load page data and handle permissions
    useLoadPageData(pageId, setComponents, setBackgroundImage, setSavedPages, flowId);
@@ -262,6 +264,16 @@ export default function App() {
     }));
   };
 
+  const onSaveValue = (id, newValue) => {
+    setComponents(prevComponents => prevComponents.map(comp => {
+        if (comp.id === id) {
+            return { ...comp, value: newValue };
+        }
+        return comp;
+    }));
+  };
+
+
 
   const handleAddComponent = (type) => {
     const baseComponent = {
@@ -296,6 +308,7 @@ export default function App() {
   const onButtonPress = async (component) => {
     console.log(`Button with ID ${component.id} pressed`);
     console.log(`Component type: ${component.type}`);
+    console.log(`Component value: ${component.value}`);
     switch (component.type) {
       case 'Button':
         const hapticSequence = hapticNodes[id] || [];
@@ -343,6 +356,7 @@ export default function App() {
         }
         break;
       case 'Radio':
+        
         break;
       case 'Checkbox':
         setComponents(prevComponents => {
@@ -503,3 +517,4 @@ export default function App() {
     </GestureHandlerRootView>
   );
 }
+

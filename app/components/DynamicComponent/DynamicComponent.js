@@ -4,25 +4,40 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useSharedValue } from 'react-native-reanimated';
 import { runOnJS } from 'react-native-reanimated';
-import Checkbox from 'react-native-ui-lib/checkbox'
+import Checkbox from 'react-native-ui-lib/checkbox';
+import RadioGroup from 'react-native-ui-lib/radioGroup';
+import Radio from 'react-native-ui-lib/radioButton';
+import RadioButton from 'react-native-ui-lib/radioButton';
 
-const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, onLabelChange }) => {
+const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, onLabelChange, viewModeIsOn }) => {
     const positionX = useSharedValue(component.position.x);
     const positionY = useSharedValue(component.position.y);
 
     const panGesture = Gesture.Pan()
         .onStart((event) => {
+            if (viewModeIsOn)
+            {
+                return;
+            }
             // Store initial positions at the start of the gesture
             positionX.value += event.translationX;
             positionY.value += event.translationY;
         })
         .onUpdate((event) => {
+            if (viewModeIsOn) 
+            {
+                return;
+            }
             'worklet'; // Indicates that this block should be executed on the UI thread
             // Update the position by adding the translation since the gesture started
             positionX.value = event.translationX + component.position.x;
             positionY.value = event.translationY + component.position.y;
         })
         .onEnd(() => {
+            if (viewModeIsOn) 
+            {
+                return;
+            }
             'worklet';
             // Call the callback to update the position in the parent's state
             runOnJS(onPositionChange)(component.id, { x: positionX.value, y: positionY.value });
@@ -30,11 +45,15 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, o
 
     const singleTap = Gesture.Tap()
         .onEnd(() => {
+            if (!viewModeIsOn) return;
+
             return runOnJS(onPress)(component);
         });
 
     const longPressGesture = Gesture.LongPress()
         .onEnd(() => {
+            if (viewModeIsOn) return;
+
             runOnJS(onLongPress)(component);
         });
 
@@ -51,7 +70,7 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, o
             case 'Button':
                 return <Button title={component.label || `Button ${component.id}`} onPress={() => {}} />;
             case 'Radio':
-                return <Text>{component.label || `Radio ${component.id}`}</Text>;
+                return <RadioButton label={component.label} value={component.id}/>;
             case 'Checkbox':
                 return <Checkbox value={component.checked} onValueChange={() => {}} />;
             case 'Text':

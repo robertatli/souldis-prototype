@@ -199,7 +199,24 @@ const styles = StyleSheet.create({
       height: '100%',
       width: '80%',
       alignSelf: 'center',
-    }
+    },
+    variableItem: {
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: 10,
+      marginVertical: 5,
+      backgroundColor: '#f0f0f0',
+      borderRadius: 4,
+    },
+    variableInput: {
+      height: 40,
+      width: 230,
+      margin: 1,
+      paddingLeft: 10,
+      padding: 5,
+      backgroundColor: '#d8d8d8',
+    },
   });
   
 export default styles;
