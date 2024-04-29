@@ -311,7 +311,7 @@ export default function App() {
     console.log(`Component value: ${component.value}`);
     switch (component.type) {
       case 'Button':
-        const hapticSequence = hapticNodes[id] || [];
+        const hapticSequence = hapticNodes[component.id] || [];
   
         for (let node of hapticSequence) {
           switch (node.value) {

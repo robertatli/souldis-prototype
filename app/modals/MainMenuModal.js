@@ -33,6 +33,8 @@ const MainMenuModal = ({
         setModalVisible(false);
     };
 
+    const Spacer = ({ height }) => <View style={{ height }} />;
+
     if (isViewModeOn) {
         return (
             <Modal
@@ -48,11 +50,11 @@ const MainMenuModal = ({
                             <Text>Change to Edit Mode </Text>
                         </TouchableOpacity>
                         
-                        <br/>
+                        <Spacer height={10} />
                         <Link href={`/flow/${flowId}`} asChild>
                             <Button title="Go back to Flow" onPress={() => {}} />
                         </Link>
-                        <br/>
+                        <Spacer height={10} />
                         <Button title="Close" onPress={() => setModalVisible(false)} />
 
                     </View>
@@ -139,11 +141,11 @@ const MainMenuModal = ({
                                 </View>
                             )}
                         /> */}
-                        <br/>
+                        <Spacer height={10} />
                         <Link href={`/flow/${flowId}`} asChild>
                             <Button title="Go back to Flow" onPress={() => {}} />
                         </Link>
-                        <br/>
+                        <Spacer height={10} />
                         <Button title="Close" onPress={() => setModalVisible(false)} />
                     </View>
                 </View>
