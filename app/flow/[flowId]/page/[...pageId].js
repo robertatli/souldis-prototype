@@ -43,6 +43,9 @@ export default function App() {
   
   const [components, setComponents] = useState([]);
   const [backgroundImage, setBackgroundImage] = useState(null);
+  useEffect(() => {
+    setBackgroundImage(require('../../../../assets/default.png'));
+  }, []);
   const [modalVisible, setModalVisible] = useState(false);
   const [componentsPageModalVisible, setComponentsPageModalVisible] = useState(false);
   const [currentComponent, setCurrentComponent] = useState(null);
@@ -62,7 +65,8 @@ export default function App() {
 
    // Use the custom hook to load page data and handle permissions
    useLoadPageData(pageId, setComponents, setBackgroundImage, setSavedPages, flowId);
-  
+
+   
   const HapticNodeItem = ({ item, drag, isActive, onValueChange }) => {
     return (
       <TouchableOpacity
@@ -245,15 +249,6 @@ export default function App() {
   };
 
 
-  // const handleAddComponent = () => {
-  //   const newComponent = {
-  //     type: 'Button',
-  //     id: Date.now(),
-  //     position: { x: 0, y: 0 },
-  //   };
-  //   setComponents([...components, newComponent]);
-  // };
-
   const onLabelChange = (id, newLabel) => {
     setComponents(prevComponents => prevComponents.map(comp => {
         if (comp.id === id) {
@@ -435,7 +430,7 @@ export default function App() {
         onGestureEvent={onGestureEvent}
         onHandlerStateChange={onHandlerStateChange}>
         <View style={{ flex: 1 }}>
-          <ImageBackground source={require('../../../../assets/default.png')} style={styles.backgroundImage}>
+          <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
           <MainMenuModal 
               modalVisible={modalVisible}
               setModalVisible={setModalVisible}
