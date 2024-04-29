@@ -5,10 +5,8 @@ const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
     backgroundImage: {
       flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: width,
-      height: height,
+      width: '100%',
+      height: '100%',
     },
     menuButtonContainer: {
       position: 'absolute',

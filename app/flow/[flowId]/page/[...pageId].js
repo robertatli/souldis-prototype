@@ -38,9 +38,9 @@ export default function App() {
   const pageId = Array.isArray(pageIdArray) ? pageIdArray[0] : pageIdArray;
   // const glob = useGlobalSearchParams();
   // const local = useLocalSearchParams();
-
+  
   // console.log("Local:", local, "Global:", glob); //  this is for debug purposes
-
+  
   const [components, setComponents] = useState([]);
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -62,9 +62,8 @@ export default function App() {
 
    // Use the custom hook to load page data and handle permissions
    useLoadPageData(pageId, setComponents, setBackgroundImage, setSavedPages, flowId);
-
+  
   const HapticNodeItem = ({ item, drag, isActive, onValueChange }) => {
-    // Assuming your `item` has a 'label' and 'value' that corresponds to the haptic feedback
     return (
       <TouchableOpacity
         onLongPress={drag}
@@ -229,7 +228,7 @@ export default function App() {
   const clearScreen = () => {
     console.log('Clearing screen...');
     setComponents([]); // Clear all components
-    setBackgroundImage(require('../../../../assets/splash.png')); // Remove background image
+    setBackgroundImage(require('../../../../assets/default.png')); // Remove background image
   };
 
 
@@ -311,7 +310,7 @@ export default function App() {
     console.log(`Component value: ${component.value}`);
     switch (component.type) {
       case 'Button':
-        const hapticSequence = hapticNodes[id] || [];
+        const hapticSequence = hapticNodes[component.id] || [];
   
         for (let node of hapticSequence) {
           switch (node.value) {
@@ -436,7 +435,7 @@ export default function App() {
         onGestureEvent={onGestureEvent}
         onHandlerStateChange={onHandlerStateChange}>
         <View style={{ flex: 1 }}>
-          <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
+          <ImageBackground source={require('../../../../assets/default.png')} style={styles.backgroundImage}>
           <MainMenuModal 
               modalVisible={modalVisible}
               setModalVisible={setModalVisible}
@@ -454,6 +453,8 @@ export default function App() {
               savePage={savePage}
               // savePageModalVisible={savePageModalVisible}
               flowId={flowId}
+              changeViewMode={setViewMode}
+              isViewModeOn={viewMode}
           />
           <ButtonConfigOverlayModal
               visible={configOverlayVisible}
@@ -508,6 +509,7 @@ export default function App() {
                   onLongPress={onButtonLongPress}
                   onPositionChange={handlePositionChange}
                   onLabelChange={onLabelChange}
+                  viewModeIsOn={viewMode}
               />
             ))}
 

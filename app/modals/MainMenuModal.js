@@ -30,55 +30,125 @@ const MainMenuModal = ({
     changeViewMode,
     isViewModeOn
 }) => {
-    return (
-        <Modal
-            transparent={false}
-            animationIn="slideInRight"
-            animationOut="slideOutRight"
-            presentationStyle="overFullscreen"
-            isVisible={modalVisible}
-            useNativeDriver={true}
-            swipeDirection="right"
-            hasBackdrop={false}
-            onSwipeComplete={() => setModalVisible(false)}
-            
-        >
-            <View style={styles.centeredView}>
-                <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
-                    <Icon name="chevron-left" size={40} color="#000" /> 
-                </TouchableOpacity>
-                <View style={styles.modalView}>
-                    <TouchableOpacity style={styles.modalButton} onPress={() => setComponentsPageModalVisible(true)}>
-                        <Text>Add Component</Text>
-                    </TouchableOpacity>
-                    
-                    <TouchableOpacity style={styles.modalButton} onPress={pickImage}>
-                        <Text>Set Background</Text>
-                    </TouchableOpacity>
+    const changeModes = () => {
+        changeViewMode(!isViewModeOn);
+        setModalVisible(false);
+    };
 
-                    <TouchableOpacity style={styles.modalButton} onPress={clearScreen}>
-                        <Text>Clear The Screen</Text>
-                    </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.otherModalButton} onPress={savePage}>
-                        <Text style={styles.otherModalText}>Save Current Setup</Text>
-                    </TouchableOpacity>
+    if (isViewModeOn) {
+        return (
+            <Modal
+                transparent={false}
+                animationIn="slideInRight"
+                animationOut="slideOutRight"
+                presentationStyle="overFullscreen"
+                isVisible={modalVisible}
+                useNativeDriver={true}
+                swipeDirection="right"
+                hasBackdrop={false}
+                onSwipeComplete={() => setModalVisible(false)}
                 
-                    <Link href={`/flow/${flowId}`} asChild>
-                        <TouchableOpacity style={styles.otherModalButton} onPress={() => {}}>
-                            <Text style={styles.otherModalText}>Go back to Flow Overview</Text>
+            >
+                <View style={styles.centeredView}>
+                    <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+                        <Icon name="chevron-left" size={40} color="#000" /> 
+                    </TouchableOpacity>
+                    <View style={styles.modalView}>
+                        <TouchableOpacity style={styles.modalButton} onPress={() => setComponentsPageModalVisible(true)}>
+                            <Text>Add Component</Text>
                         </TouchableOpacity>
-                    </Link>
+                        
+                        <TouchableOpacity style={styles.modalButton} onPress={pickImage}>
+                            <Text>Set Background</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.modalButton} onPress={clearScreen}>
+                            <Text>Clear The Screen</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.modalButton} onPress={() => changeModes() }>
+                            <Text>Change to Edit Mode </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.otherModalButton} onPress={savePage}>
+                            <Text style={styles.otherModalText}>Save Current Setup</Text>
+                        </TouchableOpacity>
                     
+                        <Link href={`/flow/${flowId}`} asChild>
+                            <TouchableOpacity style={styles.otherModalButton} onPress={() => {}}>
+                                <Text style={styles.otherModalText}>Go back to Flow Overview</Text>
+                            </TouchableOpacity>
+                        </Link>
+                        
+                    </View>
                 </View>
-            </View>
-                <ComponentsMenuModal 
-                    modalVisible={componentsPageModalVisible}
-                    setModalVisible={setComponentsPageModalVisible}
-                    handleAddComponent={handleAddComponent}
-                />
-        </Modal>
-    );
+                    <ComponentsMenuModal 
+                        modalVisible={componentsPageModalVisible}
+                        setModalVisible={setComponentsPageModalVisible}
+                        handleAddComponent={handleAddComponent}
+                    />
+            </Modal>
+        );
+    }
+
+    else {
+        return (
+            <Modal
+                transparent={false}
+                animationIn="slideInRight"
+                animationOut="slideOutRight"
+                presentationStyle="overFullscreen"
+                isVisible={modalVisible}
+                useNativeDriver={true}
+                swipeDirection="right"
+                hasBackdrop={false}
+                onSwipeComplete={() => setModalVisible(false)}
+                
+            >
+                <View style={styles.centeredView}>
+                    <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+                        <Icon name="chevron-left" size={40} color="#000" /> 
+                    </TouchableOpacity>
+                    <View style={styles.modalView}>
+                        <TouchableOpacity style={styles.modalButton} onPress={() => setComponentsPageModalVisible(true)}>
+                            <Text>Add Component</Text>
+                        </TouchableOpacity>
+                        
+                        <TouchableOpacity style={styles.modalButton} onPress={pickImage}>
+                            <Text>Set Background</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.modalButton} onPress={clearScreen}>
+                            <Text>Clear The Screen</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.modalButton} onPress={() => changeModes() }>
+                            <Text>Change to View Mode </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.otherModalButton} onPress={savePage}>
+                            <Text style={styles.otherModalText}>Save Current Setup</Text>
+                        </TouchableOpacity>
+                    
+                        <Link href={`/flow/${flowId}`} asChild>
+                            <TouchableOpacity style={styles.otherModalButton} onPress={() => {}}>
+                                <Text style={styles.otherModalText}>Go back to Flow Overview</Text>
+                            </TouchableOpacity>
+                        </Link>
+                        
+                    </View>
+                </View>
+                    <ComponentsMenuModal 
+                        modalVisible={componentsPageModalVisible}
+                        setModalVisible={setComponentsPageModalVisible}
+                        handleAddComponent={handleAddComponent}
+                    />
+            </Modal>
+        );
+
+    }
+
 };
 
 export default MainMenuModal;

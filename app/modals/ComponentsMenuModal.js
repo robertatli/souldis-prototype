@@ -35,8 +35,8 @@ const ComponentsMenuModal = ({
                         <Text>Add TextInput</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false)}>
-                        <Text>Close</Text>
+                    <TouchableOpacity style={styles.otherModalButton} onPress={() => setModalVisible(false)}>
+                        <Text style={styles.otherModalText}>Close</Text>
                     </TouchableOpacity>
                 </View>
             </View>
