@@ -2,7 +2,7 @@
 import React from 'react';
 import { Modal, View, Text, TouchableOpacity, FlatList, Button } from 'react-native';
 import styles from '../styles/stylesIndex';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 
 import SaveDesignModal from './SaveDesignModal';
 import ComponentsMenuModal from './ComponentsMenuModal';
@@ -30,7 +30,6 @@ const MainMenuModal = ({
 
     const changeModes = () => {
         changeViewMode(!isViewModeOn);
-        setModalVisible(false);
     };
 
     const Spacer = ({ height }) => <View style={{ height }} />;
@@ -45,17 +44,17 @@ const MainMenuModal = ({
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-
                         <TouchableOpacity style={styles.modalButton} onPress={() => changeModes() }>
-                            <Text>Change to Edit Mode </Text>
+                            <Text>Change to Edit Mode</Text>
                         </TouchableOpacity>
-                        
                         <Spacer height={10} />
-                        <Link href={`/flow/${flowId}`} asChild>
-                            <Button title="Go back to Flow" onPress={() => {}} />
-                        </Link>
+                        <TouchableOpacity style={styles.modalButton} onPress={() => router.push({ pathname: `/flow/${flowId}` }) }>
+                            <Text>Go back to Flow</Text>
+                        </TouchableOpacity>
                         <Spacer height={10} />
-                        <Button title="Close" onPress={() => setModalVisible(false)} />
+                        <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false) }>
+                            <Text>Close</Text>
+                        </TouchableOpacity>
 
                     </View>
                 </View>
