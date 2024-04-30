@@ -58,7 +58,7 @@ export default function App() {
   const [buttonConfigs, setButtonConfigs] = useState({});
   const [hapticNodes, setHapticNodes] = useState({});
   const [selectedHaptic, setSelectedHaptic] = useState(null);
-  const [viewMode, setViewMode] = useState(false);
+  const [viewMode, setViewMode] = useState(true);
 
    // Use the custom hook to load page data and handle permissions
    useLoadPageData(pageId, setComponents, setBackgroundImage, setSavedPages, flowId);
