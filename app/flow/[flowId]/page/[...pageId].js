@@ -36,18 +36,12 @@ import { RadioButton, RadioGroup } from 'react-native-ui-lib';
 export default function App() {
   const { flowId, pageId: pageIdArray } = useLocalSearchParams();  // Extracting pageId from the URL parameters
   const pageId = Array.isArray(pageIdArray) ? pageIdArray[0] : pageIdArray;
-  // const glob = useGlobalSearchParams();
-  // const local = useLocalSearchParams();
-
-  // console.log("Local:", local, "Global:", glob); //  this is for debug purposes
 
   const [components, setComponents] = useState([]);
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [componentsPageModalVisible, setComponentsPageModalVisible] = useState(false);
   const [currentComponent, setCurrentComponent] = useState(null);
-  // const [savePageModalVisible, setSavePageModalVisible] = useState(false);
-  // const [pageName, setPageName] = useState('');
   const [savedPages, setSavedPages] = useState([]);
   const [currentButtonId, setCurrentButtonId] = useState(null);
   const [configOverlayVisible, setConfigOverlayVisible] = useState(false);
@@ -60,7 +54,7 @@ export default function App() {
   const [viewMode, setViewMode] = useState(true);
 
    // Use the custom hook to load page data and handle permissions
-   useLoadPageData(pageId, setComponents, setBackgroundImage, setSavedPages, flowId);
+   useLoadPageData(pageId, setComponents, setBackgroundImage, setSavedPages, flowId, setButtonConfigs, setHapticNodes);
 
   const HapticNodeItem = ({ item, drag, isActive, onValueChange }) => {
     // Assuming your `item` has a 'label' and 'value' that corresponds to the haptic feedback
@@ -151,10 +145,6 @@ export default function App() {
     }));
   };
   
-
-
-  // // Use the custom hook to load page data and handle permissions
-  // useLoadPageData(pageId, setComponents, setBackgroundImage);
   
   const savePage = async () => {
     // Fetch the existing list of pages
@@ -166,6 +156,7 @@ export default function App() {
 
     if (currentPage) {
         console.log("Current page: ", JSON.stringify(currentPage, null, 2));
+        console.log("Current page components: ", JSON.stringify(currentPage.components, null, 2));
     } else {
         console.log("No page found with id:", pageId);
     }
@@ -175,11 +166,20 @@ export default function App() {
     const pageIndex = pages.findIndex(p => p.id === pageId);
     if (pageIndex !== -1) {
       // Update the existing page data
+      // pages[pageIndex] = {
+      //   ...pages[pageIndex], // Preserve existing data
+      //   components: components, // Update components
+      //   backgroundImageUri: backgroundImage ? backgroundImage : null // Update background image
+      // };
       pages[pageIndex] = {
-        ...pages[pageIndex], // Preserve existing data
-        components: components, // Update components
-        backgroundImageUri: backgroundImage ? backgroundImage : null // Update background image
-      };
+        ...pages[pageIndex],
+        components: components.map(component => ({
+            ...component,
+            nextPageId: buttonConfigs[component.id], // Assuming buttonConfigs is still relevant
+            hapticNodes: hapticNodes[component.id] || [] // Store current haptic configuration
+        })),
+        backgroundImageUri: backgroundImage ? backgroundImage : null
+    };
 
       // Save the updated pages array back to storage
       try {
@@ -194,35 +194,6 @@ export default function App() {
       alert('Page not found!');
     }
   };
-
-  // const loadPage = async () => { // maybe should only be in flowOverview
-  //   const storedPagesJson = await AsyncStorage.getItem('@pages');
-  //   const pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
-  //   const currentPage = pages.find(p => p.id === pageId);
-  //   if (currentPage) {
-  //     setComponents(currentPage.components);
-  //     setBackgroundImage(currentPage.backgroundImageUri ? { uri: currentPage.backgroundImageUri } : null);
-  //   } else {
-  //     alert('Page not found');
-  //   }
-  // };
-  
-
-
-  // const deletePage = async (id) => { // maybe should only be in flowOverview
-  //   const storedPagesJson = await AsyncStorage.getItem('@pages');
-  //   let pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
-  //   const filteredPages = pages.filter(p => p.id !== id);
-    
-  //   try {
-  //     await AsyncStorage.setItem('@pages', JSON.stringify(filteredPages));
-  //     alert('Page deleted successfully!');
-  //   } catch (e) {
-  //     console.error('Failed to delete page', e);
-  //     alert('Failed to delete page.');
-  //   }
-  // };
-  
 
   
   const clearScreen = () => {
@@ -244,15 +215,6 @@ export default function App() {
     setModalVisible(false); // Optionally close the modal after setting the background
   };
 
-
-  // const handleAddComponent = () => {
-  //   const newComponent = {
-  //     type: 'Button',
-  //     id: Date.now(),
-  //     position: { x: 0, y: 0 },
-  //   };
-  //   setComponents([...components, newComponent]);
-  // };
 
   const onLabelChange = (id, newLabel) => {
     setComponents(prevComponents => prevComponents.map(comp => {
@@ -284,7 +246,7 @@ export default function App() {
 
     switch (type) {
         case 'Button':
-            setComponents([...components, {...baseComponent}]);
+            setComponents([...components, {...baseComponent, nextPageId: null, hapticNodes: []}]);
             break;
         case 'Radio':
             setComponents([...components, {...baseComponent, selected: false}]); // Example additional property
@@ -307,9 +269,6 @@ export default function App() {
   const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
   const onButtonPress = async (component) => {
-    console.log(`Button with ID ${component.id} pressed`);
-    console.log(`Component type: ${component.type}`);
-    console.log(`Component value: ${component.value}`);
     switch (component.type) {
       case 'Button':
         const hapticSequence = hapticNodes[component.id] || [];
@@ -357,8 +316,6 @@ export default function App() {
               await delay(500);
               break;
           }
-          // Wait for 500 milliseconds before the next iteration of the loop
-          // await delay(500);
         }
 
         const nextPageId = buttonConfigs[component.id]; // Assuming buttonConfigs stores page IDs now
@@ -430,8 +387,6 @@ export default function App() {
         default:
             return null;
     }
-    // setCurrentButtonId(buttonId);
-    // setConfigOverlayVisible(true);
   };
 
   return (
@@ -448,14 +403,7 @@ export default function App() {
           handleAddComponent={handleAddComponent}
           pickImage={pickImage}
           clearScreen={clearScreen}
-          // setSavePageModalVisible={setSavePageModalVisible}
-          // savedPages={savedPages}
-          // loadPage={loadPage} // maybe should only be in flowOverview
-          // deletePage={deletePage} // maybe should only be in flowOverview
-          // pageName={pageName}
-          // setPageName={setPageName}
           savePage={savePage}
-          // savePageModalVisible={savePageModalVisible}
           flowId={flowId}
           changeViewMode={setViewMode}
           isViewModeOn={viewMode}
@@ -470,6 +418,8 @@ export default function App() {
           ButtonConfigurationComponent={<ButtonConfiguration />}
           component={currentComponent}
           onLabelChange={onLabelChange}
+          setHapticNodes={setHapticNodes}
+          hapticNodes={hapticNodes}
       />
       <RadioConfigOverlayModal
         visible={radioConfigOverlayVisible}
@@ -496,16 +446,6 @@ export default function App() {
         component={currentComponent}
         onLabelChange={onLabelChange}
       />
-        {/* {components.map((component) => (
-          <ButtonComponent
-            key={component.id}
-            id={component.id}
-            onPress={onButtonPress}
-            onLongPress={onButtonLongPress}
-            initialPosition={component.position}
-            onPositionChange={handlePositionChange}
-          />
-        ))} */}
         <RadioGroup initialValue={null}>
         {components.map((component) => (
           <DynamicComponent
@@ -519,12 +459,6 @@ export default function App() {
           />
         ))}
         </RadioGroup>
-
-        {/* <RadioGroup initialValue={null} onValueChange={null}>
-        <RadioButton value={"test1"} label={"test1"}/>
-        <RadioButton value={"test2"} label={"test2"}/>
-        </RadioGroup> */}
-
       </ImageBackground>
     </GestureHandlerRootView>
   );

@@ -3,21 +3,33 @@ import { Platform, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 
-const useLoadPageData = (pageId, setComponents, setBackgroundImage, setSavedPages, flowId) => {
+const useLoadPageData = (pageId, setComponents, setBackgroundImage, setSavedPages, flowId, setButtonConfigs, setHapticNodes) => {
   useEffect(() => {
     // Function to load the page data
     const loadPageData = async () => {
       const storedPages = await AsyncStorage.getItem('@pages');
       if (storedPages) {
-        const pages = JSON.parse(storedPages);
-        const currentPage = pages.find(p => p.id === pageId);
-        if (currentPage) {
-          setComponents(currentPage.components);
-          setBackgroundImage(currentPage.backgroundImageUri);
-          // Set other state specific to the page as needed
-        }
+          const pages = JSON.parse(storedPages);
+          const currentPage = pages.find(p => p.id === pageId);
+          if (currentPage) {
+              setComponents(currentPage.components);
+              setBackgroundImage(currentPage.backgroundImageUri);
+  
+              // Restore button configurations and haptic nodes
+              const newButtonConfigs = {};
+              const newHapticNodes = {};
+              currentPage.components.forEach(component => {
+                  if (component.type === 'Button') {
+                      newButtonConfigs[component.id] = component.nextPageId;
+                      newHapticNodes[component.id] = component.hapticNodes;
+                  }
+              });
+              setButtonConfigs(newButtonConfigs);
+              setHapticNodes(newHapticNodes);
+          }
       }
     };
+  
 
     // Function to request permissions
     const requestPermissions = async () => {
@@ -51,6 +63,9 @@ const useLoadPageData = (pageId, setComponents, setBackgroundImage, setSavedPage
       const storedPagesJson = await AsyncStorage.getItem('@pages');
       const pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
       setSavedPages(pages.filter(p => p.flowId === flowId));
+      currentPages = pages.filter(p => p.flowId === flowId);
+
+      console.log('Fetched pages:', currentPages[0].components);
     };
 
     // Call the function to load page data
