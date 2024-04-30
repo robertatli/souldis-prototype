@@ -57,7 +57,6 @@ export default function App() {
   const [textInputConfigOverlayVisible, setTextInputConfigOverlayVisible] = useState(false);
   const [buttonConfigs, setButtonConfigs] = useState({});
   const [hapticNodes, setHapticNodes] = useState({});
-  const [selectedHaptic, setSelectedHaptic] = useState(null);
   const [viewMode, setViewMode] = useState(true);
 
    // Use the custom hook to load page data and handle permissions
@@ -75,7 +74,7 @@ export default function App() {
         ]}
       >
         <HapticDropdown
-          selectedHaptic={selectedHaptic}
+          selectedHaptic={item.selectedHaptic}
           onHapticChange={(value) => {
             onValueChange(item.key, value); // Update based on item.key
           }}
@@ -88,10 +87,9 @@ export default function App() {
   const HapticNodeList = ({ nodes, setNodes }) => {
     const renderItem = ({ item, drag, isActive }) => {
       const onValueChange = (key, newValue) => {
-        setSelectedHaptic(newValue);
         console.log(`Haptic feedback for ${key} changed to ${newValue}`);
         const updatedNodes = nodes.map((node) => 
-          node.key === key ? { ...node, value: newValue } : node
+          node.key === key ? { ...node, value: newValue, selectedHaptic: newValue } : node
         );
         setNodes(updatedNodes);
       };
@@ -125,6 +123,7 @@ export default function App() {
       const newNode = {
         key: `${uuidv4()}`, // Unique key for the new node
         value: 'selectionAsync', // Default value or some initial value
+        selectedHaptic: 'selectionAsync',
       };
       const currentNodes = hapticNodes[currentButtonId] || [];
       const updatedNodes = [...currentNodes, newNode];
@@ -305,6 +304,8 @@ export default function App() {
     };
 
 
+  const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
   const onButtonPress = async (component) => {
     console.log(`Button with ID ${component.id} pressed`);
     console.log(`Component type: ${component.type}`);
@@ -312,7 +313,7 @@ export default function App() {
     switch (component.type) {
       case 'Button':
         const hapticSequence = hapticNodes[component.id] || [];
-  
+        console.log('Haptic sequence:', hapticSequence);
         for (let node of hapticSequence) {
           switch (node.value) {
             case 'selectionAsync':
@@ -343,7 +344,21 @@ export default function App() {
               console.log('HapticHeavy');
               await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
               break;
+            case 'delayAsync100':
+              console.log('Delay 100ms');
+              await delay(100);
+              break;
+            case 'delayAsync300':
+              console.log('Delay 300ms');
+              await delay(300);
+              break;
+            case 'delayAsync500':
+              console.log('Delay 500ms');
+              await delay(500);
+              break;
           }
+          // Wait for 500 milliseconds before the next iteration of the loop
+          // await delay(500);
         }
 
         const nextPageId = buttonConfigs[component.id]; // Assuming buttonConfigs stores page IDs now

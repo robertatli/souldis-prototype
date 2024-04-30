@@ -15,6 +15,9 @@ const HapticDropdown = ({ selectedHaptic, onHapticChange }) => {
         { label: 'Light Impact', value: 'impactAsyncLight' },
         { label: 'Medium Impact', value: 'impactAsyncMedium' },
         { label: 'Heavy Impact', value: 'impactAsyncHeavy' },
+        { label: 'Delay 100ms', value: 'delayAsync100' },
+        { label: 'Delay 300ms', value: 'delayAsync300' },
+        { label: 'Delay 500ms', value: 'delayAsync500' },
     ];
 
     // // Custom style for the picker
