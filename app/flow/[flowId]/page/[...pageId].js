@@ -440,6 +440,8 @@ export default function App() {
               ButtonConfigurationComponent={<ButtonConfiguration />}
               component={currentComponent}
               onLabelChange={onLabelChange}
+              setHapticNodes={setHapticNodes}
+              hapticNodes={hapticNodes}
           />
           <RadioConfigOverlayModal
             visible={radioConfigOverlayVisible}
