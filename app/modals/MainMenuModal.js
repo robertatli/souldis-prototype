@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, FlatList, Button } from 'react-native';
 import styles from '../styles/stylesIndex';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import Modal from "react-native-modal";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -35,9 +35,9 @@ const MainMenuModal = ({
 }) => {
     const changeModes = () => {
         changeViewMode(!isViewModeOn);
-        setModalVisible(false);
     };
 
+    const Spacer = ({ height }) => <View style={{ height }} />;
 
     if (isViewModeOn) {
         return (
@@ -61,20 +61,16 @@ const MainMenuModal = ({
                         <Icon name="help" size={40} /> 
                     </TouchableOpacity>
                     <View style={styles.modalView}>
-                        <TouchableOpacity style={styles.modalButton} onPress={() => setComponentsPageModalVisible(true)}>
-                            <Text>Add Component</Text>
-                        </TouchableOpacity>
-                        
-                        <TouchableOpacity style={styles.modalButton} onPress={pickImage}>
-                            <Text>Set Background</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.modalButton} onPress={clearScreen}>
-                            <Text>Clear The Screen</Text>
-                        </TouchableOpacity>
-
                         <TouchableOpacity style={styles.modalButton} onPress={() => changeModes() }>
-                            <Text>Change to Edit Mode </Text>
+                            <Text>Change to Edit Mode</Text>
+                        </TouchableOpacity>
+                        <Spacer height={10} />
+                        <TouchableOpacity style={styles.modalButton} onPress={() => router.push({ pathname: `/flow/${flowId}` }) }>
+                            <Text>Go back to Flow</Text>
+                        </TouchableOpacity>
+                        <Spacer height={10} />
+                        <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false) }>
+                            <Text>Close</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.otherModalButton} onPress={savePage}>
@@ -149,7 +145,8 @@ const MainMenuModal = ({
                                 <Text style={styles.otherModalText}>Go back to Flow Overview</Text>
                             </TouchableOpacity>
                         </Link>
-                        
+                        <Spacer height={10} />
+                        <Button title="Close" onPress={() => setModalVisible(false)} />
                     </View>
                 </View>
                     <TutorialModal

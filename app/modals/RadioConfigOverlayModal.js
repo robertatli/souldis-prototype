@@ -1,7 +1,5 @@
-// ConfigOverlayModal.js
 import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, Button, TextInput } from 'react-native';
-import Dropdown from '../components/Dropdown/Dropdown';
 import styles from '../styles/stylesIndex';
 
 const RadioConfigOverlayModal = ({
@@ -12,19 +10,25 @@ const RadioConfigOverlayModal = ({
     onSaveValue,
 }) => {
     const [label, setLabel] = useState(component?.label || '');
-    const [value, setValue] = useState(component?.value || 0);
+    // Convert the value to a string for use in TextInput
+    // Initialize value safely by ensuring component and component.value are defined
+    const [value, setValue] = useState((component?.value ?? 0).toString());
+
 
     useEffect(() => {
         if (component) {
             setLabel(component.label || '');
-            setValue(component.value || 0);
+            // Use nullish coalescing to ensure we fallback to '0' if component.value is undefined
+            setValue((component.value ?? 0).toString());
         }
     }, [component]);
+    
 
     const handleSave = () => {
         if (component) {
             onLabelChange(component.id, label);
-            onSaveValue(component.id, value);
+            // Convert value back to a number when saving/updating
+            onSaveValue(component.id, parseInt(value, 10));
         }
         onClose();
     };
@@ -44,14 +48,14 @@ const RadioConfigOverlayModal = ({
                         onChangeText={setLabel}
                         placeholder="Enter component label"
                     />
-                    <br/>
+                    {/* Add a break or space for layout if needed */}
                     <Text>Radio Value</Text>
                     <TextInput
-                    value={value}
-                    onChangeText={setValue}
-                    placeholder="Enter component's value"
+                        value={value}
+                        onChangeText={setValue}
+                        placeholder="Enter component's value"
+                        keyboardType="numeric"  // Ensure the keyboard is appropriate for numeric input
                     />
-                    <br/>
                     <Button title="Save" onPress={handleSave} />
                 </View>
             </View>

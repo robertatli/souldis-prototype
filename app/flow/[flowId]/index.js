@@ -27,6 +27,9 @@ const FlowOverview = () => {
             const flows = await AsyncStorage.getItem('@flows');
             const flowsArray = flows ? JSON.parse(flows) : [];
             const currentFlow = flowsArray.find(f => f.id === flowId);
+            console.log('Current flow:', currentFlow);
+            console.log('Pages:', currentFlow.pages);
+            console.log('flowId: ', flowId);
             if (currentFlow) {
                 setFlow(currentFlow);
                 setPages(currentFlow.pages);
@@ -38,7 +41,7 @@ const FlowOverview = () => {
 
     // Add a new page
     const handleAddPage = async () => {
-        const newPageId = `page_${Date.now()}`;
+        const newPageId = `page_${uuidv4()}`;
         const newPage = {
             id: newPageId,
             flowId: flowId,
