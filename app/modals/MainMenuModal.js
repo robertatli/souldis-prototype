@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import SaveDesignModal from './SaveDesignModal';
 import ComponentsMenuModal from './ComponentsMenuModal';
+import TutorialModal from './TutorialModal';
 
 const MainMenuModal = ({
     modalVisible,
@@ -28,7 +29,9 @@ const MainMenuModal = ({
     // savePageModalVisible,
     flowId,
     changeViewMode,
-    isViewModeOn
+    isViewModeOn,
+    tutorialModalVisible,
+    setTutorialModalVisible,
 }) => {
     const changeModes = () => {
         changeViewMode(!isViewModeOn);
@@ -53,6 +56,9 @@ const MainMenuModal = ({
                 <View style={styles.centeredView}>
                     <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
                         <Icon name="chevron-left" size={40} color="#000" /> 
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.tutorialButton} onPress={() => setTutorialModalVisible(true)}>
+                        <Icon name="help" size={40} /> 
                     </TouchableOpacity>
                     <View style={styles.modalView}>
                         <TouchableOpacity style={styles.modalButton} onPress={() => setComponentsPageModalVisible(true)}>
@@ -83,6 +89,10 @@ const MainMenuModal = ({
                         
                     </View>
                 </View>
+                    <TutorialModal
+                        isVisible={tutorialModalVisible}
+                        onClose={() => setTutorialModalVisible(false)}
+                    />
                     <ComponentsMenuModal 
                         modalVisible={componentsPageModalVisible}
                         setModalVisible={setComponentsPageModalVisible}
@@ -109,6 +119,9 @@ const MainMenuModal = ({
                 <View style={styles.centeredView}>
                     <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
                         <Icon name="chevron-left" size={40} color="#000" /> 
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.tutorialButton} onPress={() => setTutorialModalVisible(true)}>
+                        <Icon name="help" size={40} color="#000" /> 
                     </TouchableOpacity>
                     <View style={styles.modalView}>
                         <TouchableOpacity style={styles.modalButton} onPress={() => setComponentsPageModalVisible(true)}>
@@ -139,6 +152,10 @@ const MainMenuModal = ({
                         
                     </View>
                 </View>
+                    <TutorialModal
+                        isVisible={tutorialModalVisible}
+                        onClose={() => setTutorialModalVisible(false)}
+                    />
                     <ComponentsMenuModal 
                         modalVisible={componentsPageModalVisible}
                         setModalVisible={setComponentsPageModalVisible}

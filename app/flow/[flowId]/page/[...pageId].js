@@ -30,6 +30,7 @@ import CheckboxConfigOverlayModal from '../../../modals/CheckboxConfigOverlayMod
 import TextConfigOverlayModal from '../../../modals/TextConfigOverlayModal.js';
 import TextInputConfigOverlayModal from '../../../modals/TextInputConfigOverlayModal.js';
 import { RadioButton, RadioGroup } from 'react-native-ui-lib';
+import TutorialModal from '../../../modals/TutorialModal';
 
 
 
@@ -62,6 +63,8 @@ export default function App() {
   const [hapticNodes, setHapticNodes] = useState({});
   const [selectedHaptic, setSelectedHaptic] = useState(null);
   const [viewMode, setViewMode] = useState(false);
+  const [tutorialModalVisible, setTutorialModalVisible] = useState(false);
+
 
    // Use the custom hook to load page data and handle permissions
    useLoadPageData(pageId, setComponents, setBackgroundImage, setSavedPages, flowId);
@@ -233,6 +236,7 @@ export default function App() {
     console.log('Clearing screen...');
     setComponents([]); // Clear all components
     setBackgroundImage(require('../../../../assets/default.png')); // Remove background image
+    setModalVisible(false);
   };
 
 
@@ -295,8 +299,9 @@ export default function App() {
             break;
         default:
             console.log('Unknown type');
-      }
-    };
+    }
+    setComponentsPageModalVisible(false);
+  };
 
 
   const onButtonPress = async (component) => {
@@ -436,15 +441,11 @@ export default function App() {
               setModalVisible={setModalVisible}
               componentsPageModalVisible={componentsPageModalVisible}
               setComponentsPageModalVisible={setComponentsPageModalVisible}
+              tutorialModalVisible={tutorialModalVisible}
+              setTutorialModalVisible={setTutorialModalVisible}
               handleAddComponent={handleAddComponent}
               pickImage={pickImage}
               clearScreen={clearScreen}
-              // setSavePageModalVisible={setSavePageModalVisible}
-              // savedPages={savedPages}
-              // loadPage={loadPage} // maybe should only be in flowOverview
-              // deletePage={deletePage} // maybe should only be in flowOverview
-              // pageName={pageName}
-              // setPageName={setPageName}
               savePage={savePage}
               // savePageModalVisible={savePageModalVisible}
               flowId={flowId}
