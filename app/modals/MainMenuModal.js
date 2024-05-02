@@ -4,7 +4,9 @@ import { View, Text, TouchableOpacity, FlatList, Button } from 'react-native';
 import styles from '../styles/stylesIndex';
 import { Link, router } from 'expo-router';
 import Modal from "react-native-modal";
-import Icon from 'react-native-vector-icons/MaterialIcons';
+
+// icons
+import { FontAwesome6 } from '@expo/vector-icons';
 
 
 import SaveDesignModal from './SaveDesignModal';
@@ -55,10 +57,11 @@ const MainMenuModal = ({
             >
                 <View style={styles.centeredView}>
                     <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
-                        <Icon name="chevron-left" size={40} color="#000" /> 
+                        <FontAwesome6 name="chevron-left" size={30} /> 
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.tutorialButton} onPress={() => setTutorialModalVisible(true)}>
-                        <Icon name="help" size={40} /> 
+                        <FontAwesome6 name="circle-info"  size={30}/> 
+                        <Text style={styles.tutorialButtonText}>Tutorial</Text>
                     </TouchableOpacity>
                     <View style={styles.modalView}>
                         <TouchableOpacity style={styles.modalButton} onPress={() => changeModes() }>
@@ -69,9 +72,7 @@ const MainMenuModal = ({
                             <Text>Go back to Flow</Text>
                         </TouchableOpacity>
                         <Spacer height={10} />
-                        <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false) }>
-                            <Text>Close</Text>
-                        </TouchableOpacity>
+
 
                         <TouchableOpacity style={styles.otherModalButton} onPress={savePage}>
                             <Text style={styles.otherModalText}>Save Current Setup</Text>
@@ -114,10 +115,11 @@ const MainMenuModal = ({
             >
                 <View style={styles.centeredView}>
                     <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
-                        <Icon name="chevron-left" size={40} color="#000" /> 
+                        <FontAwesome6 name="chevron-left" size={30}/>  
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.tutorialButton} onPress={() => setTutorialModalVisible(true)}>
-                        <Icon name="help" size={40} color="#000" /> 
+                        <FontAwesome6 name="circle-info" size={30} /> 
+                        <Text style={styles.tutorialButtonText}>Tutorial</Text> 
                     </TouchableOpacity>
                     <View style={styles.modalView}>
                         <TouchableOpacity style={styles.modalButton} onPress={() => setComponentsPageModalVisible(true)}>
@@ -146,7 +148,6 @@ const MainMenuModal = ({
                             </TouchableOpacity>
                         </Link>
                         <Spacer height={10} />
-                        <Button title="Close" onPress={() => setModalVisible(false)} />
                     </View>
                 </View>
                     <TutorialModal

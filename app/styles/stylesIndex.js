@@ -67,16 +67,20 @@ const styles = StyleSheet.create({
     closeButton: {
       position: 'absolute',
       top: 0,
-      left: -30,
+      left: -10,
       padding: 20,
       zIndex: 1
     },
     tutorialButton: {
       position: 'absolute',
       top: 0,
-      right: 0,
+      right: -20,
       padding: 20,
-      zIndex: 1
+      zIndex: 1,
+    },
+    tutorialButtonText: {
+      left: -9,
+      
     },
     otherModalText: {
       color: 'white',
@@ -222,6 +226,31 @@ const styles = StyleSheet.create({
       padding: 5,
       backgroundColor: '#d8d8d8',
     },
+
+    // dynamic buttons style
+    dynamicButton: {
+      backgroundColor: 'white',
+      padding: 10,
+      margin: 10,
+      borderRadius: 10,
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: 'black',
+      width: 100,
+      height: 40,
+    },
+    textInput: {
+      backgroundColor: 'white',
+      padding: 10,
+      margin: 10,
+      borderRadius: 10,
+      alignItems: 'flex-start',
+      borderWidth: 1,
+      borderColor: 'black',
+      width: 200,
+      height: 40,
+    },
+
   });
   
 export default styles;

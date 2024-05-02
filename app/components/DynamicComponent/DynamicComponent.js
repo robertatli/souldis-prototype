@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, View, Text, TextInput, Switch } from 'react-native';
+import { Button, View, Text, TextInput, SafeAreaView, TouchableOpacity } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useSharedValue } from 'react-native-reanimated';
@@ -8,6 +8,9 @@ import Checkbox from 'react-native-ui-lib/checkbox';
 import RadioGroup from 'react-native-ui-lib/radioGroup';
 import Radio from 'react-native-ui-lib/radioButton';
 import RadioButton from 'react-native-ui-lib/radioButton';
+
+// import styles
+import styles from '../../styles/stylesIndex.js';
 
 const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, onLabelChange, viewModeIsOn }) => {
     const positionX = useSharedValue(component.position.x);
@@ -68,7 +71,11 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, o
       const renderComponentContent = () => {
         switch (component.type) {
             case 'Button':
-                return <Button title={component.label || `Button ${component.id}`} onPress={() => {}} />;
+                return (
+                    <TouchableOpacity style={styles.dynamicButton} onPress={() => onPress(component)}>
+                        <Text>{component.label || `Button ${component.id}`}</Text>
+                    </TouchableOpacity>
+                );
             case 'Radio':
                 return <RadioButton label={component.label} value={component.id}/>;
             case 'Checkbox':
@@ -76,7 +83,16 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, o
             case 'Text':
                 return <Text>{component.label || `Text ${component.id}`}</Text>;
             case 'TextInput':
-                return <TextInput value={component.label || ''} onChangeText={(text) => runOnJS(onLabelChange)(component.id, text)} />;
+                return (
+                    <SafeAreaView>
+                        <TextInput 
+                        style={styles.textInput}
+                        placeholder="Enter your input here..." 
+                        // value={component.label || ''} 
+                        onChangeText={(text) => runOnJS(onLabelChange)(component.id, text) } 
+                        />
+                    </SafeAreaView>
+                );
             default:
                 return null;
         }
@@ -85,7 +101,7 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, o
 
     return (
         <GestureDetector gesture={gesture}>
-            <Animated.View style={[animatedStyle, { padding: 10, backgroundColor: '#eee' }]}>
+            <Animated.View style={[animatedStyle]}>
                 {renderComponentContent()}
             </Animated.View>
         </GestureDetector>
