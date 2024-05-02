@@ -3,7 +3,7 @@ import { Platform, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 
-const useLoadPageData = (pageId, setComponents, setBackgroundImage, setSavedPages, flowId, setButtonConfigs, setHapticNodes) => {
+const useLoadPageData = (pageId, setComponents, setBackgroundImage, setSavedPages, flowId, setButtonConfigs, setHapticNodes, setVariables) => {
   useEffect(() => {
     // Function to load the page data
     const loadPageData = async () => {
@@ -23,9 +23,23 @@ const useLoadPageData = (pageId, setComponents, setBackgroundImage, setSavedPage
                       newButtonConfigs[component.id] = component.nextPageId;
                       newHapticNodes[component.id] = component.hapticNodes;
                   }
+                  if (component.type === 'Radio' || component.type === 'Checkbox') {
+                      newHapticNodes[component.id] = component.hapticNodes;
+                  }
               });
               setButtonConfigs(newButtonConfigs);
               setHapticNodes(newHapticNodes);
+          }
+      }
+    };
+
+    const loadFlowData = async () => {
+      const flows = await AsyncStorage.getItem('@flows');
+      if (flows) {
+          const flowsArray = JSON.parse(flows);
+          const currentFlow = flowsArray.find(f => f.id === flowId);
+          if (currentFlow) {
+              setVariables(currentFlow.variables || []); // Handle the case where variables might be undefined
           }
       }
     };
@@ -78,6 +92,8 @@ const useLoadPageData = (pageId, setComponents, setBackgroundImage, setSavedPage
     validatePagesData();
 
     fetchPages();
+
+    loadFlowData();
   }, [pageId, setComponents, setBackgroundImage, flowId]);
 };
 

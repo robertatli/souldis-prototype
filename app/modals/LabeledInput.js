@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 });
 
 // Component
-const LabeledInput = ({ label, value, onChangeText, placeholder }) => {
+const LabeledInput = ({ label, value, onChangeText, placeholder, keyboardType = 'default', returnKeyType = 'done' }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.label}>{label}:</Text>
@@ -29,6 +29,8 @@ const LabeledInput = ({ label, value, onChangeText, placeholder }) => {
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
+        keyboardType={keyboardType}
+        returnKeyType={returnKeyType}
       />
     </View>
   );

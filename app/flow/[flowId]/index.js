@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Button, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DraggableFlatList from 'react-native-draggable-flatlist';
-import { useLocalSearchParams, Link } from 'expo-router';
+import { useLocalSearchParams, Link, router } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import styles from '../../styles/stylesIndex';
@@ -154,33 +154,47 @@ const FlowOverview = () => {
             <TouchableOpacity
                 onLongPress={drag}
                 style={{
-                    backgroundColor: isActive ? 'blue' : 'grey',
-                    padding: 20,
-                    margin: 5,
-                    borderRadius: 5,
+                    ...styles.pageDisplay,
+                    backgroundColor: isActive ? "#f0f0f0" : "white",
+                    shadowColor: isActive ? "#f0f0f0" : "#f0f0f0",
+                    shadowOffset: { width: 0, height: 6 },
+                    shadowOpacity: 1,
+                    shadowRadius: 2,
+                    marginBottom: 10,
                 }}>
-                <Text style={{ color: 'white' }}>{item.name}</Text>
-                <Button title="Delete" onPress={() => handleDeletePage(item.id)} />
+                <Text style={{ color: 'black', marginLeft: 20, fontSize: 18 }}>{item.name}</Text>
+                <TouchableOpacity style={{...styles.modalButtonClose, maxWidth:120, height: 50, alignContent: 'center', paddingVertical: 14}} onPress={() => handleDeletePage(item.id)}>
+                    <Text style={{...styles.whitetext, fontSize: 16}}>Delete</Text>
+                </TouchableOpacity>
             </TouchableOpacity>
         </Link>
     );
 
+    const Spacer = ({ height }) => <View style={{ height }} />;
+    const FlexSpacer = () => <View style={{ flex: 1 }} />;
+
 
     return (
-        <GestureHandlerRootView style={{ flex: 1, marginTop: 50, marginBottom: 50 }}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <Text>Flow Overview - {flow?.name}</Text>
-                <Button title="Add New Page" onPress={handleAddPage} />
+                <Spacer height={32} />
+                <Text style={styles.modalTitle}>Flow Overview - {flow?.name}</Text>
+                <TouchableOpacity style={styles.modalButton} onPress={handleAddPage}>
+                    <Text>Add New Page</Text>
+                </TouchableOpacity>
                 <DraggableFlatList
+                    style={{ maxHeight: '83%' }}
                     data={pages}
                     renderItem={renderItem}
                     keyExtractor={(item) => `draggable-item-${item.id}`}
                     onDragEnd={({ data }) => setPages(data)}
                 />
-                <Button title="Settings" onPress={() => setFlowSettingOverlayVisible(true)} />
-                <Link href="/" asChild>
-                    <Button title="Go back" onPress={() => {}} />
-                </Link>
+                <TouchableOpacity style={{...styles.modalButton, position: 'absolute', bottom: 50}} onPress={() => setFlowSettingOverlayVisible(true)}>
+                    <Text>Flow Settings</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{...styles.modalButtonClose, position: 'absolute', bottom: 0}} onPress={() => router.push({ pathname: `/` }) }>
+                    <Text style={styles.whitetext}>Go Back</Text>
+                </TouchableOpacity>
             </View>
             <FlowOverviewSettingsOverlayModal
                 visible={flowSettingOverlayVisible}

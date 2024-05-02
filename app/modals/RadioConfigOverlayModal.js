@@ -10,27 +10,47 @@ const RadioConfigOverlayModal = ({
     component,
     onLabelChange,
     onSaveValue,
+    variables,
+    ButtonConfigurationComponent,
+    setHapticNodes,
+    hapticNodes,
+    currentButtonId,
 }) => {
     const [label, setLabel] = useState(component?.label || '');
+    const [hapticSequence, setHapticSequence] = useState(hapticNodes[currentButtonId] || []);
     // Convert the value to a string for use in TextInput
     // Initialize value safely by ensuring component and component.value are defined
-    const [value, setValue] = useState((component?.value ?? 0).toString());
+    const [variableValues, setVariableValues] = useState({});
 
 
     useEffect(() => {
         if (component) {
-            setLabel(component.label || '');
-            // Use nullish coalescing to ensure we fallback to '0' if component.value is undefined
-            setValue((component.value ?? 0).toString());
+        setLabel(component.label || '');
+        setHapticSequence(hapticNodes[component.id] || []);
+        // Initialize variable values
+        const initialValues = {};
+        console.log(variables);
+        variables.forEach(varItem => {
+            initialValues[varItem.id] = varItem.value.toString();
+        });
+        setVariableValues(initialValues);
         }
-    }, [component]);
-    
+    }, [component, variables, hapticNodes]);
+
+    const handleVariableChange = (id, value) => {
+        setVariableValues(prev => ({
+        ...prev,
+        [id]: value
+        }));
+    };
 
     const handleSave = () => {
         if (component) {
-            onLabelChange(component.id, label);
-            // Convert value back to a number when saving/updating
-            onSaveValue(component.id, parseInt(value, 10));
+        onLabelChange(component.id, label);
+        setHapticNodes({ ...hapticNodes, [component.id]: hapticSequence });
+        variables.forEach(varItem => {
+            onSaveValue(varItem.id, parseInt(variableValues[varItem.id], 10));
+        });
         }
         onClose();
     };
@@ -56,13 +76,32 @@ const RadioConfigOverlayModal = ({
                         placeholder="Enter Text"
                     />
                     {/* Add a break or space for layout if needed */}
-                    <Text>Radio Value</Text>
+                    {/* <Text>Radio Value</Text>
                     <TextInput
                         value={value}
                         onChangeText={setValue}
                         placeholder="Enter component's value"
                         keyboardType="numeric"  // Ensure the keyboard is appropriate for numeric input
-                    />
+                    /> */}
+                    {variables.map(varItem => (
+                        <View key={varItem.id} style={styles.picker}>
+                            {/* <Text>{varItem.name}</Text> */}
+                            <LabeledInput
+                                label={varItem.name}
+                                value={variableValues[varItem.id]}
+                                onChangeText={(text) => handleVariableChange(varItem.id, text)}
+                                keyboardType="numeric"
+                                returnKeyType="done"
+                            />
+                            {/* <TextInput
+                                value={variableValues[varItem.id]}
+                                onChangeText={(text) => handleVariableChange(varItem.id, text)}
+                                keyboardType="numeric"
+                                returnKeyType="done"
+                            /> */}
+                        </View>
+                    ))}
+                    {ButtonConfigurationComponent}
                     <FlexSpacer />
                     <TouchableOpacity style={styles.modalButtonClose} onPress={handleSave}>
                         <Text style={styles.whitetext}>Save</Text>

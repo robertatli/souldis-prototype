@@ -29,7 +29,7 @@ import RadioConfigOverlayModal from '../../../modals/RadioConfigOverlayModal.js'
 import CheckboxConfigOverlayModal from '../../../modals/CheckboxConfigOverlayModal.js';
 import TextConfigOverlayModal from '../../../modals/TextConfigOverlayModal.js';
 import TextInputConfigOverlayModal from '../../../modals/TextInputConfigOverlayModal.js';
-import { RadioButton, RadioGroup } from 'react-native-ui-lib';
+import { RadioGroup } from 'react-native-ui-lib';
 
 
 
@@ -52,9 +52,11 @@ export default function App() {
   const [buttonConfigs, setButtonConfigs] = useState({});
   const [hapticNodes, setHapticNodes] = useState({});
   const [viewMode, setViewMode] = useState(true);
+  const [selectedId, setSelectedId] = useState(null);
+  const [variables, setVariables] = useState([]);
 
    // Use the custom hook to load page data and handle permissions
-   useLoadPageData(pageId, setComponents, setBackgroundImage, setSavedPages, flowId, setButtonConfigs, setHapticNodes);
+   useLoadPageData(pageId, setComponents, setBackgroundImage, setSavedPages, flowId, setButtonConfigs, setHapticNodes, setVariables);
 
   const HapticNodeItem = ({ item, drag, isActive, onValueChange }) => {
     // Assuming your `item` has a 'label' and 'value' that corresponds to the haptic feedback
@@ -226,14 +228,31 @@ export default function App() {
     }));
   };
 
-  const onSaveValue = (id, newValue) => {
-    setComponents(prevComponents => prevComponents.map(comp => {
-        if (comp.id === id) {
-            return { ...comp, value: newValue };
-        }
-        return comp;
-    }));
+  const onSaveValue = async (variableId, newValue) => {
+    const storedFlows = await AsyncStorage.getItem('@flows');
+    let flows = storedFlows ? JSON.parse(storedFlows) : [];
+    let flowIndex = flows.findIndex(f => f.id === flowId);
+    
+    if (flowIndex !== -1) {
+      let flow = flows[flowIndex];
+      let variableIndex = flow.variables.findIndex(v => v.id === variableId);
+      
+      if (variableIndex !== -1) {
+        // Update the variable value
+        flow.variables[variableIndex].value = newValue;
+  
+        // Update the flow in the array
+        flows[flowIndex] = flow;
+        
+        // Save the updated flows array back to AsyncStorage
+        await AsyncStorage.setItem('@flows', JSON.stringify(flows));
+        
+        // Optionally update the local state if you're also tracking changes there
+        setVariables(flow.variables);
+      }
+    }
   };
+  
 
   const updateComponent = (id, updates) => {
     setComponents(prevComponents => prevComponents.map(comp => {
@@ -245,7 +264,30 @@ export default function App() {
   };
 
 
+  const handleSelectVariable = async (variableId) => {
+      // Map through variables to update their values based on selection
+      const updatedVariables = variables.map(variable => {
+          if (variable.id === variableId) {
+              variable.value = selectedId === variableId ? 0 : 1; // Toggle value
+          }
+          return variable;
+      });
+      setVariables(updatedVariables);
+      setSelectedId(selectedId === variableId ? null : variableId);
+      // Save updated variables back to AsyncStorage
+      await saveFlowVariables(flowId, updatedVariables);
+  };
 
+  const saveFlowVariables = async (flowId, updatedVariables) => {
+    const storedFlows = await AsyncStorage.getItem('@flows');
+    let flowsArray = JSON.parse(storedFlows);
+    let flowIndex = flowsArray.findIndex(f => f.id === flowId);
+    if (flowIndex !== -1) {
+        flowsArray[flowIndex].variables = updatedVariables;
+        await AsyncStorage.setItem('@flows', JSON.stringify(flowsArray));
+    }
+    console.log("flow Variables: ", flowsArray[flowIndex].variables);
+};
 
   const handleAddComponent = (type) => {
     const baseComponent = {
@@ -260,10 +302,10 @@ export default function App() {
             setComponents([...components, {...baseComponent, nextPageId: null, hapticNodes: [], height: 40, width: '90%'}]);
             break;
         case 'Radio':
-            setComponents([...components, {...baseComponent, selected: false, label: ''}]); // Example additional property
+            setComponents([...components, {...baseComponent, selected: false, label: '', hapticNodes: []}]); // Example additional property
             break;
         case 'Checkbox':
-            setComponents([...components, {...baseComponent, checked: false, label: ''}]);
+            setComponents([...components, {...baseComponent, checked: false, label: '', hapticNodes: []}]);
             break;
         case 'Text':
             setComponents([...components, {...baseComponent, text: 'New Text'}]);
@@ -280,9 +322,10 @@ export default function App() {
   const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
   const onButtonPress = async (component) => {
+    const hapticSequence = hapticNodes[component.id] || [];
+
     switch (component.type) {
       case 'Button':
-        const hapticSequence = hapticNodes[component.id] || [];
         for (let node of hapticSequence) {
           switch (node.value) {
             case 'selectionAsync':
@@ -338,18 +381,108 @@ export default function App() {
         }
         break;
       case 'Radio':
-        
+        for (let node of hapticSequence) {
+          switch (node.value) {
+            case 'selectionAsync':
+              console.log('HapticSelection');
+              await Haptics.selectionAsync();
+              break;
+            case 'notificationAsyncSuccess':
+              console.log('HapticSuccess');
+              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+              break;
+            case 'notificationAsyncError':
+              console.log('HapticError');
+              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+              break;
+            case 'notificationAsyncWarning':
+              console.log('HapticWarning');
+              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+              break;
+            case 'impactAsyncLight':
+              console.log('HapticLight');
+              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              break;
+            case 'impactAsyncMedium':
+              console.log('HapticMedium');
+              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              break;
+            case 'impactAsyncHeavy':
+              console.log('HapticHeavy');
+              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+              break;
+            case 'delayAsync100':
+              console.log('Delay 100ms');
+              await delay(100);
+              break;
+            case 'delayAsync300':
+              console.log('Delay 300ms');
+              await delay(300);
+              break;
+            case 'delayAsync500':
+              console.log('Delay 500ms');
+              await delay(500);
+              break;
+          }
+        }
         break;
       case 'Checkbox':
         setComponents(prevComponents => {
-            return prevComponents.map(prevComponent => {
-                if (prevComponent.id === component.id) {
-                    return { ...prevComponent, checked: !prevComponent.checked };
-                } else {
-                    return prevComponent;
-                }
-            });
+          return prevComponents.map(prevComponent => {
+              if (prevComponent.id === component.id) {
+                  return { ...prevComponent, checked: !prevComponent.checked };
+              } else {
+                  return prevComponent;
+              }
+          });
         });
+        
+        for (let node of hapticSequence) {
+          switch (node.value) {
+            case 'selectionAsync':
+              console.log('HapticSelection');
+              await Haptics.selectionAsync();
+              break;
+            case 'notificationAsyncSuccess':
+              console.log('HapticSuccess');
+              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+              break;
+            case 'notificationAsyncError':
+              console.log('HapticError');
+              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+              break;
+            case 'notificationAsyncWarning':
+              console.log('HapticWarning');
+              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+              break;
+            case 'impactAsyncLight':
+              console.log('HapticLight');
+              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              break;
+            case 'impactAsyncMedium':
+              console.log('HapticMedium');
+              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              break;
+            case 'impactAsyncHeavy':
+              console.log('HapticHeavy');
+              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+              break;
+            case 'delayAsync100':
+              console.log('Delay 100ms');
+              await delay(100);
+              break;
+            case 'delayAsync300':
+              console.log('Delay 300ms');
+              await delay(300);
+              break;
+            case 'delayAsync500':
+              console.log('Delay 500ms');
+              await delay(500);
+              break;
+          }
+        }
+
+        
         break;
       case 'Text':
         break;
@@ -438,12 +571,19 @@ export default function App() {
         component={currentComponent}
         onLabelChange={onLabelChange}
         onSaveValue={onSaveValue}
+        variables={variables}
+        ButtonConfigurationComponent={<ButtonConfiguration />}
+        setHapticNodes={setHapticNodes}
+        hapticNodes={hapticNodes}
       />
       <CheckboxConfigOverlayModal
         visible={checkboxConfigOverlayVisible}
         onClose={() => setCheckboxConfigOverlayVisible(false)}
         component={currentComponent}
         onLabelChange={onLabelChange}
+        ButtonConfigurationComponent={<ButtonConfiguration />}
+        setHapticNodes={setHapticNodes}
+        hapticNodes={hapticNodes}
       />
       <TextConfigOverlayModal
         visible={textConfigOverlayVisible}
@@ -457,7 +597,7 @@ export default function App() {
         component={currentComponent}
         onLabelChange={onLabelChange}
       />
-        <RadioGroup initialValue={null}>
+        <RadioGroup onValueChange={handleSelectVariable} initialValue={selectedId}>
         {components.map((component) => (
           <DynamicComponent
               key={component.id}

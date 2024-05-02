@@ -54,6 +54,7 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, o
 
     const longPressGesture = Gesture.LongPress()
         .onEnd(() => {
+            console.log('Long press detected within dynamic');
             if (viewModeIsOn) return;
 
             runOnJS(onLongPress)(component);

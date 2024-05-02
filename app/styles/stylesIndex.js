@@ -143,9 +143,9 @@ const styles = StyleSheet.create({
         width: '80%',
     },
     modalButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
+      color: 'white',
+      fontWeight: 'bold',
+      textAlign: 'center',
     },
     textInput: {
       height: 40,
@@ -163,6 +163,17 @@ const styles = StyleSheet.create({
       marginTop: 10,
       padding: 10,
     },
+    pageDisplay: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      backgroundColor: '#ddd',
+      width: '100%',
+      height: 100,
+      padding: 10,
+      elevation: 3, // for Android
+  },
+  
     deleteButton: {
       // Ensure this button is outside and to the right of the setup item container
       padding: 8,
@@ -218,7 +229,7 @@ const styles = StyleSheet.create({
     flowList: {
       flex: 1,
       height: '100%',
-      width: '80%',
+      width: '100%',
       alignSelf: 'center',
     },
     variableItem: {

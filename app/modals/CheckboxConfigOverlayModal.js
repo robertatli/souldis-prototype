@@ -10,18 +10,26 @@ const CheckboxConfigOverlayModal = ({
     onClose,
     component,
     onLabelChange,
+    ButtonConfigurationComponent,
+    setHapticNodes,
+    hapticNodes,
+    currentButtonId,
 }) => {
     const [label, setLabel] = useState(component?.label || '');
+    const [hapticSequence, setHapticSequence] = useState(hapticNodes[currentButtonId] || []);
+
 
     useEffect(() => {
         if (component) {
             setLabel(component.label || '');
+            setHapticSequence(hapticNodes[component.id] || []);
         }
-    }, [component]);
+    }, [component, hapticNodes]);
 
     const handleSave = () => {
         if (component) {
             onLabelChange(component.id, label);
+            setHapticNodes({ ...hapticNodes, [component.id]: hapticSequence });
         }
         onClose();
     };
@@ -46,6 +54,7 @@ const CheckboxConfigOverlayModal = ({
                         onChangeText={setLabel}
                         placeholder="Enter Text"
                     />
+                    {ButtonConfigurationComponent}
                     <FlexSpacer />
                     <TouchableOpacity style={styles.modalButtonClose} onPress={handleSave}>
                         <Text style={styles.whitetext}>Save</Text>
