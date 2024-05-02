@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, View, Text, TextInput, Switch } from 'react-native';
+import { Button, View, Text, TextInput, Switch, TouchableOpacity } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useSharedValue } from 'react-native-reanimated';
@@ -8,6 +8,8 @@ import Checkbox from 'react-native-ui-lib/checkbox';
 import RadioGroup from 'react-native-ui-lib/radioGroup';
 import Radio from 'react-native-ui-lib/radioButton';
 import RadioButton from 'react-native-ui-lib/radioButton';
+
+import styles from '../../styles/stylesIndex';
 
 const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, onLabelChange, viewModeIsOn }) => {
     const positionX = useSharedValue(component.position.x);
@@ -66,13 +68,19 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, o
       });
 
       const renderComponentContent = () => {
+        const buttonStyle = {
+            ...styles.modalButton,
+            width: component.width || '90%', // Default width
+            height: component.height || 40 // Default height
+        };
         switch (component.type) {
             case 'Button':
-                return <Button title={component.label || `Button ${component.id}`} onPress={() => {}} />;
+                return <TouchableOpacity style={buttonStyle} onPress={() => {} }><Text>{component.label}</Text></TouchableOpacity>;
+                // return <Button title={component.label || `Button ${component.id}`} onPress={() => {}} />;
             case 'Radio':
                 return <RadioButton label={component.label} value={component.id}/>;
             case 'Checkbox':
-                return <Checkbox value={component.checked} onValueChange={() => {}} />;
+                return <Checkbox value={component.checked} label={component.label} onValueChange={() => {}} />;
             case 'Text':
                 return <Text>{component.label || `Text ${component.id}`}</Text>;
             case 'TextInput':
@@ -85,7 +93,7 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, o
 
     return (
         <GestureDetector gesture={gesture}>
-            <Animated.View style={[animatedStyle, { padding: 10, backgroundColor: '#eee' }]}>
+            <Animated.View style={[animatedStyle]}>
                 {renderComponentContent()}
             </Animated.View>
         </GestureDetector>

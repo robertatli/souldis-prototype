@@ -12,7 +12,7 @@ const SaveDesignModal = ({
     }) => {
     return (
         <Modal
-            animationType="fade"
+            animationType="slide"
             transparent={true}
             visible={modalVisible}
             onRequestClose={() => setModalVisible(!modalVisible)}

@@ -6,6 +6,7 @@ import { Link, router } from 'expo-router';
 
 import SaveDesignModal from './SaveDesignModal';
 import ComponentsMenuModal from './ComponentsMenuModal';
+import InfoSection from './InfoSection';
 
 const MainMenuModal = ({
     modalVisible,
@@ -33,6 +34,7 @@ const MainMenuModal = ({
     };
 
     const Spacer = ({ height }) => <View style={{ height }} />;
+    const FlexSpacer = () => <View style={{ flex: 1 }} />;
 
     if (isViewModeOn) {
         return (
@@ -41,30 +43,25 @@ const MainMenuModal = ({
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(!modalVisible)}
-            >
+            >   
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
+                        <Spacer height={32} />
+                        <Text style={styles.modalTitle}>Main Menu</Text>
+                        <InfoSection />
+                        <FlexSpacer />
                         <TouchableOpacity style={styles.modalButton} onPress={() => changeModes() }>
                             <Text>Change to Edit Mode</Text>
                         </TouchableOpacity>
-                        <Spacer height={10} />
-                        <TouchableOpacity style={styles.modalButton} onPress={() => router.push({ pathname: `/flow/${flowId}` }) }>
-                            <Text>Go back to Flow</Text>
+                        <TouchableOpacity style={styles.modalButtonClose} onPress={() => router.push({ pathname: `/flow/${flowId}` }) }>
+                            <Text style={styles.whitetext}>Go back to Flow</Text>
                         </TouchableOpacity>
-                        <Spacer height={10} />
-                        <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false) }>
-                            <Text>Close</Text>
+                        <TouchableOpacity style={styles.modalButtonClose} onPress={() => setModalVisible(false) }>
+                            <Text style={styles.whitetext}>Close</Text>
                         </TouchableOpacity>
 
                     </View>
                 </View>
-                {/* <SaveDesignModal
-                    modalVisible={savePageModalVisible}
-                    setModalVisible={setSavePageModalVisible}
-                    //pageName={pageName}
-                    //setPageName={setPageName}
-                    savePage={savePage}
-                /> */}
                     <ComponentsMenuModal 
                         modalVisible={componentsPageModalVisible}
                         setModalVisible={setComponentsPageModalVisible}
@@ -84,32 +81,20 @@ const MainMenuModal = ({
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        {/* <TouchableOpacity style={styles.modalButton} onPress={handleAddComponent}>
-                            <Text>Add Button</Text>
-                        </TouchableOpacity> */}
+                        <Spacer height={32} />
+
+                        <Text style={styles.modalTitle}>Main Menu</Text>
+
                         <TouchableOpacity style={styles.modalButton} onPress={() => setComponentsPageModalVisible(true)}>
                             <Text>Add Component</Text>
                         </TouchableOpacity>
-                        {/* <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Button')}>
-                            <Text>Add Button</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Radio')}>
-                            <Text>Add Radio</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Checkbox')}>
-                            <Text>Add Checkbox</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Text')}>
-                            <Text>Add Text</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('TextInput')}>
-                            <Text>Add TextInput</Text>
-                        </TouchableOpacity> */}
-    
                         
                         <TouchableOpacity style={styles.modalButton} onPress={pickImage}>
                             <Text>Set Background</Text>
                         </TouchableOpacity>
+
+                        <Spacer height={0} /> 
+                        {/* This Spacer is here because of a bug that was making the next element fade-in, now nothing fades in because this spacer is empty */}
     
                         <TouchableOpacity style={styles.modalButton} onPress={clearScreen}>
                             <Text>Clear The Screen</Text>
@@ -118,34 +103,19 @@ const MainMenuModal = ({
                         <TouchableOpacity style={styles.modalButton} onPress={savePage}>
                             <Text>Save Current Setup</Text>
                         </TouchableOpacity>
+                        
+                        <FlexSpacer />
 
                         <TouchableOpacity style={styles.modalButton} onPress={() => changeModes() }>
                             <Text>Change to View Mode </Text>
                         </TouchableOpacity>
 
-                    
-                        {/* <FlatList
-                            data={savedPages}
-                            keyExtractor={(item) => item.name}
-                            renderItem={({ item }) => (
-                                <View style={styles.setupItemRow}>
-                                    <TouchableOpacity onPress={() => loadPage(item)}>
-                                        <Text style={styles.setupItemText} numberOfLines={1} ellipsizeMode="tail">
-                                            {item.name}
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={styles.deleteButton} onPress={() => deletePage(item.name)}>
-                                        <Text style={styles.deleteButtonText}>🗑️</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            )}
-                        /> */}
-                        <Spacer height={10} />
-                        <Link href={`/flow/${flowId}`} asChild>
-                            <Button title="Go back to Flow" onPress={() => {}} />
-                        </Link>
-                        <Spacer height={10} />
-                        <Button title="Close" onPress={() => setModalVisible(false)} />
+                        <TouchableOpacity style={styles.modalButtonClose} onPress={() => router.push({ pathname: `/flow/${flowId}` }) }>
+                            <Text style={styles.whitetext}>Go back to Flow</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.modalButtonClose} onPress={() => setModalVisible(false) }>
+                            <Text style={styles.whitetext}>Close</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
                 {/* <SaveDesignModal

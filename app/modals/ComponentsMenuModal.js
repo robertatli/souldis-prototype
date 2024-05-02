@@ -8,17 +8,21 @@ const ComponentsMenuModal = ({
     setModalVisible,
     handleAddComponent
  }) => {
+    const Spacer = ({ height }) => <View style={{ height }} />;
+    const FlexSpacer = () => <View style={{ flex: 1 }} />;
+
     return (
         <Modal
             animationType="slide"
             transparent={true}
             visible={modalVisible}
             onRequestClose={() => setModalVisible(false)}
-        >
+        >   
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
+                    <Spacer height={32} />
                     {/* Add your components menu content here */}
-                    <Text>Components Menu</Text>
+                    <Text style={styles.modalTitle}>Components Menu</Text>
                     <TouchableOpacity style={styles.modalButton} onPress={() => handleAddComponent('Button')}>
                         <Text>Add Button</Text>
                     </TouchableOpacity>
@@ -35,8 +39,10 @@ const ComponentsMenuModal = ({
                         <Text>Add TextInput</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false)}>
-                        <Text>Close</Text>
+                    <FlexSpacer />
+
+                    <TouchableOpacity style={styles.modalButtonClose} onPress={() => setModalVisible(false)}>
+                        <Text style={styles.whitetext}>Close</Text>
                     </TouchableOpacity>
                 </View>
             </View>

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, Button, TextInput } from 'react-native';
+import { Modal, View, Text, Button, TextInput, TouchableOpacity } from 'react-native';
 import styles from '../styles/stylesIndex';
+
+import LabeledInput from './LabeledInput';
 
 const RadioConfigOverlayModal = ({
     visible,
@@ -33,6 +35,9 @@ const RadioConfigOverlayModal = ({
         onClose();
     };
 
+    const Spacer = ({ height }) => <View style={{ height }} />;
+    const FlexSpacer = () => <View style={{ flex: 1 }} />;
+
     return (
         <Modal
             visible={visible}
@@ -42,11 +47,13 @@ const RadioConfigOverlayModal = ({
         >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    <Text>Radio Configuration</Text>
-                    <TextInput
+                    <Spacer height={32} />
+                    <Text style={styles.modalTitle}>Radio Configuration</Text>
+                    <LabeledInput
+                        label="Label"
                         value={label}
                         onChangeText={setLabel}
-                        placeholder="Enter component label"
+                        placeholder="Enter Text"
                     />
                     {/* Add a break or space for layout if needed */}
                     <Text>Radio Value</Text>
@@ -56,7 +63,10 @@ const RadioConfigOverlayModal = ({
                         placeholder="Enter component's value"
                         keyboardType="numeric"  // Ensure the keyboard is appropriate for numeric input
                     />
-                    <Button title="Save" onPress={handleSave} />
+                    <FlexSpacer />
+                    <TouchableOpacity style={styles.modalButtonClose} onPress={handleSave}>
+                        <Text style={styles.whitetext}>Save</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </Modal>

@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
-      marginTop: 22,
     },
     modalView: {
       width: '100%',
@@ -53,16 +52,46 @@ const styles = StyleSheet.create({
       elevation: 5,
     },
     modalButton: {
-        backgroundColor: 'white',
-        padding: 10,
-        margin: 10,
-        borderRadius: 10,
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#000',
-        width: '90%',
-        height: 40,
-      },
+      backgroundColor: 'white',
+      padding: 10,
+      margin: 10,
+      borderRadius: 10,
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: '#000',
+      width: '90%',
+      height: 40,
+    },
+    bottomContainer: {
+      flex: 1, // Takes up all available space
+      justifyContent: 'flex-end', // Aligns children at the bottom
+      marginBottom: 20, // Adds some margin at the bottom
+    },
+    whitetext: {
+      color: '#FFFBEE',
+    },
+    modalButtonClose: {
+      backgroundColor: '#3C3630',
+      padding: 10,
+      margin: 10,
+      borderRadius: 10,
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: '#3C3630',
+      width: '90%',
+      height: 40,
+    },
+    modalButtonSave: {
+      backgroundColor: '#9E998F',
+      padding: 10,
+      margin: 10,
+      borderRadius: 10,
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: '#9E998F',
+      width: '90%',
+      height: 40,
+    },
     centeredModalView: {
         flex: 1,
         justifyContent: 'center',
@@ -149,6 +178,7 @@ const styles = StyleSheet.create({
       marginRight: 8,
     },    
     container: {
+      width: '100%',
       flex: 1,
       padding: 10,
     },
@@ -180,6 +210,10 @@ const styles = StyleSheet.create({
     },
     flowText: {
       fontSize: 18,
+    },
+    flowText2: {
+      fontSize: 18,
+      lineHeight: 32,
     },
     flowList: {
       flex: 1,

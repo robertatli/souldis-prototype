@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, Button, TextInput, FlatList } from 'react-native';
+import { Modal, View, Text, Button, TextInput, FlatList, TouchableOpacity } from 'react-native';
 import styles from '../styles/stylesIndex';
 
 import VariableItem from '../components/VariableItem/VariableItem';
+import LabeledInput from './LabeledInput';
 
 const FlowOverviewSettingsOverlayModal = ({
     visible,
@@ -20,24 +21,33 @@ const FlowOverviewSettingsOverlayModal = ({
         setNewVariableName('');
     };
 
+    const Spacer = ({ height }) => <View style={{ height }} />;
+    const FlexSpacer = () => <View style={{ flex: 1 }} />;
+
     return (
         <Modal visible={visible} onRequestClose={onClose} animationType="slide" transparent={true}>
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    <Text>Flow Settings</Text>
-                    <TextInput
-                        style={styles.textInput}
+                    <Spacer height={32} />
+                    <Text style={styles.modalTitle}>Flow Settings</Text>
+                    <LabeledInput
+                        label="Variable"
                         value={newVariableName}
                         onChangeText={setNewVariableName}
                         placeholder="New Variable Name"
                     />
-                    <Button title="Add Variable" onPress={handleSaveNewVariable} />
+                    <TouchableOpacity style={styles.modalButton} onPress={handleSaveNewVariable}>
+                        <Text>Add Variable</Text>
+                    </TouchableOpacity>
                     <FlatList
                         data={variables}
                         keyExtractor={item => item.id.toString()}
                         renderItem={({ item }) => <VariableItem item={item} onRenameVariable={onRenameVariable} handleRemoveVariable={handleRemoveVariable} />}
                     />
-                    <Button title="Close" onPress={onClose} />
+                    <FlexSpacer />
+                    <TouchableOpacity style={styles.modalButtonClose} onPress={onClose}>
+                        <Text style={styles.whitetext}>Save</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </Modal>

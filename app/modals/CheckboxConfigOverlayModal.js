@@ -1,7 +1,9 @@
 // ConfigOverlayModal.js
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, Button, TextInput } from 'react-native';
+import { Modal, View, Text, Button, TextInput, TouchableOpacity } from 'react-native';
 import styles from '../styles/stylesIndex';
+
+import LabeledInput from './LabeledInput';
 
 const CheckboxConfigOverlayModal = ({
     visible,
@@ -24,6 +26,9 @@ const CheckboxConfigOverlayModal = ({
         onClose();
     };
 
+    const Spacer = ({ height }) => <View style={{ height }} />;
+    const FlexSpacer = () => <View style={{ flex: 1 }} />;
+
     return (
         <Modal
             visible={visible}
@@ -33,13 +38,18 @@ const CheckboxConfigOverlayModal = ({
         >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    <Text>Checkbox Configuration</Text>
-                    <TextInput
+                    <Spacer height={32} />
+                    <Text style={styles.modalTitle}>Checkbox Configuration</Text>
+                    <LabeledInput
+                        label="Label"
                         value={label}
                         onChangeText={setLabel}
-                        placeholder="Enter component label"
+                        placeholder="Enter Text"
                     />
-                    <Button title="Save" onPress={handleSave} />
+                    <FlexSpacer />
+                    <TouchableOpacity style={styles.modalButtonClose} onPress={handleSave}>
+                        <Text style={styles.whitetext}>Save</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </Modal>

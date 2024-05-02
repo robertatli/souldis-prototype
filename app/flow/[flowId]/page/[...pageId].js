@@ -81,7 +81,6 @@ export default function App() {
   const HapticNodeList = ({ nodes, setNodes }) => {
     const renderItem = ({ item, drag, isActive }) => {
       const onValueChange = (key, newValue) => {
-        console.log(`Haptic feedback for ${key} changed to ${newValue}`);
         const updatedNodes = nodes.map((node) => 
           node.key === key ? { ...node, value: newValue, selectedHaptic: newValue } : node
         );
@@ -125,7 +124,9 @@ export default function App() {
     };
     return (
       <View style={styles.container}>
-        <Button title="Add Haptic Node" onPress={addHapticNode} />
+        <TouchableOpacity style={styles.modalButton} onPress={addHapticNode}>
+            <Text>Add Haptic Node</Text>
+        </TouchableOpacity>
         <HapticNodeList
           nodes={hapticNodes[currentButtonId] || []}
           setNodes={(newNodes) => {
@@ -234,6 +235,16 @@ export default function App() {
     }));
   };
 
+  const updateComponent = (id, updates) => {
+    setComponents(prevComponents => prevComponents.map(comp => {
+        if (comp.id === id) {
+            return { ...comp, ...updates };
+        }
+        return comp;
+    }));
+  };
+
+
 
 
   const handleAddComponent = (type) => {
@@ -246,13 +257,13 @@ export default function App() {
 
     switch (type) {
         case 'Button':
-            setComponents([...components, {...baseComponent, nextPageId: null, hapticNodes: []}]);
+            setComponents([...components, {...baseComponent, nextPageId: null, hapticNodes: [], height: 40, width: '90%'}]);
             break;
         case 'Radio':
-            setComponents([...components, {...baseComponent, selected: false}]); // Example additional property
+            setComponents([...components, {...baseComponent, selected: false, label: ''}]); // Example additional property
             break;
         case 'Checkbox':
-            setComponents([...components, {...baseComponent, checked: false}]);
+            setComponents([...components, {...baseComponent, checked: false, label: ''}]);
             break;
         case 'Text':
             setComponents([...components, {...baseComponent, text: 'New Text'}]);
@@ -272,7 +283,6 @@ export default function App() {
     switch (component.type) {
       case 'Button':
         const hapticSequence = hapticNodes[component.id] || [];
-        console.log('Haptic sequence:', hapticSequence);
         for (let node of hapticSequence) {
           switch (node.value) {
             case 'selectionAsync':
@@ -420,6 +430,7 @@ export default function App() {
           onLabelChange={onLabelChange}
           setHapticNodes={setHapticNodes}
           hapticNodes={hapticNodes}
+          onComponentUpdate={updateComponent}
       />
       <RadioConfigOverlayModal
         visible={radioConfigOverlayVisible}
