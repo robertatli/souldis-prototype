@@ -17,6 +17,7 @@ const FlowOverviewSettingsOverlayModal = ({
 }) => {
     const handleSaveNewVariable = () => {
         if (newVariableName.trim() === '') return;
+        console.log("Adding variable:", newVariableName);
         onAddVariable(newVariableName);
         setNewVariableName('');
     };

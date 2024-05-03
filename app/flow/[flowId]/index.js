@@ -78,16 +78,21 @@ const FlowOverview = () => {
     // Function to handle adding a new variable
     const handleAddVariable = (varName) => {
         const newVariable = {
-            id: uuidv4(), // Using Date.now() for simplicity
+            id: uuidv4(),
             name: varName,
             value: 0
         };
-        
-        const updatedVariables = [...variables, newVariable];
-        setVariables(updatedVariables);
-        updateFlowVariablesInStorage(updatedVariables);
-        saveFlowData({ ...flow, variables: [...flow.variables, newVariable] }); // Assuming flow includes a variables array
+      
+        setVariables(prevVariables => [...prevVariables, newVariable]);
+        setFlow(prevFlow => {
+            const updatedVariables = [...prevFlow.variables, newVariable];
+            updateFlowVariablesInStorage(updatedVariables);
+            const updatedFlow = {...prevFlow, variables: updatedVariables};
+            saveFlowData(updatedFlow);
+            return updatedFlow;
+        });
     };
+      
 
     const handleRenameVariable = (id, newName) => {
         const updatedVariables = variables.map(variable => {
@@ -104,19 +109,20 @@ const FlowOverview = () => {
     // Function to save flow data to AsyncStorage
     const saveFlowData = async (flowData) => {
         try {
-        const flows = await AsyncStorage.getItem('@flows');
-        let flowsArray = flows ? JSON.parse(flows) : [];
-        const flowIndex = flowsArray.findIndex(f => f.id === flowData.id);
-        if (flowIndex !== -1) {
-            flowsArray[flowIndex] = flowData;
-        } else {
-            flowsArray.push(flowData);
-        }
-        await AsyncStorage.setItem('@flows', JSON.stringify(flowsArray));
+            const flows = await AsyncStorage.getItem('@flows');
+            let flowsArray = flows ? JSON.parse(flows) : [];
+            const flowIndex = flowsArray.findIndex(f => f.id === flowData.id);
+            if (flowIndex !== -1) {
+                flowsArray[flowIndex] = flowData;
+            } else {
+                flowsArray.push(flowData);
+            }
+            await AsyncStorage.setItem('@flows', JSON.stringify(flowsArray));
         } catch (error) {
-        console.error('Failed to save flow data', error);
+            console.error('Failed to save flow data', error);
         }
     };
+      
 
     // Update the flow in AsyncStorage
     const updateFlowInStorage = async (updatedPages) => {
