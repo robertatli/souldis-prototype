@@ -8,7 +8,7 @@ import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withTimin
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faSeedling, faGripLinesVertical } from '@fortawesome/free-solid-svg-icons'
 
 import styles from './styles/stylesIndex';
 
@@ -142,14 +142,26 @@ const Home = () => {
                         shadowOpacity: 1,
                         shadowRadius: 2,
                         marginBottom: 10,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
                     }}>
                         <TextInput
-                            style={{...styles.flowText, color: 'black', marginLeft: 20, fontSize: 18 }}
+                            style={{
+                                ...styles.flowText,
+                                color: 'black',
+                                marginLeft: 20, 
+                                fontSize: 18, 
+                            }}
                             onChangeText={(text) => handleLocalChange(text)}
                             onEndEditing={(e) => handleLocalEndEditing()}
                             value={localName}
                         />
-                        <Spacer height={16} />
+                        <FontAwesomeIcon icon={faGripLinesVertical} size={48} style={{
+                                zIndex: 200,
+                                alignSelf: 'center',
+                                color: '#f0f0f0',
+                                }} />
                     </TouchableOpacity>
                 </Link>
             </Animated.View>
@@ -160,7 +172,7 @@ const Home = () => {
             height: 90, 
             alignContent: 'center', 
             paddingVertical: 14, 
-            position: 'absolute', 
+            position: 'absolute',  
             right: 0,
             zIndex: -1,
             backgroundColor: 'red',
@@ -176,10 +188,10 @@ const Home = () => {
     });
 
     return (
-        <GestureHandlerRootView>
+        <GestureHandlerRootView style={{ flex: 1 }}>
             <View>
                 <TouchableOpacity style={{...styles.modalButton, marginLeft: 20}} onPress={handleCreateFlow}>
-                    <Text>Create New Flow</Text>
+                    <Text><FontAwesomeIcon icon={faSeedling} /> Create New Flow</Text>
                 </TouchableOpacity>
                 <FlatList
                     data={flows}

@@ -3,6 +3,8 @@ import React from 'react';
 import { Modal, View, Text, TouchableOpacity, FlatList, Button } from 'react-native';
 import styles from '../styles/stylesIndex';
 import { Link, router } from 'expo-router';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faPen, faBoxOpen, faEye, faChevronLeft, faXmark, faImage, faEraser, faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
 
 import SaveDesignModal from './SaveDesignModal';
 import ComponentsMenuModal from './ComponentsMenuModal';
@@ -50,14 +52,49 @@ const MainMenuModal = ({
                         <Text style={styles.modalTitle}>Main Menu</Text>
                         <InfoSection />
                         <FlexSpacer />
-                        <TouchableOpacity style={styles.modalButton} onPress={() => changeModes() }>
-                            <Text>Change to Edit Mode</Text>
+                        <TouchableOpacity 
+                            style={{
+                                ...styles.modalButton, 
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }} 
+                            onPress={() => changeModes() }>
+                            <FontAwesomeIcon icon={faPen} size={18} style={{
+                                
+                                zIndex: 200,
+                                alignSelf: 'flex-start',}} />
+                            <Text style={{fontSize: 14, alignSelf: 'flex-end'}}> Change to Edit Mode</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.modalButtonClose} onPress={() => router.push({ pathname: `/flow/${flowId}` }) }>
-                            <Text style={styles.whitetext}>Go back to Flow</Text>
+                        <TouchableOpacity 
+                            style={{
+                                ...styles.modalButtonClose, 
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }} 
+                            onPress={() => router.push({ pathname: `/flow/${flowId}` }) }>
+                            <FontAwesomeIcon icon={faChevronLeft} size={18} style={{
+                                
+                                zIndex: 200,
+                                color: 'white',
+                                alignSelf: 'flex-start',}} />
+                            <Text style={{...styles.whitetext, fontSize: 14, alignSelf: 'flex-end'}}> Go back to Flow</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.modalButtonClose} onPress={() => setModalVisible(false) }>
-                            <Text style={styles.whitetext}>Close</Text>
+                        <TouchableOpacity 
+                            style={{
+                                ...styles.modalButtonClose, 
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }} 
+                            onPress={() => setModalVisible(false) }>
+                            <FontAwesomeIcon icon={faXmark} size={18} style={{
+                                
+                                zIndex: 200,
+                                color: 'white',
+                                alignSelf: 'flex-start',}} />
+                            <Text style={{...styles.whitetext, fontSize: 14, alignSelf: 'flex-end'}}> Close</Text>
                         </TouchableOpacity>
 
                     </View>
@@ -85,36 +122,114 @@ const MainMenuModal = ({
 
                         <Text style={styles.modalTitle}>Main Menu</Text>
 
-                        <TouchableOpacity style={styles.modalButton} onPress={() => setComponentsPageModalVisible(true)}>
-                            <Text>Add Component</Text>
+                        <TouchableOpacity 
+                            style={{
+                                ...styles.modalButton, 
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }} 
+                            onPress={() => setComponentsPageModalVisible(true)}>
+                            <FontAwesomeIcon icon={faBoxOpen} size={18} style={{
+                                
+                                zIndex: 200,
+                                alignSelf: 'flex-start',}} />
+                            <Text style={{fontSize: 14, alignSelf: 'flex-end'}}> Add Component</Text>
                         </TouchableOpacity>
                         
-                        <TouchableOpacity style={styles.modalButton} onPress={pickImage}>
-                            <Text>Set Background</Text>
+                        <TouchableOpacity 
+                            style={{
+                                ...styles.modalButton, 
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }} 
+                            onPress={pickImage}>
+                            <FontAwesomeIcon icon={faImage} size={18} style={{
+                                
+                                zIndex: 200,
+                                alignSelf: 'flex-start',}} />
+                            <Text style={{fontSize: 14, alignSelf: 'flex-end'}}> Set Background</Text>
                         </TouchableOpacity>
 
                         <Spacer height={0} /> 
                         {/* This Spacer is here because of a bug that was making the next element fade-in, now nothing fades in because this spacer is empty */}
-    
-                        <TouchableOpacity style={styles.modalButton} onPress={clearScreen}>
-                            <Text>Clear The Screen</Text>
+                        
+                        <TouchableOpacity 
+                            style={{
+                                ...styles.modalButton, 
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }} 
+                            onPress={clearScreen}>
+                            <FontAwesomeIcon icon={faEraser} size={18} style={{
+                                
+                                zIndex: 200,
+                                alignSelf: 'flex-start',}} />
+                            <Text style={{fontSize: 14, alignSelf: 'flex-end'}}> Clear The Screen</Text>
                         </TouchableOpacity>
-    
-                        <TouchableOpacity style={styles.modalButton} onPress={savePage}>
-                            <Text>Save Current Setup</Text>
+                        
+                        <TouchableOpacity 
+                            style={{
+                                ...styles.modalButton, 
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }} 
+                            onPress={savePage}>
+                            <FontAwesomeIcon icon={faFloppyDisk} size={18} style={{
+                                
+                                zIndex: 200,
+                                alignSelf: 'flex-start',}} />
+                            <Text style={{fontSize: 14, alignSelf: 'flex-end'}}> Save Page</Text>
                         </TouchableOpacity>
                         
                         <FlexSpacer />
 
-                        <TouchableOpacity style={styles.modalButton} onPress={() => changeModes() }>
-                            <Text>Change to View Mode </Text>
+                        <TouchableOpacity 
+                            style={{
+                                ...styles.modalButton, 
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }} 
+                            onPress={() => changeModes() }>
+                            <FontAwesomeIcon icon={faEye} size={18} style={{
+                                
+                                zIndex: 200,
+                                alignSelf: 'flex-start',}} />
+                            <Text style={{fontSize: 14, alignSelf: 'flex-end'}}> Change to View Mode</Text>
                         </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.modalButtonClose} onPress={() => router.push({ pathname: `/flow/${flowId}` }) }>
-                            <Text style={styles.whitetext}>Go back to Flow</Text>
+                        <TouchableOpacity 
+                            style={{
+                                ...styles.modalButtonClose, 
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }} 
+                            onPress={() => router.push({ pathname: `/flow/${flowId}` }) }>
+                            <FontAwesomeIcon icon={faChevronLeft} size={18} style={{
+                                
+                                zIndex: 200,
+                                color: 'white',
+                                alignSelf: 'flex-start',}} />
+                            <Text style={{...styles.whitetext, fontSize: 14, alignSelf: 'flex-end'}}> Go back to Flow</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.modalButtonClose} onPress={() => setModalVisible(false) }>
-                            <Text style={styles.whitetext}>Close</Text>
+                        <TouchableOpacity 
+                            style={{
+                                ...styles.modalButtonClose, 
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }} 
+                            onPress={() => setModalVisible(false) }>
+                            <FontAwesomeIcon icon={faXmark} size={18} style={{
+                                
+                                zIndex: 200,
+                                color: 'white',
+                                alignSelf: 'flex-start',}} />
+                            <Text style={{...styles.whitetext, fontSize: 14, alignSelf: 'flex-end'}}> Close</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

@@ -9,6 +9,8 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       width: width,
       height: height,
+      position: 'relative',
+      top: -65,
     },
     menuButtonContainer: {
       position: 'absolute',

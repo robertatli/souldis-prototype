@@ -30,6 +30,7 @@ import CheckboxConfigOverlayModal from '../../../modals/CheckboxConfigOverlayMod
 import TextConfigOverlayModal from '../../../modals/TextConfigOverlayModal.js';
 import TextInputConfigOverlayModal from '../../../modals/TextInputConfigOverlayModal.js';
 import { RadioGroup } from 'react-native-ui-lib';
+import SwipeToOpenModal from '../../../modals/SwipeToOpenModal.js';
 
 
 
@@ -292,7 +293,7 @@ export default function App() {
   const handleAddComponent = (type) => {
     const baseComponent = {
         id: uuidv4(),
-        position: { x: 0, y: 0 },
+        position: { x: 0, y: -400 },
         type: type,
         label: type === 'Text' ? 'New Text' : type,
     };
@@ -533,10 +534,13 @@ export default function App() {
   };
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
-      <View style={styles.menuButtonContainer}>
-        <Button title="Menu" onPress={() => setModalVisible(true)} color="white" />
+    <GestureHandlerRootView style={{ flex: 1}}>
+      <ImageBackground source={backgroundImage} resizeMode="cover" style={{...styles.backgroundImage, top: -60,}}>
+      <View style={{
+        width: '100%',
+        height: '100%',
+      }}>
+        <SwipeToOpenModal onOpen={() => setModalVisible(true)} />
       </View>
       <MainMenuModal 
           modalVisible={modalVisible}
@@ -575,6 +579,7 @@ export default function App() {
         ButtonConfigurationComponent={<ButtonConfiguration />}
         setHapticNodes={setHapticNodes}
         hapticNodes={hapticNodes}
+        currentButtonId={currentButtonId}
       />
       <CheckboxConfigOverlayModal
         visible={checkboxConfigOverlayVisible}
@@ -584,6 +589,7 @@ export default function App() {
         ButtonConfigurationComponent={<ButtonConfiguration />}
         setHapticNodes={setHapticNodes}
         hapticNodes={hapticNodes}
+        currentButtonId={currentButtonId}
       />
       <TextConfigOverlayModal
         visible={textConfigOverlayVisible}

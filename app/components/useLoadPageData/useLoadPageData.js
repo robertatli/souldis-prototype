@@ -13,7 +13,7 @@ const useLoadPageData = (pageId, setComponents, setBackgroundImage, setSavedPage
           const currentPage = pages.find(p => p.id === pageId);
           if (currentPage) {
               setComponents(currentPage.components);
-              setBackgroundImage(currentPage.backgroundImageUri);
+              setBackgroundImage(currentPage.backgroundImageUri || require('../../../assets/default-resized.png'));
   
               // Restore button configurations and haptic nodes
               const newButtonConfigs = {};
