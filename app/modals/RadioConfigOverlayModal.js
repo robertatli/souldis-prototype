@@ -29,7 +29,6 @@ const RadioConfigOverlayModal = ({
         setHapticSequence(hapticNodes[component.id] || []);
         // Initialize variable values
         const initialValues = {};
-        console.log(variables);
         variables.forEach(varItem => {
             initialValues[varItem.id] = varItem.value.toString();
         });

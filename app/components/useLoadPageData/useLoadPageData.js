@@ -3,7 +3,7 @@ import { Platform, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 
-const useLoadPageData = (pageId, setComponents, setBackgroundImage, setSavedPages, flowId, setButtonConfigs, setHapticNodes, setVariables) => {
+const useLoadPageData = (pageId, setComponents, setBackgroundImage, setSavedPages, flowId, setButtonConfigs, setHapticNodes, setVariables, savePage) => {
   useEffect(() => {
     // Function to load the page data
     const loadPageData = async () => {
@@ -82,6 +82,11 @@ const useLoadPageData = (pageId, setComponents, setBackgroundImage, setSavedPage
       console.log('Fetched pages:', currentPages[0].components);
     };
 
+    const interval = setInterval(() => {
+      console.log("Saving page data...");
+      savePage();
+    }, 60000); // 60000 milliseconds = 1 minute
+
     // Call the function to load page data
     loadPageData();
 
@@ -94,6 +99,10 @@ const useLoadPageData = (pageId, setComponents, setBackgroundImage, setSavedPage
     fetchPages();
 
     loadFlowData();
+
+    return () => {
+      clearInterval(interval); // This is crucial, it clears the interval when the component unmounts
+    };
   }, [pageId, setComponents, setBackgroundImage, flowId]);
 };
 

@@ -56,8 +56,57 @@ export default function App() {
   const [selectedId, setSelectedId] = useState(null);
   const [variables, setVariables] = useState([]);
 
+  const savePage = async () => {
+    // Fetch the existing list of pages
+    const storedPagesJson = await AsyncStorage.getItem('@pages');
+    let pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
+
+    // Find the page object using `pageId`
+    const currentPage = pages.find(p => p.id === pageId);
+
+    if (currentPage) {
+        console.log("Current page: ", JSON.stringify(currentPage, null, 2));
+        console.log("Current page components: ", JSON.stringify(currentPage.components, null, 2));
+    } else {
+        console.log("No page found with id:", pageId);
+    }
+    
+    
+    // Find the index of the current page using `pageId`
+    const pageIndex = pages.findIndex(p => p.id === pageId);
+    if (pageIndex !== -1) {
+      // Update the existing page data
+      // pages[pageIndex] = {
+      //   ...pages[pageIndex], // Preserve existing data
+      //   components: components, // Update components
+      //   backgroundImageUri: backgroundImage ? backgroundImage : null // Update background image
+      // };
+      pages[pageIndex] = {
+        ...pages[pageIndex],
+        components: components.map(component => ({
+            ...component,
+            nextPageId: buttonConfigs[component.id], // Assuming buttonConfigs is still relevant
+            hapticNodes: hapticNodes[component.id] || [] // Store current haptic configuration
+        })),
+        backgroundImageUri: backgroundImage ? backgroundImage : null
+    };
+
+      // Save the updated pages array back to storage
+      try {
+        await AsyncStorage.setItem('@pages', JSON.stringify(pages));
+        // alert('Page updated successfully!');
+      } catch (e) {
+        console.error('Failed to update page', e);
+        alert('Failed to update page.');
+      }
+    } else {
+      // This case should not normally occur since the page should exist
+      alert('Page not found!');
+    }
+  };
+  
    // Use the custom hook to load page data and handle permissions
-   useLoadPageData(pageId, setComponents, setBackgroundImage, setSavedPages, flowId, setButtonConfigs, setHapticNodes, setVariables);
+   useLoadPageData(pageId, setComponents, setBackgroundImage, setSavedPages, flowId, setButtonConfigs, setHapticNodes, setVariables, savePage);
 
   const HapticNodeItem = ({ item, drag, isActive, onValueChange }) => {
     // Assuming your `item` has a 'label' and 'value' that corresponds to the haptic feedback
@@ -150,54 +199,7 @@ export default function App() {
   };
   
   
-  const savePage = async () => {
-    // Fetch the existing list of pages
-    const storedPagesJson = await AsyncStorage.getItem('@pages');
-    let pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
-
-    // Find the page object using `pageId`
-    const currentPage = pages.find(p => p.id === pageId);
-
-    if (currentPage) {
-        console.log("Current page: ", JSON.stringify(currentPage, null, 2));
-        console.log("Current page components: ", JSON.stringify(currentPage.components, null, 2));
-    } else {
-        console.log("No page found with id:", pageId);
-    }
-    
-    
-    // Find the index of the current page using `pageId`
-    const pageIndex = pages.findIndex(p => p.id === pageId);
-    if (pageIndex !== -1) {
-      // Update the existing page data
-      // pages[pageIndex] = {
-      //   ...pages[pageIndex], // Preserve existing data
-      //   components: components, // Update components
-      //   backgroundImageUri: backgroundImage ? backgroundImage : null // Update background image
-      // };
-      pages[pageIndex] = {
-        ...pages[pageIndex],
-        components: components.map(component => ({
-            ...component,
-            nextPageId: buttonConfigs[component.id], // Assuming buttonConfigs is still relevant
-            hapticNodes: hapticNodes[component.id] || [] // Store current haptic configuration
-        })),
-        backgroundImageUri: backgroundImage ? backgroundImage : null
-    };
-
-      // Save the updated pages array back to storage
-      try {
-        await AsyncStorage.setItem('@pages', JSON.stringify(pages));
-        alert('Page updated successfully!');
-      } catch (e) {
-        console.error('Failed to update page', e);
-        alert('Failed to update page.');
-      }
-    } else {
-      // This case should not normally occur since the page should exist
-      alert('Page not found!');
-    }
-  };
+  
 
   
   const clearScreen = () => {
