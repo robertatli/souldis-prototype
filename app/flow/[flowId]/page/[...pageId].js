@@ -203,7 +203,7 @@ export default function App() {
   const clearScreen = () => {
     console.log('Clearing screen...');
     setComponents([]); // Clear all components
-    setBackgroundImage(require('../../../../assets/splash.png')); // Remove background image
+    setBackgroundImage(require('../../../../assets/default-resized.png')); // Remove background image
   };
 
 
