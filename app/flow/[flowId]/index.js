@@ -7,7 +7,7 @@ import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withTimin
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faTrash, faTree, faGear, faChevronLeft, faGripLinesVertical } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faLeaf, faGear, faChevronLeft, faGripLinesVertical } from '@fortawesome/free-solid-svg-icons'
 
 
 import styles from '../../styles/stylesIndex';
@@ -73,6 +73,17 @@ const FlowOverview = () => {
             console.error('Failed to create new page in @pages', e);
             alert('Failed to create new page.');
         }
+    };
+
+    const handleRenamePage = async (id, newName) => {
+        const updatedPages = pages.map(page => {
+            if (page.id === id) {
+                return { ...page, name: newName };
+            }
+            return page;
+        });
+        setPages(updatedPages);
+        await AsyncStorage.setItem('@pages', JSON.stringify(updatedPages));
     };
     
     // Function to handle adding a new variable
@@ -172,7 +183,7 @@ const FlowOverview = () => {
         };
     
         const handleLocalEndEditing = () => {
-            handleRenameFlow(item.id, localName);
+            handleRenamePage(item.id, localName);
         };
 
         const startX = useSharedValue(0);
@@ -304,7 +315,7 @@ const FlowOverview = () => {
                         justifyContent: 'center',
                     }} 
                     onPress={handleAddPage}>
-                    <FontAwesomeIcon icon={faTree} size={18} style={{
+                    <FontAwesomeIcon icon={faLeaf} size={18} style={{
                         float: 'left',
                         zIndex: 200,
                         alignSelf: 'flex-start',}} />

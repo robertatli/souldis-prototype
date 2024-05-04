@@ -8,7 +8,7 @@ import Animated, { interpolateColor, useAnimatedStyle, useSharedValue, withTimin
 import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-reanimated';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faTrash, faSeedling, faGripLinesVertical } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faTree, faGripLinesVertical } from '@fortawesome/free-solid-svg-icons'
 
 import styles from './styles/stylesIndex';
 
@@ -191,7 +191,7 @@ const Home = () => {
         <GestureHandlerRootView style={{ flex: 1 }}>
             <View>
                 <TouchableOpacity style={{...styles.modalButton, marginLeft: 20}} onPress={handleCreateFlow}>
-                    <Text><FontAwesomeIcon icon={faSeedling} /> Create New Flow</Text>
+                    <Text><FontAwesomeIcon icon={faTree} /> Create New Flow</Text>
                 </TouchableOpacity>
                 <FlatList
                     data={flows}
