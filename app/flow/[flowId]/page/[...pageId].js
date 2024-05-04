@@ -9,6 +9,7 @@ import { useLocalSearchParams, useGlobalSearchParams, Link, router } from 'expo-
 import Checkbox from 'react-native-ui-lib/checkbox.js'
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
+import Toast, { BaseToast } from 'react-native-toast-message';
 
 // import styles
 import styles from '../../../styles/stylesIndex.js';
@@ -56,6 +57,32 @@ export default function App() {
   const [selectedId, setSelectedId] = useState(null);
   const [variables, setVariables] = useState([]);
 
+
+  const toastConfig = {
+    success: (props) => (
+      <BaseToast
+        {...props}
+        style={{ borderLeftColor: '#3C3630' }}
+        contentContainerStyle={{ paddingHorizontal: 15 }}
+        text1Style={{
+          fontSize: 15,
+          fontWeight: '400'
+        }}
+      />
+    ),
+    error: (props) => (
+      <BaseToast
+        {...props}
+        style={{ borderLeftColor: '#a24040' }}
+        contentContainerStyle={{ paddingHorizontal: 15 }}
+        text1Style={{
+          fontSize: 15,
+          fontWeight: '400'
+        }}
+      />
+    ),
+  };
+
   const savePage = async () => {
     // Fetch the existing list of pages
     const storedPagesJson = await AsyncStorage.getItem('@pages');
@@ -95,9 +122,24 @@ export default function App() {
       try {
         await AsyncStorage.setItem('@pages', JSON.stringify(pages));
         // alert('Page updated successfully!');
+        Toast.show({
+          type: 'success',
+          text1: 'Saved Page Successfully!',
+          textStyle: { fontSize: 16 }, // Applies to all text if not overridden
+          position: 'top',
+          visibilityTime: 3000,
+          topOffset: 10, // Distance from the top (if position is 'top')
+      });
       } catch (e) {
         console.error('Failed to update page', e);
-        alert('Failed to update page.');
+        Toast.show({
+          type: 'error',
+          text1: 'Saving Page Unsuccessful!',
+          textStyle: { fontSize: 16 }, // Applies to all text if not overridden
+          position: 'top',
+          visibilityTime: 3000,
+          topOffset: 10, // Distance from the top (if position is 'top')
+      });
       }
     } else {
       // This case should not normally occur since the page should exist
@@ -619,6 +661,7 @@ export default function App() {
         ))}
         </RadioGroup>
       </ImageBackground>
+      <Toast config={toastConfig}/>
     </GestureHandlerRootView>
   );
 }

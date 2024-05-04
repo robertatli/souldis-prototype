@@ -5,6 +5,8 @@ import styles from '../styles/stylesIndex';
 import VariableItem from '../components/VariableItem/VariableItem';
 import LabeledInput from './LabeledInput';
 
+import Toast from 'react-native-toast-message';
+
 const FlowOverviewSettingsOverlayModal = ({
     visible,
     onClose,
@@ -49,6 +51,8 @@ const FlowOverviewSettingsOverlayModal = ({
                     <TouchableOpacity style={styles.modalButtonClose} onPress={onClose}>
                         <Text style={styles.whitetext}>Save</Text>
                     </TouchableOpacity>
+                    
+                    <Toast />
                 </View>
             </View>
         </Modal>

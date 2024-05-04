@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, Button, TextInput, TouchableOpacity } from 'react-native';
 import Dropdown from '../components/Dropdown/Dropdown';
 import styles from '../styles/stylesIndex';
+import Toast from 'react-native-toast-message';
 
 import LabeledInput from './LabeledInput';
 
@@ -105,6 +106,8 @@ const ButtonConfigOverlayModal = ({
                     <TouchableOpacity style={styles.modalButtonClose} onPress={handleSave}>
                         <Text style={styles.whitetext}>Save</Text>
                     </TouchableOpacity>
+                    
+                    <Toast />
                 </View>
             </View>
         </Modal>

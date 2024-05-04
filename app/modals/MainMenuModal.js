@@ -5,6 +5,7 @@ import styles from '../styles/stylesIndex';
 import { Link, router } from 'expo-router';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faPen, faBoxOpen, faEye, faChevronLeft, faXmark, faImage, faEraser, faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
+import Toast from 'react-native-toast-message';
 
 import SaveDesignModal from './SaveDesignModal';
 import ComponentsMenuModal from './ComponentsMenuModal';
@@ -96,7 +97,7 @@ const MainMenuModal = ({
                                 alignSelf: 'flex-start',}} />
                             <Text style={{...styles.whitetext, fontSize: 14, alignSelf: 'flex-end'}}> Close</Text>
                         </TouchableOpacity>
-
+                        <Toast />
                     </View>
                 </View>
                     <ComponentsMenuModal 
@@ -104,6 +105,7 @@ const MainMenuModal = ({
                         setModalVisible={setComponentsPageModalVisible}
                         handleAddComponent={handleAddComponent}
                     />
+                
             </Modal>
         );
     }
@@ -231,6 +233,7 @@ const MainMenuModal = ({
                                 alignSelf: 'flex-start',}} />
                             <Text style={{...styles.whitetext, fontSize: 14, alignSelf: 'flex-end'}}> Close</Text>
                         </TouchableOpacity>
+                        <Toast />
                     </View>
                 </View>
                 {/* <SaveDesignModal
@@ -245,6 +248,7 @@ const MainMenuModal = ({
                         setModalVisible={setComponentsPageModalVisible}
                         handleAddComponent={handleAddComponent}
                     />
+                
             </Modal>
         );
 

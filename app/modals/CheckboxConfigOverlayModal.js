@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, Button, TextInput, TouchableOpacity } from 'react-native';
 import styles from '../styles/stylesIndex';
+import Toast from 'react-native-toast-message';
 
 import LabeledInput from './LabeledInput';
 
@@ -59,6 +60,7 @@ const CheckboxConfigOverlayModal = ({
                     <TouchableOpacity style={styles.modalButtonClose} onPress={handleSave}>
                         <Text style={styles.whitetext}>Save</Text>
                     </TouchableOpacity>
+                    <Toast />
                 </View>
             </View>
         </Modal>

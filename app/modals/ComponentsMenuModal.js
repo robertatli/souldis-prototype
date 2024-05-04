@@ -5,6 +5,8 @@ import styles from '../styles/stylesIndex';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCircleDot, faFileText, faFloppyDisk, faICursor, faSquareCheck, faSquarePlus, faT, faXmark } from '@fortawesome/free-solid-svg-icons'
 
+import Toast from 'react-native-toast-message';
+
 
 const ComponentsMenuModal = ({ 
     modalVisible, 
@@ -114,6 +116,7 @@ const ComponentsMenuModal = ({
                                 alignSelf: 'flex-start',}} />
                             <Text style={{...styles.whitetext, fontSize: 14, alignSelf: 'flex-end'}}> Close</Text>
                         </TouchableOpacity>
+                    <Toast />
                 </View>
             </View>
         </Modal>

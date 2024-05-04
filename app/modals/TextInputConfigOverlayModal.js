@@ -4,6 +4,7 @@ import { Modal, View, Text, Button, TextInput, TouchableOpacity } from 'react-na
 import styles from '../styles/stylesIndex';
 
 import LabeledInput from './LabeledInput';
+import Toast from 'react-native-toast-message';
 
 const TextConfigOverlayModal = ({
     visible,
@@ -50,6 +51,7 @@ const TextConfigOverlayModal = ({
                     <TouchableOpacity style={styles.modalButtonClose} onPress={handleSave}>
                         <Text style={styles.whitetext}>Save</Text>
                     </TouchableOpacity>
+                    <Toast />
                 </View>
             </View>
         </Modal>
