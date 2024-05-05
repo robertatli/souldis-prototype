@@ -53,7 +53,7 @@ const MainMenuModal = ({
                 onRequestClose={() => setModalVisible(!modalVisible)}
             >   
                 <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
+                    <View style={styles.mainMenuModalView}>
                         <Spacer height={32} />
                         <Text style={styles.modalTitle}>Main Menu</Text>
                         <InfoSection />
@@ -128,7 +128,7 @@ const MainMenuModal = ({
                 onRequestClose={() => setModalVisible(!modalVisible)}
             >
                 <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
+                    <View style={styles.mainMenuModalView}>
                         <Spacer height={32} />
 
                         <Text style={styles.modalTitle}>Main Menu</Text>
