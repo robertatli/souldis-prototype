@@ -1,11 +1,12 @@
 // MainMenuModal.js
 import React from 'react';
-import { Modal, View, Text, TouchableOpacity, FlatList, Button } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Button } from 'react-native';
 import styles from '../styles/stylesIndex';
 import { Link, router } from 'expo-router';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faPen, faBoxOpen, faEye, faChevronLeft, faXmark, faImage, faEraser, faFloppyDisk } from '@fortawesome/free-solid-svg-icons'
 import Toast from 'react-native-toast-message';
+import Modal from "react-native-modal";
 
 import SaveDesignModal from './SaveDesignModal';
 import ComponentsMenuModal from './ComponentsMenuModal';
@@ -42,9 +43,13 @@ const MainMenuModal = ({
     if (isViewModeOn) {
         return (
             <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
+                transparent={false}
+                animationIn="slideInRight"
+                animationOut="slideOutRight"
+                // presentationStyle="fullScreen"
+                isVisible={modalVisible}
+                useNativeDriver={true}
+                // hasBackdrop={false}
                 onRequestClose={() => setModalVisible(!modalVisible)}
             >   
                 <View style={styles.centeredView}>
@@ -113,9 +118,13 @@ const MainMenuModal = ({
     else {
         return (
             <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
+                transparent={false}
+                animationIn="slideInRight"
+                animationOut="slideOutRight"
+                // presentationStyle="fullScreen"
+                isVisible={modalVisible}
+                useNativeDriver={true}
+                // hasBackdrop={false}
                 onRequestClose={() => setModalVisible(!modalVisible)}
             >
                 <View style={styles.centeredView}>

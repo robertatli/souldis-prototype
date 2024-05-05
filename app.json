@@ -16,7 +16,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.haukurs.souldisprototype"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,6 +30,14 @@
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "7f0b2899-75df-4e3f-8952-6ade1acc1ca8"
+      }
+    }
   }
 }
