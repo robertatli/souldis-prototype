@@ -5,6 +5,7 @@ import styles from '../styles/stylesIndex';
 import Toast from 'react-native-toast-message';
 
 import LabeledInput from './LabeledInput';
+import { runOnJS } from 'react-native-reanimated';
 
 const handleDimensionChange = (value) => {
     // Ensure the value is a string
@@ -43,7 +44,7 @@ const ButtonConfigOverlayModal = ({
             setLabel(component.label || '');
             setNextPageId(buttonConfigs[component.id] || '');
             setHapticSequence(hapticNodes[component.id] || []);
-            setWidth(component.width || '90%');
+            setWidth(component.width || '100%');
             setHeight(component.height || 40);
         }
     }, [component, buttonConfigs, hapticNodes]);
@@ -52,7 +53,7 @@ const ButtonConfigOverlayModal = ({
         if (component) {
             const formattedWidth = handleDimensionChange(width);
             const formattedHeight = handleDimensionChange(height);
-            onLabelChange(component.id, label);
+            runOnJS(onLabelChange)(component.id, label);
             setButtonConfigs({ ...buttonConfigs, [component.id]: nextPageId });
             setHapticNodes({ ...hapticNodes, [component.id]: hapticSequence });
             onComponentUpdate(component.id, { ...component, width: formattedWidth, height: formattedHeight });

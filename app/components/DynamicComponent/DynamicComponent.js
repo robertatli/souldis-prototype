@@ -71,7 +71,7 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, o
       const renderComponentContent = () => {
         const buttonStyle = {
             ...styles.modalButton,
-            width: component.width || '90%', // Default width
+            width: component.width || '100%', // Default width
             height: component.height || 40 // Default height
         };
         switch (component.type) {

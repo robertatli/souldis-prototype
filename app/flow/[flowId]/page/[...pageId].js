@@ -344,7 +344,7 @@ export default function App() {
 
     switch (type) {
         case 'Button':
-            setComponents([...components, {...baseComponent, nextPageId: null, hapticNodes: [], height: 40, width: '90%'}]);
+            setComponents([...components, {...baseComponent, nextPageId: null, hapticNodes: [], height: 40, width: '100%'}]);
             break;
         case 'Radio':
             setComponents([...components, {...baseComponent, selected: false, label: '', hapticNodes: []}]); // Example additional property
