@@ -49,8 +49,10 @@ const MainMenuModal = ({
                 // presentationStyle="fullScreen"
                 isVisible={modalVisible}
                 useNativeDriver={true}
+                coverScreen={true}
                 // hasBackdrop={false}
                 onRequestClose={() => setModalVisible(!modalVisible)}
+                style={{ margin: 0 }}
             >   
                 <View style={styles.centeredView}>
                     <View style={styles.mainMenuModalView}>
@@ -126,6 +128,7 @@ const MainMenuModal = ({
                 useNativeDriver={true}
                 // hasBackdrop={false}
                 onRequestClose={() => setModalVisible(!modalVisible)}
+                style={{ margin: 0 }}
             >
                 <View style={styles.centeredView}>
                     <View style={styles.mainMenuModalView}>

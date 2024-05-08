@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     modalView: {
       width: '100%',
       height: '100%',
-      margin: 20,
+      margin: 0,
       backgroundColor: 'white',
       borderRadius: 20,
       padding: 35,
@@ -54,9 +54,9 @@ const styles = StyleSheet.create({
       elevation: 5,
     },
     mainMenuModalView: {
-      width: '110%',
-      height: '110%',
-      margin: 20,
+      width: '100%',
+      height: '100%',
+      margin: 0,
       backgroundColor: 'white',
       borderRadius: 20,
       padding: 35,

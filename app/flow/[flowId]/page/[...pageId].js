@@ -647,7 +647,10 @@ export default function App() {
         component={currentComponent}
         onLabelChange={onLabelChange}
       />
-        <RadioGroup onValueChange={handleSelectVariable} initialValue={selectedId}>
+        <RadioGroup onValueChange={handleSelectVariable} initialValue={selectedId} 
+        style={{
+          width: '100%', 
+          }}>
         {components.map((component) => (
           <DynamicComponent
               key={component.id}
