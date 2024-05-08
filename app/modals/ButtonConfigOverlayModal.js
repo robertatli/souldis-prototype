@@ -5,7 +5,9 @@ import styles from '../styles/stylesIndex';
 import Toast from 'react-native-toast-message';
 
 import LabeledInput from './LabeledInput';
+import CheckBoxInput from './CheckboxInput';
 import { runOnJS } from 'react-native-reanimated';
+import { Checkbox } from 'react-native-ui-lib';
 
 const handleDimensionChange = (value) => {
     // Ensure the value is a string
@@ -38,6 +40,7 @@ const ButtonConfigOverlayModal = ({
     const [hapticSequence, setHapticSequence] = useState(hapticNodes[currentButtonId] || []);
     const [width, setWidth] = useState(component?.width || '90%');
     const [height, setHeight] = useState(component?.height || 40);
+    const [checked, setChecked] = useState(component?.visible || true);
 
     useEffect(() => {
         if (component) {
@@ -56,9 +59,16 @@ const ButtonConfigOverlayModal = ({
             runOnJS(onLabelChange)(component.id, label);
             setButtonConfigs({ ...buttonConfigs, [component.id]: nextPageId });
             setHapticNodes({ ...hapticNodes, [component.id]: hapticSequence });
-            onComponentUpdate(component.id, { ...component, width: formattedWidth, height: formattedHeight });
+            onComponentUpdate(component.id, { ...component, width: formattedWidth, height: formattedHeight, visible: checked });
         }
         onClose();
+    };
+
+    const checkValueChanged = () => {
+        const newVisibility = !checked;
+        console.log(`Old visibility: ${component.visible}, new: ${newVisibility}`);
+        setChecked(newVisibility);
+        onComponentUpdate(component.id, { ...component, visible: newVisibility });  
     };
 
     const Spacer = ({ height }) => <View style={{ height }} />;
@@ -101,6 +111,11 @@ const ButtonConfigOverlayModal = ({
                             setNextPageId(selectedSetup);
                             setButtonConfigs({ ...buttonConfigs, [id]: selectedSetup });
                         }}
+                    />
+                    <CheckBoxInput 
+                        label={"Visible in View mode"}
+                        checked={checked}
+                        checkValueChanged={checkValueChanged}
                     />
                     {ButtonConfigurationComponent}
                     <FlexSpacer />

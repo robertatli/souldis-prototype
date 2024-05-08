@@ -263,6 +263,52 @@ export default function App() {
     setModalVisible(false); // Optionally close the modal after setting the background
   };
 
+  const PlayHapticSequence = async (hapticSequence) => {
+    for (let node of hapticSequence) {
+      switch (node.value) {
+        case 'selectionAsync':
+          console.log('HapticSelection');
+          await Haptics.selectionAsync();
+          break;
+        case 'notificationAsyncSuccess':
+          console.log('HapticSuccess');
+          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          break;
+        case 'notificationAsyncError':
+          console.log('HapticError');
+          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+          break;
+        case 'notificationAsyncWarning':
+          console.log('HapticWarning');
+          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+          break;
+        case 'impactAsyncLight':
+          console.log('HapticLight');
+          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          break;
+        case 'impactAsyncMedium':
+          console.log('HapticMedium');
+          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+          break;
+        case 'impactAsyncHeavy':
+          console.log('HapticHeavy');
+          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+          break;
+        case 'delayAsync100':
+          console.log('Delay 100ms');
+          await delay(100);
+          break;
+        case 'delayAsync300':
+          console.log('Delay 300ms');
+          await delay(300);
+          break;
+        case 'delayAsync500':
+          console.log('Delay 500ms');
+          await delay(500);
+          break;
+      }
+    }
+  };
 
   const onLabelChange = (id, newLabel) => {
     setComponents(prevComponents => prevComponents.map(comp => {
@@ -302,6 +348,7 @@ export default function App() {
   const updateComponent = (id, updates) => {
     setComponents(prevComponents => prevComponents.map(comp => {
         if (comp.id === id) {
+            console.log({ ...comp, ...updates });
             return { ...comp, ...updates };
         }
         return comp;
@@ -344,7 +391,7 @@ export default function App() {
 
     switch (type) {
         case 'Button':
-            setComponents([...components, {...baseComponent, nextPageId: null, hapticNodes: [], height: 40, width: '100%'}]);
+            setComponents([...components, {...baseComponent, nextPageId: null, hapticNodes: [], height: 40, width: '100%', visible: true}]);
             break;
         case 'Radio':
             setComponents([...components, {...baseComponent, selected: false, label: '', hapticNodes: []}]); // Example additional property
@@ -371,50 +418,7 @@ export default function App() {
 
     switch (component.type) {
       case 'Button':
-        for (let node of hapticSequence) {
-          switch (node.value) {
-            case 'selectionAsync':
-              console.log('HapticSelection');
-              await Haptics.selectionAsync();
-              break;
-            case 'notificationAsyncSuccess':
-              console.log('HapticSuccess');
-              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-              break;
-            case 'notificationAsyncError':
-              console.log('HapticError');
-              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-              break;
-            case 'notificationAsyncWarning':
-              console.log('HapticWarning');
-              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-              break;
-            case 'impactAsyncLight':
-              console.log('HapticLight');
-              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              break;
-            case 'impactAsyncMedium':
-              console.log('HapticMedium');
-              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-              break;
-            case 'impactAsyncHeavy':
-              console.log('HapticHeavy');
-              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-              break;
-            case 'delayAsync100':
-              console.log('Delay 100ms');
-              await delay(100);
-              break;
-            case 'delayAsync300':
-              console.log('Delay 300ms');
-              await delay(300);
-              break;
-            case 'delayAsync500':
-              console.log('Delay 500ms');
-              await delay(500);
-              break;
-          }
-        }
+        PlayHapticSequence(hapticSequence);
 
         const nextPageId = buttonConfigs[component.id]; // Assuming buttonConfigs stores page IDs now
 
@@ -426,50 +430,7 @@ export default function App() {
         }
         break;
       case 'Radio':
-        for (let node of hapticSequence) {
-          switch (node.value) {
-            case 'selectionAsync':
-              console.log('HapticSelection');
-              await Haptics.selectionAsync();
-              break;
-            case 'notificationAsyncSuccess':
-              console.log('HapticSuccess');
-              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-              break;
-            case 'notificationAsyncError':
-              console.log('HapticError');
-              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-              break;
-            case 'notificationAsyncWarning':
-              console.log('HapticWarning');
-              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-              break;
-            case 'impactAsyncLight':
-              console.log('HapticLight');
-              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              break;
-            case 'impactAsyncMedium':
-              console.log('HapticMedium');
-              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-              break;
-            case 'impactAsyncHeavy':
-              console.log('HapticHeavy');
-              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-              break;
-            case 'delayAsync100':
-              console.log('Delay 100ms');
-              await delay(100);
-              break;
-            case 'delayAsync300':
-              console.log('Delay 300ms');
-              await delay(300);
-              break;
-            case 'delayAsync500':
-              console.log('Delay 500ms');
-              await delay(500);
-              break;
-          }
-        }
+        PlayHapticSequence(hapticSequence);
         break;
       case 'Checkbox':
         setComponents(prevComponents => {
@@ -482,52 +443,7 @@ export default function App() {
           });
         });
         
-        for (let node of hapticSequence) {
-          switch (node.value) {
-            case 'selectionAsync':
-              console.log('HapticSelection');
-              await Haptics.selectionAsync();
-              break;
-            case 'notificationAsyncSuccess':
-              console.log('HapticSuccess');
-              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-              break;
-            case 'notificationAsyncError':
-              console.log('HapticError');
-              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-              break;
-            case 'notificationAsyncWarning':
-              console.log('HapticWarning');
-              await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-              break;
-            case 'impactAsyncLight':
-              console.log('HapticLight');
-              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-              break;
-            case 'impactAsyncMedium':
-              console.log('HapticMedium');
-              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-              break;
-            case 'impactAsyncHeavy':
-              console.log('HapticHeavy');
-              await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-              break;
-            case 'delayAsync100':
-              console.log('Delay 100ms');
-              await delay(100);
-              break;
-            case 'delayAsync300':
-              console.log('Delay 300ms');
-              await delay(300);
-              break;
-            case 'delayAsync500':
-              console.log('Delay 500ms');
-              await delay(500);
-              break;
-          }
-        }
-
-        
+        PlayHapticSequence(hapticSequence);
         break;
       case 'Text':
         break;

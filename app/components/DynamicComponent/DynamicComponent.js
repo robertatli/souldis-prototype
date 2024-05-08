@@ -71,11 +71,14 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, o
         const buttonStyle = {
             ...styles.modalButton,
             width: component.width || '100%', // Default width
-            height: component.height || 40 // Default height
+            height: component.height || 40, // Default height
+            backgroundColor: viewModeIsOn && !component.visible ? 'transparent' : 'white',
+            borderColor: viewModeIsOn && !component.visible ? 'transparent' : 'black',
+            //opacity: viewModeIsOn ? 0.5 : 1,
         };
         switch (component.type) {
             case 'Button':
-                return <TouchableOpacity style={buttonStyle} onPress={() => {} }><Text>{component.label}</Text></TouchableOpacity>;
+                return <TouchableOpacity style={buttonStyle} onPress={() => {} }><Text>{viewModeIsOn && !component.visible ? '' : component.label}</Text></TouchableOpacity>;
                 // return <Button title={component.label || `Button ${component.id}`} onPress={() => {}} />;
             case 'Radio':
                 return <RadioButton label={component.label} value={component.id}/>;
