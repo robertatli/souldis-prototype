@@ -43,9 +43,11 @@ import SwipeToOpenModal from '../../../modals/SwipeToOpenModal.js';
 
 
 export default function App() {
+  // Here we get the flowId and pageId from the URL parameters, this is because we have dynamic routing.
   const { flowId, pageId: pageIdArray } = useLocalSearchParams();  // Extracting pageId from the URL parameters
   const pageId = Array.isArray(pageIdArray) ? pageIdArray[0] : pageIdArray;
 
+  // Here we create and store our states for our page.
   const [components, setComponents] = useState([]);
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
