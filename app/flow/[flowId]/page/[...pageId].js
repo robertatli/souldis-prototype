@@ -22,6 +22,10 @@ import ButtonComponent from '../../../components/ButtonComponent/ButtonComponent
 import useLoadPageData from '../../../components/useLoadPageData/useLoadPageData.js';
 import DynamicComponent from '../../../components/DynamicComponent/DynamicComponent.js';
 
+
+// import utility functions
+// import { createPositionHandler } from '../../../components/Page/handlePositionChange.js';
+
 // import modals
 //import SaveDesignModal from '../../modals/SaveDesignModal.js';
 import MainMenuModal from '../../../modals/MainMenuModal.js';
@@ -239,6 +243,8 @@ export default function App() {
       return comp;
     }));
   };
+
+  // const handlePositionChange = useMemo(() => createPositionHandler(setComponents), [setComponents]);
   
   
   
