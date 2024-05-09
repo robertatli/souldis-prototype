@@ -1,30 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { View, Button, ImageBackground, Platform, Text, Modal, FlatList, TouchableOpacity, TextInput } from 'react-native';
-import * as Haptics from 'expo-haptics';
+import React, { useState, useMemo } from 'react';
+import { View, ImageBackground } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import * as ImagePicker from 'expo-image-picker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import DraggableFlatList from 'react-native-draggable-flatlist';
-import { useLocalSearchParams, useGlobalSearchParams, Link, router } from 'expo-router';
-import Checkbox from 'react-native-ui-lib/checkbox.js'
+import { useLocalSearchParams, router } from 'expo-router';
 import 'react-native-get-random-values';
-import { v4 as uuidv4 } from 'uuid';
-import Toast, { BaseToast } from 'react-native-toast-message';
+import Toast from 'react-native-toast-message';
 
 // import styles
 import styles from '../../../styles/stylesIndex.js';
 
 
 // import components
-import Dropdown from '../../../components/Dropdown/Dropdown.js';
-import HapticDropdown from '../../../components/HapticDropdown/HapticDropdown.js';
-import ButtonComponent from '../../../components/ButtonComponent/ButtonComponent.js';
 import useLoadPageData from '../../../components/useLoadPageData/useLoadPageData.js';
 import DynamicComponent from '../../../components/DynamicComponent/DynamicComponent.js';
 
 
 // import utility functions
-// import { createPositionHandler } from '../../../components/Page/handlePositionChange.js';
+import { savePageHelper, toastConfig } from '../../../components/Page/savePage.js';
+import { ButtonConfiguration } from '../../../components/Page/ButtonConfiguration.js';
+import { createPositionHandler } from '../../../components/Page/handlePositionChange.js';
+import { clearScreenHandler } from '../../../components/Page/clearScreen.js';
+import { pickImageHandler } from '../../../components/Page/pickImage.js';
+import { playHapticSequenceHelper } from '../../../components/Page/playHapticSequence.js';
+import { onLabelChangeHelper } from '../../../components/Page/onLabelChange.js';
+import { onSaveValueHandler } from '../../../components/Page/onSaveValue.js';
+import { updateComponentHelper } from '../../../components/Page/updateComponent.js';
+import { handleSelectVariableHandler } from '../../../components/Page/handleSelectVariable.js';
+import { handleAddComponentHandler } from '../../../components/Page/handleAddComponent.js';
+import { onButtonPressHandler } from '../../../components/Page/onButtonPress.js';
+import { onButtonLongPressHandler } from '../../../components/Page/onButtonLongPress.js';
 
 // import modals
 //import SaveDesignModal from '../../modals/SaveDesignModal.js';
@@ -61,444 +64,75 @@ export default function App() {
   const [selectedId, setSelectedId] = useState(null);
   const [variables, setVariables] = useState([]);
 
-
-  const toastConfig = {
-    success: (props) => (
-      <BaseToast
-        {...props}
-        style={{ borderLeftColor: '#3C3630' }}
-        contentContainerStyle={{ paddingHorizontal: 15 }}
-        text1Style={{
-          fontSize: 15,
-          fontWeight: '400'
-        }}
-      />
-    ),
-    error: (props) => (
-      <BaseToast
-        {...props}
-        style={{ borderLeftColor: '#a24040' }}
-        contentContainerStyle={{ paddingHorizontal: 15 }}
-        text1Style={{
-          fontSize: 15,
-          fontWeight: '400'
-        }}
-      />
-    ),
-  };
-
   const savePage = async () => {
-    // Fetch the existing list of pages
-    const storedPagesJson = await AsyncStorage.getItem('@pages');
-    let pages = storedPagesJson ? JSON.parse(storedPagesJson) : [];
-
-    // Find the page object using `pageId`
-    const currentPage = pages.find(p => p.id === pageId);
-
-    if (currentPage) {
-        console.log("Current page: ", JSON.stringify(currentPage, null, 2));
-        console.log("Current page components: ", JSON.stringify(currentPage.components, null, 2));
-    } else {
-        console.log("No page found with id:", pageId);
-    }
-    
-    
-    // Find the index of the current page using `pageId`
-    const pageIndex = pages.findIndex(p => p.id === pageId);
-    if (pageIndex !== -1) {
-      // Update the existing page data
-      // pages[pageIndex] = {
-      //   ...pages[pageIndex], // Preserve existing data
-      //   components: components, // Update components
-      //   backgroundImageUri: backgroundImage ? backgroundImage : null // Update background image
-      // };
-      pages[pageIndex] = {
-        ...pages[pageIndex],
-        components: components.map(component => ({
-            ...component,
-            nextPageId: buttonConfigs[component.id], // Assuming buttonConfigs is still relevant
-            hapticNodes: hapticNodes[component.id] || [] // Store current haptic configuration
-        })),
-        backgroundImageUri: backgroundImage ? backgroundImage : null
-    };
-
-      // Save the updated pages array back to storage
-      try {
-        await AsyncStorage.setItem('@pages', JSON.stringify(pages));
-        // alert('Page updated successfully!');
-        Toast.show({
-          type: 'success',
-          text1: 'Saved Page Successfully!',
-          textStyle: { fontSize: 16 }, // Applies to all text if not overridden
-          position: 'top',
-          visibilityTime: 3000,
-          topOffset: 10, // Distance from the top (if position is 'top')
-      });
-      } catch (e) {
-        console.error('Failed to update page', e);
-        Toast.show({
-          type: 'error',
-          text1: 'Saving Page Unsuccessful!',
-          textStyle: { fontSize: 16 }, // Applies to all text if not overridden
-          position: 'top',
-          visibilityTime: 3000,
-          topOffset: 10, // Distance from the top (if position is 'top')
-      });
-      }
-    } else {
-      // This case should not normally occur since the page should exist
-      alert('Page not found!');
-    }
+    savePageHelper(pageId, components, backgroundImage, buttonConfigs, hapticNodes);
   };
   
    // Use the custom hook to load page data and handle permissions
    useLoadPageData(pageId, setComponents, setBackgroundImage, setSavedPages, flowId, setButtonConfigs, setHapticNodes, setVariables, savePage);
 
-  const HapticNodeItem = ({ item, drag, isActive, onValueChange }) => {
-    // Assuming your `item` has a 'label' and 'value' that corresponds to the haptic feedback
-    return (
-      <TouchableOpacity
-        onLongPress={drag}
-        disabled={isActive}
-        style={[
-          styles.nodeItem,
-          { backgroundColor: isActive ? "lightgrey" : "#f0f0f0" },
-        ]}
-      >
-        <HapticDropdown
-          selectedHaptic={item.selectedHaptic}
-          onHapticChange={(value) => {
-            onValueChange(item.key, value); // Update based on item.key
-          }}
-          selectedValue={item.value}
-        />
-      </TouchableOpacity>
-    );
-  };
+  /* This is used for every component, to handle the current and updated positions and store them in the Local AsyncStorage database */
+  const handlePositionChange = useMemo(() => createPositionHandler(setComponents), [setComponents]);
   
-  const HapticNodeList = ({ nodes, setNodes }) => {
-    const renderItem = ({ item, drag, isActive }) => {
-      const onValueChange = (key, newValue) => {
-        const updatedNodes = nodes.map((node) => 
-          node.key === key ? { ...node, value: newValue, selectedHaptic: newValue } : node
-        );
-        setNodes(updatedNodes);
-      };
-  
-      return (
-        <HapticNodeItem
-          item={item}
-          drag={drag}
-          isActive={isActive}
-          onValueChange={onValueChange}
-        />
-      );
-    };
-  
-    return (
-      <DraggableFlatList
-        data={nodes}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.key}
-        onDragEnd={({ data }) => setNodes(data)}
-      />
-    );
-  };
-
-  // Main component logic
-  const ButtonConfiguration = () => {
-    //const [nodes, setNodes] = useState([]);
-  
-    // Function to add a new haptic node
-    const addHapticNode = () => {
-      const newNode = {
-        key: `${uuidv4()}`, // Unique key for the new node
-        value: 'selectionAsync', // Default value or some initial value
-        selectedHaptic: 'selectionAsync',
-      };
-      const currentNodes = hapticNodes[currentButtonId] || [];
-      const updatedNodes = [...currentNodes, newNode];
-      setHapticNodes({ ...hapticNodes, [currentButtonId]: updatedNodes });
-    };
-    return (
-      <View style={styles.container}>
-        <TouchableOpacity style={styles.modalButton} onPress={addHapticNode}>
-            <Text>Add Haptic Node</Text>
-        </TouchableOpacity>
-        <HapticNodeList
-          nodes={hapticNodes[currentButtonId] || []}
-          setNodes={(newNodes) => {
-            setHapticNodes({ ...hapticNodes, [currentButtonId]: newNodes });
-          }}
-        />
-      </View>
-    );
-  }; 
-
-  const handlePositionChange = (componentId, newPosition) => {
-    setComponents(currentComponents => currentComponents.map(comp => {
-      if (comp.id === componentId) {
-        return { ...comp, position: newPosition };
-      }
-      return comp;
-    }));
-  };
-
-  // const handlePositionChange = useMemo(() => createPositionHandler(setComponents), [setComponents]);
-  
-  
-  
-
-  
+  /* This is used in the main menu to clear the screen of any component and reset the background image. */
   const clearScreen = () => {
-    console.log('Clearing screen...');
-    setComponents([]); // Clear all components
-    setBackgroundImage(require('../../../../assets/DTC-Page.png')); // Remove background image
+    clearScreenHandler(setComponents, setBackgroundImage);
   };
 
-
+  /* This is used in the main menu to select a background image from the image library of the device. */
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        quality: 1,
-    });
+    pickImageHandler(setBackgroundImage, setModalVisible);
+  }
 
-    if (!result.cancelled) {
-        setBackgroundImage({ uri: result.assets[0].uri });
-    }
-    setModalVisible(false); // Optionally close the modal after setting the background
+  /* This is used in the ButtonComponent, Radio and Checkbox, to play haptic feedback from the nodes selected. */
+  const playHapticSequence = async (hapticSequence) => {
+    playHapticSequenceHelper(hapticSequence);
   };
 
-  const PlayHapticSequence = async (hapticSequence) => {
-    for (let node of hapticSequence) {
-      switch (node.value) {
-        case 'selectionAsync':
-          console.log('HapticSelection');
-          await Haptics.selectionAsync();
-          break;
-        case 'notificationAsyncSuccess':
-          console.log('HapticSuccess');
-          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-          break;
-        case 'notificationAsyncError':
-          console.log('HapticError');
-          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-          break;
-        case 'notificationAsyncWarning':
-          console.log('HapticWarning');
-          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-          break;
-        case 'impactAsyncLight':
-          console.log('HapticLight');
-          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          break;
-        case 'impactAsyncMedium':
-          console.log('HapticMedium');
-          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-          break;
-        case 'impactAsyncHeavy':
-          console.log('HapticHeavy');
-          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-          break;
-        case 'delayAsync100':
-          console.log('Delay 100ms');
-          await delay(100);
-          break;
-        case 'delayAsync300':
-          console.log('Delay 300ms');
-          await delay(300);
-          break;
-        case 'delayAsync500':
-          console.log('Delay 500ms');
-          await delay(500);
-          break;
-      }
-    }
-  };
-
+  /* This is used in every component that has the functionality of changing its label (displayed name) */
   const onLabelChange = (id, newLabel) => {
-    setComponents(prevComponents => prevComponents.map(comp => {
-        if (comp.id === id) {
-            return { ...comp, label: newLabel };
-        }
-        return comp;
-    }));
+    onLabelChangeHelper(id, newLabel, setComponents);
   };
 
+  /* This is used in the RadioComponent Modal, to update the values of variables stored in the flow */
   const onSaveValue = async (variableId, newValue) => {
-    const storedFlows = await AsyncStorage.getItem('@flows');
-    let flows = storedFlows ? JSON.parse(storedFlows) : [];
-    let flowIndex = flows.findIndex(f => f.id === flowId);
-    
-    if (flowIndex !== -1) {
-      let flow = flows[flowIndex];
-      let variableIndex = flow.variables.findIndex(v => v.id === variableId);
-      
-      if (variableIndex !== -1) {
-        // Update the variable value
-        flow.variables[variableIndex].value = newValue;
-  
-        // Update the flow in the array
-        flows[flowIndex] = flow;
-        
-        // Save the updated flows array back to AsyncStorage
-        await AsyncStorage.setItem('@flows', JSON.stringify(flows));
-        
-        // Optionally update the local state if you're also tracking changes there
-        setVariables(flow.variables);
-      }
-    }
+    onSaveValueHandler(variableId, newValue, setVariables, flowId);
   };
   
-
+  /* This is used in the ButtonComponent Modal, to update the height/width and visibility of the component */
   const updateComponent = (id, updates) => {
-    setComponents(prevComponents => prevComponents.map(comp => {
-        if (comp.id === id) {
-            console.log({ ...comp, ...updates });
-            return { ...comp, ...updates };
-        }
-        return comp;
-    }));
+    updateComponentHelper(id, updates, setComponents);
   };
 
-
+  /* This is used in the RadioGroup, to handle onChange to update the value of the selected variable */
   const handleSelectVariable = async (variableId) => {
-      // Map through variables to update their values based on selection
-      const updatedVariables = variables.map(variable => {
-          if (variable.id === variableId) {
-              variable.value = selectedId === variableId ? 0 : 1; // Toggle value
-          }
-          return variable;
-      });
-      setVariables(updatedVariables);
-      setSelectedId(selectedId === variableId ? null : variableId);
-      // Save updated variables back to AsyncStorage
-      await saveFlowVariables(flowId, updatedVariables);
+    handleSelectVariableHandler(variableId, variables, setVariables, selectedId, setSelectedId, flowId);
   };
 
-  const saveFlowVariables = async (flowId, updatedVariables) => {
-    const storedFlows = await AsyncStorage.getItem('@flows');
-    let flowsArray = JSON.parse(storedFlows);
-    let flowIndex = flowsArray.findIndex(f => f.id === flowId);
-    if (flowIndex !== -1) {
-        flowsArray[flowIndex].variables = updatedVariables;
-        await AsyncStorage.setItem('@flows', JSON.stringify(flowsArray));
-    }
-    console.log("flow Variables: ", flowsArray[flowIndex].variables);
-};
-
+  /* This is used in the main menu to handle the addition of any component to the page. */
   const handleAddComponent = (type) => {
-    const baseComponent = {
-        id: uuidv4(),
-        position: { x: 0, y: -400 },
-        type: type,
-        label: type === 'Text' ? 'New Text' : type,
-    };
+    handleAddComponentHandler(type, setComponents, components);
+  };
 
-    switch (type) {
-        case 'Button':
-            setComponents([...components, {...baseComponent, nextPageId: null, hapticNodes: [], height: 40, width: '100%', visible: true}]);
-            break;
-        case 'Radio':
-            setComponents([...components, {...baseComponent, selected: false, label: '', hapticNodes: []}]); // Example additional property
-            break;
-        case 'Checkbox':
-            setComponents([...components, {...baseComponent, checked: false, label: '', hapticNodes: []}]);
-            break;
-        case 'Text':
-            setComponents([...components, {...baseComponent, text: 'New Text'}]);
-            break;
-        case 'TextInput':
-            setComponents([...components, {...baseComponent, value: ''}]);
-            break;
-        default:
-            console.log('Unknown type');
-      }
-    };
-
-
-  const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
+  /* This is used by any component, and handles the logic for each component type when a button is pressed. */
   const onButtonPress = async (component) => {
-    const hapticSequence = hapticNodes[component.id] || [];
-
-    switch (component.type) {
-      case 'Button':
-        PlayHapticSequence(hapticSequence);
-
-        const nextPageId = buttonConfigs[component.id]; // Assuming buttonConfigs stores page IDs now
-
-        if (nextPageId) {
-            // Use the `router.navigate` or `router.push` method to navigate to the selected page
-            router.push({ pathname: `/flow/${flowId}/page/${nextPageId}` });
-        } else {
-            console.log(`Button ${component.id} pressed without a specific page configured.`);
-        }
-        break;
-      case 'Radio':
-        PlayHapticSequence(hapticSequence);
-        break;
-      case 'Checkbox':
-        setComponents(prevComponents => {
-          return prevComponents.map(prevComponent => {
-              if (prevComponent.id === component.id) {
-                  return { ...prevComponent, checked: !prevComponent.checked };
-              } else {
-                  return prevComponent;
-              }
-          });
-        });
-        
-        PlayHapticSequence(hapticSequence);
-        break;
-      case 'Text':
-        break;
-      case 'TextInput':
-        break;
-      default:
-          return null;
-    }
-
-    
+    onButtonPressHandler(component, hapticNodes, playHapticSequence, router, flowId, buttonConfigs, setComponents);
   };
 
+  /* This is used by any component, and handles the opening of modals for the component after a long press */
   const onButtonLongPress = (component) => {
-    switch (component.type) {
-        case 'Button':
-          setCurrentButtonId(component.id);
-          setCurrentComponent(component);
-          console.log(component.type, 'long press detected');
-          setConfigOverlayVisible(true);
-          break;
-        case 'Radio':
-          setCurrentButtonId(component.id);
-          setCurrentComponent(component);
-          console.log(component.type, 'long press detected');
-          setRadioConfigOverlayVisible(true);
-          break;
-        case 'Checkbox':
-          setCurrentButtonId(component.id);
-          setCurrentComponent(component);
-          console.log(component.type, 'long press detected');
-          setCheckboxConfigOverlayVisible(true);
-          break;
-        case 'Text':
-          setCurrentButtonId(component.id);
-          setCurrentComponent(component);
-          console.log(component.type, 'long press detected');
-          setTextConfigOverlayVisible(true);
-          break;
-        case 'TextInput': // open config for this component type
-          setCurrentButtonId(component.id);
-          setCurrentComponent(component);
-          console.log(component.type, 'long press detected');
-          setTextInputConfigOverlayVisible(true);
-          break;
-        default:
-            return null;
-    }
+    onButtonLongPressHandler(component, 
+      setCurrentButtonId, 
+      setCurrentComponent, 
+      setConfigOverlayVisible, 
+      setRadioConfigOverlayVisible, 
+      setCheckboxConfigOverlayVisible, 
+      setTextConfigOverlayVisible, 
+      setTextInputConfigOverlayVisible
+    );
   };
 
+  
   return (
     <GestureHandlerRootView style={{ flex: 1}}>
       <ImageBackground source={backgroundImage} resizeMode="cover" style={{...styles.backgroundImage, top: -60,}}>
@@ -528,7 +162,11 @@ export default function App() {
           currentButtonId={currentButtonId}
           buttonConfigs={buttonConfigs}
           setButtonConfigs={setButtonConfigs}
-          ButtonConfigurationComponent={<ButtonConfiguration />}
+          ButtonConfigurationComponent={<ButtonConfiguration 
+            currentButtonId={currentButtonId}
+            hapticNodes={hapticNodes}
+            setHapticNodes={setHapticNodes}
+          />}
           component={currentComponent}
           onLabelChange={onLabelChange}
           setHapticNodes={setHapticNodes}
@@ -542,7 +180,11 @@ export default function App() {
         onLabelChange={onLabelChange}
         onSaveValue={onSaveValue}
         variables={variables}
-        ButtonConfigurationComponent={<ButtonConfiguration />}
+        ButtonConfigurationComponent={<ButtonConfiguration 
+          currentButtonId={currentButtonId}
+          hapticNodes={hapticNodes}
+          setHapticNodes={setHapticNodes}
+        />}
         setHapticNodes={setHapticNodes}
         hapticNodes={hapticNodes}
         currentButtonId={currentButtonId}
@@ -552,7 +194,11 @@ export default function App() {
         onClose={() => setCheckboxConfigOverlayVisible(false)}
         component={currentComponent}
         onLabelChange={onLabelChange}
-        ButtonConfigurationComponent={<ButtonConfiguration />}
+        ButtonConfigurationComponent={<ButtonConfiguration 
+          currentButtonId={currentButtonId}
+          hapticNodes={hapticNodes}
+          setHapticNodes={setHapticNodes}
+        />}
         setHapticNodes={setHapticNodes}
         hapticNodes={hapticNodes}
         currentButtonId={currentButtonId}
