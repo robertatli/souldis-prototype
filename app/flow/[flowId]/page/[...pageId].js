@@ -64,12 +64,13 @@ export default function App() {
   const [selectedId, setSelectedId] = useState(null);
   const [variables, setVariables] = useState([]);
 
+  /* This is used in the main menu, to handle the saving of the page data, and storing using AsyncStorage. */
   const savePage = async () => {
     savePageHelper(pageId, components, backgroundImage, buttonConfigs, hapticNodes);
   };
   
-   // Use the custom hook to load page data and handle permissions
-   useLoadPageData(pageId, setComponents, setBackgroundImage, setSavedPages, flowId, setButtonConfigs, setHapticNodes, setVariables, savePage);
+  // Use the custom hook to load page data and handle permissions
+  useLoadPageData(pageId, setComponents, setBackgroundImage, setSavedPages, flowId, setButtonConfigs, setHapticNodes, setVariables, savePage);
 
   /* This is used for every component, to handle the current and updated positions and store them in the Local AsyncStorage database */
   const handlePositionChange = useMemo(() => createPositionHandler(setComponents), [setComponents]);
@@ -134,14 +135,25 @@ export default function App() {
 
   
   return (
+    // The GestureHandlerRootView, is the root because it needs to handle all types of gestures, 
+    // and any component or modal within this root may have the ability of using gestures
     <GestureHandlerRootView style={{ flex: 1}}>
+      {/* 
+          Here we set the Background Image 
+      */}
       <ImageBackground source={backgroundImage} resizeMode="cover" style={{...styles.backgroundImage, top: -60,}}>
       <View style={{
         width: '100%',
         height: '100%',
       }}>
+        {/* 
+            Here we handle the swipe to open the main menu modal, from the right of the screen.
+        */}
         <SwipeToOpenModal onOpen={() => setModalVisible(true)} />
       </View>
+      {/* 
+            Here is the Main menu modal
+      */}
       <MainMenuModal 
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
@@ -155,6 +167,9 @@ export default function App() {
           changeViewMode={setViewMode}
           isViewModeOn={viewMode}
       />
+      {/* 
+            Here is the Button Config modal
+      */}
       <ButtonConfigOverlayModal
           visible={configOverlayVisible}
           onClose={() => setConfigOverlayVisible(false)}
@@ -173,6 +188,9 @@ export default function App() {
           hapticNodes={hapticNodes}
           onComponentUpdate={updateComponent}
       />
+      {/* 
+            Here is the Radio Config modal
+      */}
       <RadioConfigOverlayModal
         visible={radioConfigOverlayVisible}
         onClose={() => setRadioConfigOverlayVisible(false)}
@@ -189,6 +207,9 @@ export default function App() {
         hapticNodes={hapticNodes}
         currentButtonId={currentButtonId}
       />
+      {/* 
+            Here is the Checkbox Config modal
+      */}
       <CheckboxConfigOverlayModal
         visible={checkboxConfigOverlayVisible}
         onClose={() => setCheckboxConfigOverlayVisible(false)}
@@ -203,22 +224,36 @@ export default function App() {
         hapticNodes={hapticNodes}
         currentButtonId={currentButtonId}
       />
+      {/* 
+            Here is the Text Config modal
+      */}
       <TextConfigOverlayModal
         visible={textConfigOverlayVisible}
         onClose={() => setTextConfigOverlayVisible(false)}
         component={currentComponent}
         onLabelChange={onLabelChange}
       />
+      {/* 
+            Here is the TextInput Config modal
+      */}
       <TextInputConfigOverlayModal
         visible={textInputConfigOverlayVisible}
         onClose={() => setTextInputConfigOverlayVisible(false)}
         component={currentComponent}
         onLabelChange={onLabelChange}
       />
+      {/* 
+            We have a RadioGroup encompassing all components, because we cant 
+            create a new Radio Group for a specific selection of radio components
+            and still have it function without external supervision
+      */}
         <RadioGroup onValueChange={handleSelectVariable} initialValue={selectedId} 
         style={{
           width: '100%', 
           }}>
+          {/* 
+            Here we render all of our components
+          */}
         {components.map((component) => (
           <DynamicComponent
               key={component.id}
@@ -232,6 +267,9 @@ export default function App() {
         ))}
         </RadioGroup>
       </ImageBackground>
+      {/* 
+            A Toast is a notification, it has to be the last element of the root.
+      */}
       <Toast config={toastConfig}/>
     </GestureHandlerRootView>
   );
