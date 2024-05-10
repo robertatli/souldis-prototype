@@ -10,13 +10,13 @@ export const handleAddComponentHandler = (type, setComponents, components) => {
 
     switch (type) {
         case 'Button':
-            setComponents([...components, {...baseComponent, nextPageId: null, hapticNodes: [], height: 40, width: '100%', visible: true}]);
+            setComponents([...components, {...baseComponent, nextPageId: null, hapticNodes: [], height: 40, width: '20%', visible: true, startHaptic: { selectedHaptic: "", hapticValue: "" }}]);
             break;
         case 'Radio':
-            setComponents([...components, {...baseComponent, selected: false, label: '', hapticNodes: []}]); // Example additional property
+            setComponents([...components, {...baseComponent, selected: false, label: '', hapticNodes: [], startHaptic: ""}]); // Example additional property
             break;
         case 'Checkbox':
-            setComponents([...components, {...baseComponent, checked: false, label: '', hapticNodes: []}]);
+            setComponents([...components, {...baseComponent, checked: false, label: '', hapticNodes: [], startHaptic: ""}]);
             break;
         case 'Text':
             setComponents([...components, {...baseComponent, text: 'New Text'}]);

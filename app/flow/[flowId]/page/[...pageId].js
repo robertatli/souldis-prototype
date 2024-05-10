@@ -28,6 +28,7 @@ import { handleSelectVariableHandler } from '../../../components/Page/handleSele
 import { handleAddComponentHandler } from '../../../components/Page/handleAddComponent.js';
 import { onButtonPressHandler } from '../../../components/Page/onButtonPress.js';
 import { onButtonLongPressHandler } from '../../../components/Page/onButtonLongPress.js';
+import { onButtonPressStartHandler } from '../../../components/Page/onButtonPressStart.js';
 
 // import modals
 //import SaveDesignModal from '../../modals/SaveDesignModal.js';
@@ -120,6 +121,10 @@ export default function App() {
   /* This is used by any component, and handles the logic for each component type when a button is pressed. */
   const onButtonPress = async (component) => {
     onButtonPressHandler(component, hapticNodes, playHapticSequence, router, flowId, buttonConfigs, setComponents);
+  };
+
+  const onButtonPressStart = async (component) => {
+    await onButtonPressStartHandler(component, playHapticSequence);
   };
 
   /* This is used by any component, and handles the opening of modals for the component after a long press */
@@ -265,6 +270,7 @@ export default function App() {
               onPositionChange={handlePositionChange}
               onLabelChange={onLabelChange}
               viewModeIsOn={viewMode}
+              onPressStart={onButtonPressStart}
           />
         ))}
         </RadioGroup>

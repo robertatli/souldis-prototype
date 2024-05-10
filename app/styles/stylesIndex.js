@@ -213,11 +213,11 @@ const styles = StyleSheet.create({
       padding: 10,
     },
     nodeItem: {
-      width: 300,
+      width: '100%',
       flexDirection: 'column',
       alignItems: 'center',
-      padding: 10,
       marginVertical: 5,
+      paddingRight: 40,
       backgroundColor: '#f0f0f0',
       borderRadius: 4,
     },
@@ -267,6 +267,49 @@ const styles = StyleSheet.create({
       paddingLeft: 10,
       padding: 5,
       backgroundColor: '#d8d8d8',
+    },
+    centeredViewSection: {
+      flex: 1,
+      padding: 20,
+  },
+    modalTitleSection: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 16,
+    },
+    section: {
+        marginBottom: 20,
+        padding: 10,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 8,
+    },
+    sectionHeader: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    sectionDescription: {
+        fontSize: 14,
+        color: 'gray',
+        marginBottom: 8,
+    },
+    addNodeButton: {
+        backgroundColor: 'skyblue',
+        padding: 10,
+        borderRadius: 4,
+        marginTop: 10,
+    },
+    saveButton: {
+        backgroundColor: 'green',
+        padding: 10,
+        borderRadius: 4,
+    },
+    saveButtonText: {
+        color: 'white',
+        textAlign: 'center',
+    },
+    scrollView: {
+        width: '100%',
     },
   });
   

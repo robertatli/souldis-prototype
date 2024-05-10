@@ -1,11 +1,12 @@
 // HapticDropdown.js
 import React from 'react';
+import { View } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import Icon from 'react-native-vector-icons/Feather';
 
-import styles from '../../styles/stylesIndex';
+// import styles from '../../styles/stylesIndex';
 
-const HapticDropdown = ({ selectedHaptic, onHapticChange }) => {
+const HapticDropdown = ({ selectedHaptic, onHapticChange, style }) => {
     // Options for the haptic feedback types
     const hapticOptions = [
         { label: 'Selection', value: 'selectionAsync' },
@@ -20,39 +21,6 @@ const HapticDropdown = ({ selectedHaptic, onHapticChange }) => {
         { label: 'Delay 500ms', value: 'delayAsync500' },
     ];
 
-    // // Custom style for the picker
-    // const customPickerStyles = {
-    //     inputIOS: {
-    //         width: '75%', // Ensure full width or a fixed width as needed
-    //         fontSize: 16,
-    //         paddingVertical: 8,
-    //         borderWidth: 1,
-    //         borderColor: 'gray',
-    //         borderRadius: 4,
-    //         color: 'black',
-    //         textAlign: 'left',
-    //     },
-    //     inputAndroid: {
-    //         width: '75%', // Ensure full width or a fixed width as needed
-    //         fontSize: 16,
-    //         paddingVertical: 8,
-    //         borderWidth: 1,
-    //         borderColor: 'gray',
-    //         borderRadius: 8,
-    //         color: 'black',
-    //         textAlign: 'left',
-    //     },
-    //     placeholder: {
-    //         color: 'gray',
-    //         fontSize: 16,
-    //         textAlign: 'left',
-    //     },
-    //     iconContainer: {
-    //         top: 0,
-    //         right: 88,
-    //     },
-    // };
-
     return (
         <RNPickerSelect
             onValueChange={onHapticChange}
@@ -60,9 +28,12 @@ const HapticDropdown = ({ selectedHaptic, onHapticChange }) => {
             value={selectedHaptic}
             placeholder={{ label: "Select a haptic...", value: null }}
             useNativeAndroidPickerStyle={false} // this is to ensure consistent styling across platforms
-            Icon={() => <Icon name="chevron-down" size={20} color="gray" />}
+            Icon={() => <View><Icon name="chevron-up" size={20} color="gray" style={{ position: 'relative', right: -30, top: 0,}} /><Icon name="chevron-down" size={20} color="gray" style={{ position: 'relative', right: -30, top: -10,}} /></View> }
+            style={style}
         />
     );
   };
+
+
 
   export default HapticDropdown;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, Button, TextInput, TouchableOpacity } from 'react-native';
 import styles from '../styles/stylesIndex';
+import { ScrollView } from 'react-native-virtualized-view';
 
 import LabeledInput from './LabeledInput';
 import Toast from 'react-native-toast-message';
@@ -67,42 +68,43 @@ const RadioConfigOverlayModal = ({
         >
             <View style={styles.centeredView}>
                 <View style={styles.modalView}>
-                    <Spacer height={32} />
-                    <Text style={styles.modalTitle}>Radio Configuration</Text>
-                    <LabeledInput
-                        label="Label"
-                        value={label}
-                        onChangeText={setLabel}
-                        placeholder="Enter Text"
-                    />
-                    {/* Add a break or space for layout if needed */}
-                    {/* <Text>Radio Value</Text>
-                    <TextInput
-                        value={value}
-                        onChangeText={setValue}
-                        placeholder="Enter component's value"
-                        keyboardType="numeric"  // Ensure the keyboard is appropriate for numeric input
-                    /> */}
-                    {variables.map(varItem => (
-                        <View key={varItem.id} style={styles.picker}>
-                            {/* <Text>{varItem.name}</Text> */}
+                        <Spacer height={32} />
+                        <Text style={styles.modalTitleSection}>Radio Configuration</Text>
+                    <ScrollView style={styles.scrollView} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+                        <View style={{...styles.section}}>
+                            <Text style={styles.sectionHeader}>Name</Text>
+                            <Text style={styles.sectionDescription}>Choose the displayed name of the radio button.</Text>
                             <LabeledInput
-                                label={varItem.name}
-                                value={variableValues[varItem.id]}
-                                onChangeText={(text) => handleVariableChange(varItem.id, text)}
-                                keyboardType="numeric"
-                                returnKeyType="done"
+                                label="Label"
+                                value={label}
+                                onChangeText={setLabel}
+                                placeholder="Enter Text"
                             />
-                            {/* <TextInput
-                                value={variableValues[varItem.id]}
-                                onChangeText={(text) => handleVariableChange(varItem.id, text)}
-                                keyboardType="numeric"
-                                returnKeyType="done"
-                            /> */}
                         </View>
-                    ))}
-                    {ButtonConfigurationComponent}
-                    <FlexSpacer />
+                        {variables.length > 0 && (
+                            <View style={{...styles.section}}>
+                                <Text style={styles.sectionHeader}>Variables</Text>
+                                <Text style={styles.sectionDescription}>Assign a value for this radio button for the variables in the flow.</Text>
+                                {variables.map(varItem => (
+                                    <View key={varItem.id} style={styles.picker}>
+                                        <LabeledInput
+                                            label={varItem.name}
+                                            value={variableValues[varItem.id]}
+                                            onChangeText={(text) => handleVariableChange(varItem.id, text)}
+                                            keyboardType="numeric"
+                                            returnKeyType="done"
+                                        />
+                                    </View>
+                                ))}
+                            </View>
+                        )}
+                        <View style={{...styles.section}}>
+                            <Text style={styles.sectionHeader}>Sequential Haptic Feedback Nodes</Text>
+                            <Text style={styles.sectionDescription}>Configure the sequence of haptic feedbacks to play during the interaction.</Text>
+                            {ButtonConfigurationComponent}
+                        </View>
+                        <FlexSpacer />
+                    </ScrollView>
                     <TouchableOpacity style={styles.modalButtonClose} onPress={handleSave}>
                         <Text style={styles.whitetext}>Save</Text>
                     </TouchableOpacity>

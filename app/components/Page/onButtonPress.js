@@ -2,6 +2,9 @@
 
 export const onButtonPressHandler = async (component, hapticNodes, playHapticSequence, router, flowId, buttonConfigs, setComponents) => {
     const hapticSequence = hapticNodes[component.id] || [];
+    console.log("H2: ", hapticSequence);
+    console.log("H2: ", component.startHaptic.hapticValue);
+    console.log("H2: ", component);
 
     switch (component.type) {
       case 'Button':

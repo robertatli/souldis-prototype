@@ -11,7 +11,7 @@ import RadioButton from 'react-native-ui-lib/radioButton';
 
 import styles from '../../styles/stylesIndex';
 
-const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, onLabelChange, viewModeIsOn }) => {
+const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, onLabelChange, viewModeIsOn, onPressStart }) => {
     const positionX = useSharedValue(component.position.x);
     const positionY = useSharedValue(component.position.y);
 
@@ -46,6 +46,11 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, o
         });
 
     const singleTap = Gesture.Tap()
+        .onStart(() => {
+            if (!viewModeIsOn) return;
+            
+            return runOnJS(onPressStart)(component);
+        })
         .onEnd(() => {
             if (!viewModeIsOn) return;
 
@@ -70,7 +75,7 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, o
       const renderComponentContent = () => {
         const buttonStyle = {
             ...styles.modalButton,
-            width: component.width || '100%', // Default width
+            width: component.width || '20%', // Default width
             height: component.height || 40, // Default height
             backgroundColor: viewModeIsOn && !component.visible ? 'transparent' : 'white',
             borderColor: viewModeIsOn && !component.visible ? 'transparent' : 'black',
