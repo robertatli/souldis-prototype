@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 export const handleAddComponentHandler = (type, setComponents, components) => {
     const baseComponent = {
         id: uuidv4(),
-        position: { x: 0, y: -400 },
+        position: { x: 150, y: -300 },
         type: type,
         label: type === 'Text' ? 'New Text' : type,
     };

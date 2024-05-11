@@ -46,7 +46,7 @@ const DynamicComponent = ({ component, onPress, onLongPress, onPositionChange, o
         });
 
     const singleTap = Gesture.Tap()
-        .onStart(() => {
+        .onBegin(() => {
             if (!viewModeIsOn) return;
             
             return runOnJS(onPressStart)(component);
