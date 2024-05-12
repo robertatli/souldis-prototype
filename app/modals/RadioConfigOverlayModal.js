@@ -72,13 +72,13 @@ const RadioConfigOverlayModal = ({
                         <Text style={styles.modalTitleSection}>Radio Configuration</Text>
                     <ScrollView style={styles.scrollView} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
                         <View style={{...styles.section}}>
-                            <Text style={styles.sectionHeader}>Name</Text>
-                            <Text style={styles.sectionDescription}>Choose the displayed name of the radio button.</Text>
+                            <Text style={styles.sectionHeader}>Radio Name</Text>
+                            <Text style={styles.sectionDescription}>Set the radio's name as it will appear on the screen.</Text>
                             <LabeledInput
-                                label="Label"
+                                label="Name"
                                 value={label}
                                 onChangeText={setLabel}
-                                placeholder="Enter Text"
+                                placeholder="Enter name"
                             />
                         </View>
                         {variables.length > 0 && (
@@ -99,8 +99,8 @@ const RadioConfigOverlayModal = ({
                             </View>
                         )}
                         <View style={{...styles.section}}>
-                            <Text style={styles.sectionHeader}>Sequential Haptic Feedback Nodes</Text>
-                            <Text style={styles.sectionDescription}>Configure the sequence of haptic feedbacks to play during the interaction.</Text>
+                            <Text style={styles.sectionHeader}>Touch Feedback Sequence</Text>
+                            <Text style={styles.sectionDescription}>Set up a sequence of feedbacks for interactions with the button.</Text>
                             {ButtonConfigurationComponent}
                         </View>
                         <FlexSpacer />

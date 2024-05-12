@@ -52,18 +52,18 @@ const CheckboxConfigOverlayModal = ({
                     <Text style={styles.modalTitleSection}>Checkbox Configuration</Text>
                     <ScrollView style={styles.scrollView} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
                         <View style={{...styles.section}}>
-                        <Text style={styles.sectionHeader}>Name</Text>
-                        <Text style={styles.sectionDescription}>Choose the displayed name of the checkbox.</Text>
-                        <LabeledInput
-                            label="Label"
-                            value={label}
-                            onChangeText={setLabel}
-                            placeholder="Enter Text"
-                        />
+                            <Text style={styles.sectionHeader}>Checkbox Name</Text>
+                            <Text style={styles.sectionDescription}>Set the checkbox's name as it will appear on the screen.</Text>
+                            <LabeledInput
+                                label="Name"
+                                value={label}
+                                onChangeText={setLabel}
+                                placeholder="Enter name"
+                            />
                         </View>
                         <View style={{...styles.section}}>
-                            <Text style={styles.sectionHeader}>Sequential Haptic Feedback Nodes</Text>
-                            <Text style={styles.sectionDescription}>Configure the sequence of haptic feedbacks to play during the interaction.</Text>
+                            <Text style={styles.sectionHeader}>Touch Feedback Sequence</Text>
+                            <Text style={styles.sectionDescription}>Set up a sequence of feedbacks for interactions with the button.</Text>
                             {ButtonConfigurationComponent}
                         </View>
                         <FlexSpacer />

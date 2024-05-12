@@ -101,35 +101,35 @@ const ButtonConfigOverlayModal = ({
                     <Spacer height={32} />
                     <Text style={styles.modalTitleSection}>Button Configuration</Text>
                     <ScrollView style={styles.scrollView} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
-                        <View style={{...styles.section}}>
-                        <Text style={styles.sectionHeader}>Name</Text>
-                        <Text style={styles.sectionDescription}>Choose the displayed name of the button</Text>
+                    <View style={{...styles.section}}>
+                        <Text style={styles.sectionHeader}>Button Name</Text>
+                        <Text style={styles.sectionDescription}>Set the button's name as it will appear on the screen.</Text>
                         <LabeledInput
-                            label="Label"
+                            label="Name"
                             value={label}
                             onChangeText={setLabel}
-                            placeholder="Enter Text"
+                            placeholder="Enter name"
                         />
-                        </View>
-                        <View style={{...styles.section}}>
-                        <Text style={styles.sectionHeader}>Dimensions</Text>
-                        <Text style={styles.sectionDescription}>Choose the width / height of the button dimensions.</Text>
+                    </View>
+                    <View style={{...styles.section}}>
+                        <Text style={styles.sectionHeader}>Size</Text>
+                        <Text style={styles.sectionDescription}>Adjust the button's size by setting its width and height.</Text>
                         <LabeledInput
                             label="Width"
                             value={width.toString()}
                             onChangeText={text => setWidth(text)}
-                            placeholder="Enter width"
+                            placeholder="Width (e.g., 50%)"
                         />
                         <LabeledInput
                             label="Height"
                             value={height.toString()}
                             onChangeText={text => setHeight(text)}
-                            placeholder="Enter height"
+                            placeholder="Height (e.g., 20px)"
                         />
-                        </View>
-                        <View style={{...styles.section}}>
-                        <Text style={styles.sectionHeader}>Navigation</Text>
-                        <Text style={styles.sectionDescription}>Choose what page to navigate to on click.</Text>
+                    </View>
+                    <View style={{...styles.section}}>
+                        <Text style={styles.sectionHeader}>Link</Text>
+                        <Text style={styles.sectionDescription}>Choose which page the button will link to when pressed.</Text>
                         <Dropdown
                             savedPages={savedPages}
                             currentButtonId={currentButtonId}
@@ -139,36 +139,32 @@ const ButtonConfigOverlayModal = ({
                                 setButtonConfigs({ ...buttonConfigs, [id]: selectedSetup });
                             }}
                         />
-                        </View>
-                        <View style={{...styles.section}}>
-                        <Text style={styles.sectionHeader}>Button Visibility</Text>
-                        <Text style={styles.sectionDescription}>Choose to have the button visible in the View mode.</Text>
+                    </View>
+                    <View style={{...styles.section}}>
+                        <Text style={styles.sectionHeader}>Visibility</Text>
+                        <Text style={styles.sectionDescription}>Toggle whether this button is visible when the app is in view mode.</Text>
                         <CheckBoxInput 
-                            label={"Visible in View mode"}
+                            label="Show in view mode"
                             checked={checked}
                             checkValueChanged={checkValueChanged}
                         />
-                        </View>
-                        <View style={styles.section}>
-                            <Text style={styles.sectionHeader}>On Start Haptic Feedback</Text>
-                            <Text style={styles.sectionDescription}>Select the haptic feedback to play when the button is initially pressed.</Text>
-                            <HapticDropdown
-                                selectedHaptic={selectedHaptic}
-                                onHapticChange={(value) => {
-                                    setSelectedHaptic(value);   // Set the selected haptic type
-                                    setHapticValue(value);      // Also set the haptic value if needed elsewhere
-                                }}
-                                style={pickerSelectStyles}
-                                selectedValue={hapticValue}    // Ensuring this is used for displaying the current value
-                            />
+                    </View>
+                    <View style={styles.section}>
+                        <Text style={styles.sectionHeader}>Initial Touch Feedback</Text>
+                        <Text style={styles.sectionDescription}>Choose the type of feedback when the button is first touched.</Text>
+                        <HapticDropdown
+                            selectedHaptic={selectedHaptic}
+                            onHapticChange={setSelectedHaptic}
+                            style={pickerSelectStyles}
+                            selectedValue={hapticValue}
+                        />
+                    </View>
+                    <View style={{...styles.section}}>
+                        <Text style={styles.sectionHeader}>Touch Feedback Sequence</Text>
+                        <Text style={styles.sectionDescription}>Set up a sequence of feedbacks for interactions with the button.</Text>
+                        {ButtonConfigurationComponent}
+                    </View>
 
-                        </View>
-
-                        <View style={{...styles.section}}>
-                            <Text style={styles.sectionHeader}>Sequential Haptic Feedback Nodes</Text>
-                            <Text style={styles.sectionDescription}>Configure the sequence of haptic feedbacks to play during the interaction.</Text>
-                            {ButtonConfigurationComponent}
-                        </View>
                         <FlexSpacer />
                     </ScrollView>
                     <TouchableOpacity style={styles.modalButtonClose} onPress={handleSave}>
