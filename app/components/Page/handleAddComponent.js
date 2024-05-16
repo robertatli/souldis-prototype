@@ -13,16 +13,16 @@ export const handleAddComponentHandler = (type, setComponents, components) => {
             setComponents([...components, {...baseComponent, nextPageId: null, hapticNodes: [], height: 40, width: '20%', visible: true, startHaptic: { selectedHaptic: "", hapticValue: "" }}]);
             break;
         case 'Radio':
-            setComponents([...components, {...baseComponent, selected: false, label: '', hapticNodes: [], startHaptic: ""}]); // Example additional property
+            setComponents([...components, {...baseComponent, selected: false, label: '', hapticNodes: [], startHaptic: { selectedHaptic: "", hapticValue: "" }}]); // Example additional property
             break;
         case 'Checkbox':
-            setComponents([...components, {...baseComponent, checked: false, label: '', hapticNodes: [], startHaptic: ""}]);
+            setComponents([...components, {...baseComponent, checked: false, label: '', hapticNodes: [], startHaptic: { selectedHaptic: "", hapticValue: "" }}]);
             break;
         case 'Text':
-            setComponents([...components, {...baseComponent, text: 'New Text'}]);
+            setComponents([...components, {...baseComponent, text: 'New Text', startHaptic: { selectedHaptic: "", hapticValue: "" }}]);
             break;
         case 'TextInput':
-            setComponents([...components, {...baseComponent, value: ''}]);
+            setComponents([...components, {...baseComponent, value: '', startHaptic: { selectedHaptic: "", hapticValue: "" }}]);
             break;
         default:
             console.log('Unknown type');
