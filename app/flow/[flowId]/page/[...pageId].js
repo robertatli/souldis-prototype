@@ -31,7 +31,6 @@ import { onButtonLongPressHandler } from '../../../components/Page/onButtonLongP
 import { onButtonPressStartHandler } from '../../../components/Page/onButtonPressStart.js';
 
 // import modals
-//import SaveDesignModal from '../../modals/SaveDesignModal.js';
 import MainMenuModal from '../../../modals/MainMenuModal.js';
 import ButtonConfigOverlayModal from '../../../modals/ButtonConfigOverlayModal.js';
 import RadioConfigOverlayModal from '../../../modals/RadioConfigOverlayModal.js';
