@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, Button, TextInput, TouchableOpacity } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import Dropdown from '../components/Dropdown/Dropdown';
 import styles from '../styles/stylesIndex';
 import Toast from 'react-native-toast-message';
-import { ScrollView } from 'react-native-virtualized-view';
-
-import { StyleSheet } from 'react-native';
 
 import HapticDropdown from '../components/HapticDropdown/HapticDropdown';
 import LabeledInput from './LabeledInput';
@@ -23,7 +21,6 @@ const handleDimensionChange = (value) => {
     }
     return strValue; // Return as is (could add more validation or defaulting logic here)
 };
-
 
 const ButtonConfigOverlayModal = ({
     visible,
@@ -47,7 +44,6 @@ const ButtonConfigOverlayModal = ({
     const [checked, setChecked] = useState(component?.visible || true);
     const [selectedHaptic, setSelectedHaptic] = useState('');
     const [hapticValue, setHapticValue] = useState('');
-
 
     useEffect(() => {
         if (component) {
@@ -86,8 +82,97 @@ const ButtonConfigOverlayModal = ({
         onComponentUpdate(component.id, { ...component, visible: newVisibility });  
     };
 
-    const Spacer = ({ height }) => <View style={{ height }} />;
-    const FlexSpacer = () => <View style={{ flex: 1 }} />;
+    const renderSection = ({ item }) => (
+        <View style={styles.section}>
+            <Text style={styles.sectionHeader}>{item.header}</Text>
+            <Text style={styles.sectionDescription}>{item.description}</Text>
+            {item.content}
+        </View>
+    );
+
+    const sections = [
+        {
+            key: 'name',
+            header: 'Button Name',
+            description: "Set the button's name as it will appear on the screen.",
+            content: (
+                <LabeledInput
+                    label="Name"
+                    value={label}
+                    onChangeText={setLabel}
+                    placeholder="Enter name"
+                />
+            ),
+        },
+        {
+            key: 'size',
+            header: 'Size',
+            description: "Adjust the button's size by setting its width and height.",
+            content: (
+                <>
+                    <LabeledInput
+                        label="Width"
+                        value={width.toString()}
+                        onChangeText={text => setWidth(text)}
+                        placeholder="Width (e.g., 50%)"
+                    />
+                    <LabeledInput
+                        label="Height"
+                        value={height.toString()}
+                        onChangeText={text => setHeight(text)}
+                        placeholder="Height (e.g., 20px)"
+                    />
+                </>
+            ),
+        },
+        {
+            key: 'link',
+            header: 'Link',
+            description: "Choose which page the button will link to when pressed.",
+            content: (
+                <Dropdown
+                    savedPages={savedPages}
+                    currentButtonId={currentButtonId}
+                    buttonConfigs={buttonConfigs}
+                    onConfigChange={(id, selectedSetup) => {
+                        setNextPageId(selectedSetup);
+                        setButtonConfigs({ ...buttonConfigs, [id]: selectedSetup });
+                    }}
+                />
+            ),
+        },
+        {
+            key: 'visibility',
+            header: 'Visibility',
+            description: "Toggle whether this button is visible when the app is in view mode.",
+            content: (
+                <CheckBoxInput 
+                    label="Show in view mode"
+                    checked={checked}
+                    checkValueChanged={checkValueChanged}
+                />
+            ),
+        },
+        {
+            key: 'initialFeedback',
+            header: 'Initial Touch Feedback',
+            description: "Choose the type of feedback when the button is first touched.",
+            content: (
+                <HapticDropdown
+                    selectedHaptic={selectedHaptic}
+                    onHapticChange={setSelectedHaptic}
+                    style={pickerSelectStyles}
+                    selectedValue={hapticValue}
+                />
+            ),
+        },
+        {
+            key: 'sequenceFeedback',
+            header: 'Touch Feedback Sequence',
+            description: "Set up a sequence of feedbacks for interactions with the button.",
+            content: ButtonConfigurationComponent,
+        },
+    ];
 
     return (
         <Modal
@@ -100,83 +185,28 @@ const ButtonConfigOverlayModal = ({
                 <View style={styles.modalView}>
                     <Spacer height={32} />
                     <Text style={styles.modalTitleSection}>Button Configuration</Text>
-                    <ScrollView style={styles.scrollView} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
-                    <View style={{...styles.section}}>
-                        <Text style={styles.sectionHeader}>Button Name</Text>
-                        <Text style={styles.sectionDescription}>Set the button's name as it will appear on the screen.</Text>
-                        <LabeledInput
-                            label="Name"
-                            value={label}
-                            onChangeText={setLabel}
-                            placeholder="Enter name"
-                        />
-                    </View>
-                    <View style={{...styles.section}}>
-                        <Text style={styles.sectionHeader}>Size</Text>
-                        <Text style={styles.sectionDescription}>Adjust the button's size by setting its width and height.</Text>
-                        <LabeledInput
-                            label="Width"
-                            value={width.toString()}
-                            onChangeText={text => setWidth(text)}
-                            placeholder="Width (e.g., 50%)"
-                        />
-                        <LabeledInput
-                            label="Height"
-                            value={height.toString()}
-                            onChangeText={text => setHeight(text)}
-                            placeholder="Height (e.g., 20px)"
-                        />
-                    </View>
-                    <View style={{...styles.section}}>
-                        <Text style={styles.sectionHeader}>Link</Text>
-                        <Text style={styles.sectionDescription}>Choose which page the button will link to when pressed.</Text>
-                        <Dropdown
-                            savedPages={savedPages}
-                            currentButtonId={currentButtonId}
-                            buttonConfigs={buttonConfigs}
-                            onConfigChange={(id, selectedSetup) => {
-                                setNextPageId(selectedSetup);
-                                setButtonConfigs({ ...buttonConfigs, [id]: selectedSetup });
-                            }}
-                        />
-                    </View>
-                    <View style={{...styles.section}}>
-                        <Text style={styles.sectionHeader}>Visibility</Text>
-                        <Text style={styles.sectionDescription}>Toggle whether this button is visible when the app is in view mode.</Text>
-                        <CheckBoxInput 
-                            label="Show in view mode"
-                            checked={checked}
-                            checkValueChanged={checkValueChanged}
-                        />
-                    </View>
-                    <View style={styles.section}>
-                        <Text style={styles.sectionHeader}>Initial Touch Feedback</Text>
-                        <Text style={styles.sectionDescription}>Choose the type of feedback when the button is first touched.</Text>
-                        <HapticDropdown
-                            selectedHaptic={selectedHaptic}
-                            onHapticChange={setSelectedHaptic}
-                            style={pickerSelectStyles}
-                            selectedValue={hapticValue}
-                        />
-                    </View>
-                    <View style={{...styles.section}}>
-                        <Text style={styles.sectionHeader}>Touch Feedback Sequence</Text>
-                        <Text style={styles.sectionDescription}>Set up a sequence of feedbacks for interactions with the button.</Text>
-                        {ButtonConfigurationComponent}
-                    </View>
-
-                        <FlexSpacer />
-                    </ScrollView>
+                    <KeyboardAwareFlatList
+                        data={sections}
+                        renderItem={renderSection}
+                        keyExtractor={item => item.key}
+                        extraScrollHeight={100}
+                        enableOnAndroid={true}
+                        keyboardShouldPersistTaps='handled'
+                        showsHorizontalScrollIndicator={false}
+                        showsVerticalScrollIndicator={false}
+                    />
                     <TouchableOpacity style={styles.modalButtonClose} onPress={handleSave}>
                         <Text style={styles.whitetext}>Save</Text>
                     </TouchableOpacity>
-                    
                     <Toast />
                 </View>
             </View>
         </Modal>
     );
 };
+
+const Spacer = ({ height }) => <View style={{ height }} />;
+const FlexSpacer = () => <View style={{ flex: 1 }} />;
 
 const pickerSelectStyles = StyleSheet.create({
     inputIOS: {

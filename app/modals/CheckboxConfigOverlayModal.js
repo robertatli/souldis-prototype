@@ -1,10 +1,9 @@
 // ConfigOverlayModal.js
 import React, { useState, useEffect } from 'react';
-import { Modal, View, Text, Button, TextInput, TouchableOpacity } from 'react-native';
+import { Modal, View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
 import styles from '../styles/stylesIndex';
 import Toast from 'react-native-toast-message';
-import { ScrollView } from 'react-native-virtualized-view';
-
 import LabeledInput from './LabeledInput';
 
 const CheckboxConfigOverlayModal = ({
@@ -19,7 +18,6 @@ const CheckboxConfigOverlayModal = ({
 }) => {
     const [label, setLabel] = useState(component?.label || '');
     const [hapticSequence, setHapticSequence] = useState(hapticNodes[currentButtonId] || []);
-
 
     useEffect(() => {
         if (component) {
@@ -36,8 +34,35 @@ const CheckboxConfigOverlayModal = ({
         onClose();
     };
 
-    const Spacer = ({ height }) => <View style={{ height }} />;
-    const FlexSpacer = () => <View style={{ flex: 1 }} />;
+    const renderSection = ({ item }) => (
+        <View style={styles.section}>
+            <Text style={styles.sectionHeader}>{item.header}</Text>
+            <Text style={styles.sectionDescription}>{item.description}</Text>
+            {item.content}
+        </View>
+    );
+
+    const sections = [
+        {
+            key: 'name',
+            header: 'Checkbox Name',
+            description: "Set the checkbox's name as it will appear on the screen.",
+            content: (
+                <LabeledInput
+                    label="Name"
+                    value={label}
+                    onChangeText={setLabel}
+                    placeholder="Enter name"
+                />
+            ),
+        },
+        {
+            key: 'sequenceFeedback',
+            header: 'Touch Feedback Sequence',
+            description: "Set up a sequence of feedbacks for interactions with the checkbox.",
+            content: ButtonConfigurationComponent,
+        },
+    ];
 
     return (
         <Modal
@@ -50,24 +75,16 @@ const CheckboxConfigOverlayModal = ({
                 <View style={styles.modalView}>
                     <Spacer height={32} />
                     <Text style={styles.modalTitleSection}>Checkbox Configuration</Text>
-                    <ScrollView style={styles.scrollView} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
-                        <View style={{...styles.section}}>
-                            <Text style={styles.sectionHeader}>Checkbox Name</Text>
-                            <Text style={styles.sectionDescription}>Set the checkbox's name as it will appear on the screen.</Text>
-                            <LabeledInput
-                                label="Name"
-                                value={label}
-                                onChangeText={setLabel}
-                                placeholder="Enter name"
-                            />
-                        </View>
-                        <View style={{...styles.section}}>
-                            <Text style={styles.sectionHeader}>Touch Feedback Sequence</Text>
-                            <Text style={styles.sectionDescription}>Set up a sequence of feedbacks for interactions with the button.</Text>
-                            {ButtonConfigurationComponent}
-                        </View>
-                        <FlexSpacer />
-                    </ScrollView>
+                    <KeyboardAwareFlatList
+                        data={sections}
+                        renderItem={renderSection}
+                        keyExtractor={item => item.key}
+                        extraScrollHeight={100}
+                        enableOnAndroid={true}
+                        keyboardShouldPersistTaps='handled'
+                        showsHorizontalScrollIndicator={false}
+                        showsVerticalScrollIndicator={false}
+                    />
                     <TouchableOpacity style={styles.modalButtonClose} onPress={handleSave}>
                         <Text style={styles.whitetext}>Save</Text>
                     </TouchableOpacity>
@@ -77,5 +94,8 @@ const CheckboxConfigOverlayModal = ({
         </Modal>
     );
 };
+
+const Spacer = ({ height }) => <View style={{ height }} />;
+const FlexSpacer = () => <View style={{ flex: 1 }} />;
 
 export default CheckboxConfigOverlayModal;
