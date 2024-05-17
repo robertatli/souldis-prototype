@@ -114,13 +114,13 @@ const ButtonConfigOverlayModal = ({
                         label="Width"
                         value={width.toString()}
                         onChangeText={text => setWidth(text)}
-                        placeholder="Width (e.g., 50%)"
+                        placeholder="Width (e.g., 50% or 50)"
                     />
                     <LabeledInput
                         label="Height"
                         value={height.toString()}
                         onChangeText={text => setHeight(text)}
-                        placeholder="Height (e.g., 20px)"
+                        placeholder="Height (e.g., 20 or 20%)"
                     />
                 </>
             ),
